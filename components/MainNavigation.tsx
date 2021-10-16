@@ -7,7 +7,6 @@ const NavDiv = styled.div`
   height: 3rem;
   display: flex;
   align-items: center;
-//   background-color: ${myColors.background};
   color: white;
 `;
 
@@ -16,11 +15,17 @@ const Header = styled.div`
   margin-left: 1rem;
 `;
 
+const Name = styled.span`
+//   font-family: neon;
+`;
+
 const MainNavigation = () => {
   return (
     <NavDiv>
       <Header>
-        <Text>Patrick DeVries</Text>
+        <Text size="1.5rem" color={myColors.secondary}>
+          <Name>Patrick DeVries</Name>
+        </Text>
       </Header>
     </NavDiv>
   );
