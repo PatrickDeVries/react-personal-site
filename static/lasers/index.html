@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lasers</title>
+    <link rel="shortcut icon" href="favicon.ico"/>
+
+    <style>
+        * {
+            -webkit-touch-callout: none; /* iOS Safari */
+                -webkit-user-select: none; /* Safari */
+                -khtml-user-select: none; /* Konqueror HTML */
+                -moz-user-select: none; /* Old versions of Firefox */
+                    -ms-user-select: none; /* Internet Explorer/Edge */
+                        user-select: none; /* Non-prefixed version, currently
+                                            supported by Chrome, Edge, Opera and Firefox */
+        }
+        body {
+            margin:0;
+        }
+        canvas {
+            display: block;
+        }
+        button {
+            color: darkblue;
+            background-color: magenta;
+        }
+        #viewButton {
+            position: absolute;
+            display: block;
+            z-index: 99;
+            left:0%;
+            top:0%;
+
+        }
+        #resetButton {
+            position: absolute;
+            display: block;
+            z-index: 99;
+            right:0%;
+            top:0%;
+        }
+        #controls {
+            position:absolute;
+            color: magenta;
+            z-index: 99;
+            left:45%;
+            top:0%;
+            margin: 0%;
+        }
+        #controlsMain {
+            display: none;
+        }
+        #controlsHead {
+            display: block;
+        }
+        #controls:hover #controlsMain {
+            display:block;
+            background-color: #0f0f3d;
+        }
+        #controls:hover{
+            display:block;
+            background-color: #0f0f3d;
+        }
+        /* #controls:hover {
+            opacity: 1;
+        } */
+    </style>
+</head>
+<body>
+    <script src="three.js"></script>
+
+    <script type="text/javascript" src="CopyShader.js"></script>
+    <script type="text/javascript" src="HorizontalBlurShader.js"></script>
+    <script type="text/javascript" src="VerticalBlurShader.js"></script>
+
+    <script type="text/javascript" src="EffectComposer.js"></script>
+    <script type="text/javascript" src="ShaderPass.js"></script>
+    <script type="text/javascript" src="RenderPass.js"></script>
+    <script type="text/javascript" src="MaskPass.js"></script>
+
+
+    <script>
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+        document.body.appendChild( renderer.domElement );
+
+
+
+        const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, .01, 1500 );
+        camera.position.set( 0, 0, 100 );
+        camera.lookAt( 0, 0, 0 );
+
+        var scene = new THREE.Scene();
+
+        var material = new THREE.LineBasicMaterial( { color: 0x0000ff } );
+
+        
+        // initial square
+        var points = [];
+        points.push( new THREE.Vector3(-10, 0, 0));
+        points.push( new THREE.Vector3(0, 10, 0));
+        points.push( new THREE.Vector3(10, 0, 0));
+        points.push( new THREE.Vector3(0, -10, 0));
+        points.push( new THREE.Vector3(-10, 0, 0));
+
+        var geometry = new THREE.BufferGeometry().setFromPoints( points );
+        var line = new THREE.Line( geometry, material );
+
+        // set up scene
+        scene.add( line );
+        scene.background= new THREE.Color(0x0f0f3d)
+
+        // composer to add blur
+        const composer = new THREE.EffectComposer( renderer );
+        composer.addPass( new THREE.RenderPass( scene, camera ) );
+        
+        var hblur = new THREE.ShaderPass( THREE.HorizontalBlurShader );
+
+        var vblur = new THREE.ShaderPass( THREE.VerticalBlurShader );
+
+        hblur.uniforms.h.value = .35/window.innerWidth;
+        vblur.uniforms.v.value = .35/window.innerHeight;
+
+        // set this shader pass to render to screen so we can see the effects
+        vblur.renderToScreen = true;
+        composer.addPass( vblur );
+        composer.addPass( hblur );
+
+
+        /* here down is all functions for drawing */
+
+
+        // track if the mouse button is held down
+        var mouseDown = false;
+        document.body.onmousedown = function() { 
+            mouseDown = true;
+        }
+        document.body.onmouseup = function() {
+            mouseDown = false;
+        }
+
+        // track if the motion keys are held down
+        var up = false;
+        var down = false;
+        var left = false;
+        var right = false;
+
+        function pressKey() {
+            if (event.keyCode === 87) {
+                up = true;
+            }
+            else if (event.keyCode === 83) {
+                down = true;
+            }
+            else if (event.keyCode === 65) {
+                left = true;
+            }
+            else if (event.keyCode === 68) {
+                right = true;
+            }
+            console.log(event.keyCode);
+        }
+        document.onkeydown = pressKey;
+
+        // track if the motion keys are released
+        function releaseKey() {
+            if (event.keyCode === 87) {
+                up = false;
+            }
+            else if (event.keyCode === 83) {
+                down = false;
+            }
+            else if (event.keyCode === 65) {
+                left = false;
+            }
+            else if (event.keyCode === 68) {
+                right = false;
+            }
+        }
+        document.onkeyup = releaseKey;
+
+
+        // track mouse change and update location
+        var mx = 0;
+        var my = 0;
+        var lmx = 0;
+        var lmy = 0;
+        function saveMouse() {
+            dx = event.clientX - lmx;
+            dy = event.clientY - lmy;
+            lmx = event.clientX;
+            lmy = event.clientY;
+            if (mouseDown) {
+                mx = mx + dx;
+                my = my + dy;
+            }
+        }
+        document.onmousemove = saveMouse;
+
+        // track camera movement on z axis
+        var cz = 100;
+        function saveCamera() {
+            cz += event.deltaY/5;
+        }
+        document.onwheel = saveCamera;
+
+        // track if in viewing mode
+        var lookingMode = false;
+
+        // function that actually adds new lines to the scene
+        const colorSet = ["#ff71ce", "#01cdfe", "#05ffa1", "#b967ff", "#fffb96", "#0000ff", "#ff0000", "#00ff00"];
+        function addPoints() {
+            if (!lookingMode) {
+                maxx = window.innerWidth;
+                maxy = window.innerHeight;
+                maxz = window.innerWidth;
+                newP = new THREE.Vector3(Math.floor(Math.random() * Math.floor(maxx)), Math.floor(Math.random() * Math.floor(maxy)), Math.floor(Math.random() * Math.floor(maxz)));
+                points.push(newP);
+
+                geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+
+                // newColor = "#" + ((1<<24)*Math.random() | 0).toString(16)
+                newColor = colorSet[Math.floor(Math.random() * colorSet.length)];
+                material = new THREE.LineBasicMaterial( { color: newColor } );
+
+                line = new THREE.Line( geometry, material );
+                scene.add( line );
+            }
+        }
+        document.onclick = addPoints;
+
+
+        // toggle viewing mode
+        function toggleView() {
+            lookingMode = !lookingMode;
+            resetCamera();
+            if (!lookingMode) {
+                document.getElementById("viewButton").innerText = "Press to start view mode";
+            }
+            else {
+                document.getElementById("viewButton").innerText = "Press to return to edit mode";
+
+            }
+        }
+
+        // reset the camera on button press
+        function resetCamera() {
+            camera.position.set(0, 0, 100);
+            cz = 100;
+            camera.lookAt(0, 0, 0);
+            mx = 0;
+            my = 0;
+        }
+
+
+        var direction = new THREE.Vector3;
+        var speed = 1.0;
+        // render scene
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // handle movement
+            if (up) {
+                camera.getWorldDirection(direction);
+                camera.position.addScaledVector(direction, speed);
+            }
+            if (down) {
+                camera.getWorldDirection(direction);
+                camera.position.addScaledVector(direction, -speed);
+            }
+
+            
+            // handle rotation
+            if (lookingMode) {
+                camera.rotation.y = mx/250;
+                camera.rotation.x = my/250;
+            }
+            else {
+                if (left) {
+                    camera.rotation.y += Math.PI/90;
+                }
+                if (right) {
+                    camera.rotation.y -= Math.PI/90;
+                }
+                line.rotation.y = mx/250;
+                line.rotation.x = my/100;
+            }
+
+            // renderer.render(scene, camera);
+            composer.render();
+        }
+        animate();
+
+    </script>
+    <button type = "button" onclick="toggleView();" id="viewButton">Press to start view mode</button>    
+    <button type = "button" onclick="resetCamera();" id="resetButton">Reset camera</button>
+
+    <div id = "controls">
+        <div id = "controlsHead">
+            <h4>Controls (hover to expand)</h4>
+        </div>
+        <div id = "controlsMain">
+            <p>Move forward: w (hold)</p>
+            <p>Move backward: s (hold)</p>
+            <p>Edit mode:</p>
+            <p>&emsp; Place line: click + drag, release to place line</p>
+            <p>&emsp; Rotate camera: a/d</p>
+            <p>View mode:</p>
+            <p>&emsp; Look around: click + drag</p>
+
+        </div>
+    </div>
+
+</body>
+</html>

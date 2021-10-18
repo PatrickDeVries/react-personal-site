@@ -3,8 +3,8 @@ import Document, { Head, Html, Main, NextScript } from 'next/document';
 import styled, { ServerStyleSheet } from 'styled-components';
 
 const Body = styled.body`
-  height: 100vh;
-  width: 100vw;
+  min-height: 100vh;
+  min-width: 100vw;
 `;
 
 export default class MyDocument extends Document {
