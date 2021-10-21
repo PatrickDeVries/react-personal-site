@@ -1,6 +1,6 @@
 module.exports = {
   reactStrictMode: true,
   rewrites: async () => [
-    { source: '/lasers', destination: '/pages/api/static/lasers/index.js' },
+    { source: '/static/lasers/index.html', destination: '/pages/api/static/lasers/index.js' },
   ],
 };

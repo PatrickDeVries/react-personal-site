@@ -1,60 +1,44 @@
-// import { Card } from '@headstorm/foundry-react-ui'
-import Head from 'next/head';
-// import Image from 'next/image'
-import { MainNavigation } from '../components';
+import Link from 'next/link';
+import { Layout } from '../components';
 import { Text } from '@headstorm/foundry-react-ui';
 import styled from 'styled-components';
 import myColors from '../styles/myColors';
 import React from 'react';
-import myWork from '../resources/myWork';
-import WorkCard from '../components/WorkCard';
 
-const HomeDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-`;
-
-const Body = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: fit-content;
+const GreetingBlock = styled.div`
+  margin-top: 100%;
+  filter: drop-shadow(0 0 4rem ${myColors.primary});
 `;
 
 const IntroText = styled(Text.Container)`
   display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 1rem;
+  text-align: center;
 `;
 
-const WorkItems = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+const CenteredA = styled.a`
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 `;
 
 export default function Home() {
   return (
-    <HomeDiv>
-      <link rel="preload" href="public/fonts/neon_pixel-7.ttf" as="font" crossOrigin="" />
-      <Head>
-        <title>Patrick DeVries</title>
-      </Head>
-      <MainNavigation />
-      <Body>
+    <Layout>
+      <GreetingBlock>
         <Text color="white" StyledContainer={IntroText} size="2rem">
-          Hello, I'm Patrick
+          Welcome to my website
         </Text>
-        <Text color={myColors.primary} StyledContainer={IntroText}>
-          Check out my projects:
-        </Text>
-
-        <WorkItems>
-          {myWork.map(item => (
-            <WorkCard key={item.header} item={item} />
-          ))}
-        </WorkItems>
-      </Body>
-    </HomeDiv>
+        <Link href="/work" passHref={true}>
+          <CenteredA>
+            <Text color={myColors.primary} StyledContainer={IntroText}>
+              Check out my projects
+            </Text>
+          </CenteredA>
+        </Link>
+      </GreetingBlock>
+    </Layout>
   );
 }

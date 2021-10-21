@@ -9,14 +9,15 @@ const StyledCard = styled(Card.Container)`
   margin: 1rem;
   background-color: ${myColors.backgroundHighlight};
   width: fit-content;
-  @media (min-width: 600px) {
-    max-width: 30vw;
-    height: 40vh;
+  align-self: stretch;
+  @media (min-width: 800px) {
+    max-width: 40vw;
+    min-height: 40vh;
   }
-  @media (max-width: 599px) {
+  @media (max-width: 799px) {
     width: 90vw;
-    height: fit-content;
   }
+  outline: 2px solid ${myColors.strongHighlight};
 `;
 
 const BodySection = styled.div`
@@ -54,15 +55,18 @@ interface WorkCardProps {
 const WorkCard = ({ item }: WorkCardProps) => {
   return (
     <Link href={item?.page || item?.href}>
-      {/* <a href={item?.href} target="_blank"> */}
       <Card
         StyledContainer={StyledCard}
-        header={<Text color={myColors.primary}>{item.header}</Text>}
+        header={
+          <Text size="1.25rem" color={myColors.primary}>
+            {item.header}
+          </Text>
+        }
         footer={
           <TagSection>
             {item.tags.map(tagText => (
               <Tag key={tagText} variant={variants.outline} color={myColors.primary}>
-                <Text size=".75rem">{tagText}</Text>
+                <Text size="1rem">{tagText}</Text>
               </Tag>
             ))}
           </TagSection>
