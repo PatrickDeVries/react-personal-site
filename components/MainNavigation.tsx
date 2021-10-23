@@ -78,6 +78,7 @@ const MainNavigation = () => {
       onClick: () => {
         router.push('/');
         setSelected(0);
+        setExpanded(false);
       },
     },
     {
@@ -85,6 +86,7 @@ const MainNavigation = () => {
       onClick: () => {
         router.push('/work');
         setSelected(1);
+        setExpanded(false);
       },
     },
     {
@@ -92,6 +94,7 @@ const MainNavigation = () => {
       onClick: () => {
         router.push('/contact');
         setSelected(2);
+        setExpanded(false);
       },
     },
     {
@@ -101,6 +104,7 @@ const MainNavigation = () => {
           'https://docs.google.com/document/d/1ShEG5LOTRDRSrXFYFUleTOYWL_tbf7We030Vdn3cPv0/edit?usp=sharing',
         );
         setSelected(3);
+        setExpanded(false);
       },
     },
   ];
