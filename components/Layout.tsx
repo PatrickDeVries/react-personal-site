@@ -25,6 +25,7 @@ const Body = styled.div`
   justify-content: center;
   align-items: flex-start;
   height: fit-content;
+  padding-bottom: 5rem;
 `;
 
 const Layout = props => (
