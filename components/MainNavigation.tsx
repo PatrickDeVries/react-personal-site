@@ -79,14 +79,14 @@ const pages = {
   'My Work': '/work',
   'Contact Me': '/contact',
   Résumé:
-    'https://media-exp1.licdn.com/dms/document/C4E2DAQHCFUhb3AZYAA/profile-treasury-document-pdf-analyzed/0/1612393403952?e=1634878800&v=beta&t=h57kKXP43wP3HJhmKmdOWmvU4_L9wEgxKwJKdY4-m0I',
+    'https://docs.google.com/document/d/1ShEG5LOTRDRSrXFYFUleTOYWL_tbf7We030Vdn3cPv0/edit?usp=sharing',
 };
 
 const MainNavigation = () => {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   console.log(setTheme);
-  const [dark, setDark] = React.useState<boolean>(true);
+  const [dark, setDark] = React.useState<boolean>(false);
 
   return (
     <NavDiv>
