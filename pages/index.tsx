@@ -33,8 +33,8 @@ export default function Home() {
   const dimensions = useWindowDimensions();
 
   const { theme } = useTheme();
-  const [xVelocity, setxVelocity] = React.useState(0.01);
-  const [yVelocity, setyVelocity] = React.useState(0.01);
+  // const [xVelocity, setxVelocity] = React.useState(0.01);
+  // const [yVelocity, setyVelocity] = React.useState(0.01);
 
   // === THREE.JS CODE START ===
   useEffect(() => {
@@ -49,26 +49,29 @@ export default function Home() {
     var cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
     camera.position.z = 5;
+    // var xVelocity = 0.01;
 
     var width = dimensions.width,
       height = dimensions.height;
     var widthHalf = width / 2,
       heightHalf = height / 2;
+    var velocity = { x: 0.03, y: 0.02 };
 
     var animate = function () {
       requestAnimationFrame(animate);
       cube.rotation.x += 0.01;
       cube.rotation.y += 0.01;
-      cube.position.x += xVelocity;
+      cube.position.x += velocity.x;
+      cube.position.y += velocity.y;
       var pos = cube.position.clone();
       pos.project(camera);
       pos.x = pos.x * widthHalf + widthHalf;
       pos.y = -(pos.y * heightHalf) + heightHalf;
-      if (pos.x > widthHalf) {
-        setxVelocity(-0.01);
+      if (pos.x > width || pos.x < 0) {
+        velocity.x *= -1;
       }
-      if (cube.position.x < 0) {
-        setxVelocity(0.01);
+      if (pos.y > height || pos.y < 0) {
+        velocity.y *= -1;
       }
       renderer.render(scene, camera);
     };
