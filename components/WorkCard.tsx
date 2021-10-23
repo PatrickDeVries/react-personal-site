@@ -59,7 +59,6 @@ interface WorkCardProps {
 
 const WorkCard = ({ item }: WorkCardProps) => {
   const { theme } = useTheme();
-
   return (
     <Card
       StyledContainer={StyledCard}

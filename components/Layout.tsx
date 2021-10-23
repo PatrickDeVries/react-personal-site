@@ -63,7 +63,6 @@ const Layout = props => {
         },
       };
       cubes.push(cube);
-      console.log(cube);
       scene.add(cube);
     }
     camera.position.z = 5;
