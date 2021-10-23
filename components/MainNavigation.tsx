@@ -118,9 +118,13 @@ const MainNavigation = () => {
       StyledNavButton={NavTag}
       activeButton={selected}
       header={
-        <Text size="1.5rem" color={theme.secondary}>
-          <Name>Patrick DeVries</Name>
-        </Text>
+        <Link href="/" passHref={true}>
+          <a>
+            <Text size="1.5rem" color={theme.secondary}>
+              <Name>Patrick DeVries</Name>
+            </Text>
+          </a>
+        </Link>
       }
       hideBody={isBreakpoint && !expanded}
       bodyBelow={isBreakpoint}
