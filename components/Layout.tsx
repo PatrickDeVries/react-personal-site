@@ -19,6 +19,12 @@ const HomeDiv = styled.div`
   }}
 `;
 
+const Canvas = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+`;
+
 const Body = styled.div`
   display: flex;
   flex-direction: column;
@@ -34,6 +40,7 @@ const Layout = props => (
       <title>Patrick DeVries</title>
     </Head>
     <MainNavigation />
+    <Canvas id="canvas" />
     <Body>{props.children}</Body>
   </HomeDiv>
 );
