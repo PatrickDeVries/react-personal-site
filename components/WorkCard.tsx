@@ -61,34 +61,38 @@ const WorkCard = ({ item }: WorkCardProps) => {
   const { theme } = useTheme();
 
   return (
-    <Link href={item?.page || item?.href} passHref={false}>
-      {/* <a> */}
-      <Card
-        StyledContainer={StyledCard}
-        header={
-          <Text size="1.25rem" color={theme.primary}>
-            {item.header}
-          </Text>
-        }
-        footer={
-          <TagSection>
-            {item.tags.map(tagText => (
-              <Tag key={tagText} variant={variants.outline} color={theme.secondary}>
-                <Text size="1rem">{tagText}</Text>
-              </Tag>
-            ))}
-          </TagSection>
-        }
-      >
-        <BodySection>
-          <ScalingImg src={item.image} />
-          <Text color={theme.text} StyledContainer={BodyText}>
-            {item.description}
-          </Text>
-        </BodySection>
-      </Card>
-      {/* </a> */}
-    </Link>
+    <Card
+      StyledContainer={StyledCard}
+      header={
+        <Link href={item?.page || item?.href} passHref={true}>
+          <a>
+            <Text size="1.25rem" color={theme.primary}>
+              {item.header}
+            </Text>
+          </a>
+        </Link>
+      }
+      footer={
+        <TagSection>
+          {item.tags.map(tagText => (
+            <Tag key={tagText} variant={variants.outline} color={theme.secondary}>
+              <Text size="1rem">{tagText}</Text>
+            </Tag>
+          ))}
+        </TagSection>
+      }
+    >
+      <Link href={item?.page || item?.href} passHref={true}>
+        <a>
+          <BodySection>
+            <ScalingImg src={item.image} />
+            <Text color={theme.text} StyledContainer={BodyText}>
+              {item.description}
+            </Text>
+          </BodySection>
+        </a>
+      </Link>
+    </Card>
   );
 };
 

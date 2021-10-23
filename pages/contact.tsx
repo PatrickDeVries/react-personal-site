@@ -76,9 +76,11 @@ const Contact = () => {
         {socials.map(social => (
           <SocialLink key={social.site}>
             <Link href={social.href} passHref={true}>
-              <SocialImage>
-                <Icon path={social.src} size="10rem" color={theme.primary} />
-              </SocialImage>
+              <a>
+                <SocialImage>
+                  <Icon path={social.src} size="10rem" color={theme.primary} />
+                </SocialImage>
+              </a>
             </Link>
             <Text size=".75rem" color={theme.primary}>
               {social.text}
