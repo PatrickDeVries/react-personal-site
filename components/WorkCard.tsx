@@ -61,7 +61,7 @@ const WorkCard = ({ item }: WorkCardProps) => {
   const { theme } = useTheme();
 
   return (
-    <Link href={item?.page || item?.href} passHref={true}>
+    <Link href={item?.page || item?.href} passHref={false}>
       {/* <a> */}
       <Card
         StyledContainer={StyledCard}

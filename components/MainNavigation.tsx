@@ -67,7 +67,6 @@ const useMediaQuery = width => {
 const MainNavigation = () => {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
-  console.log(setTheme);
   const [dark, setDark] = React.useState<boolean>(false);
   const [expanded, setExpanded] = React.useState<boolean>(false);
   const [selected, setSelected] = React.useState<number>(0);
