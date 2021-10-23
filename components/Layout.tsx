@@ -2,12 +2,20 @@ import React from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
 import { MainNavigation } from '.';
+import { useTheme } from './ThemeContext';
 
 const HomeDiv = styled.div`
+  ${() => {
+    const { theme } = useTheme();
+    return `
+  background-repeat: no-repeat;
+  background-image: linear-gradient(168deg, ${theme.background}, ${theme.strongHighlight});
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
+  `;
+  }}
 `;
 
 const Body = styled.div`
@@ -20,7 +28,6 @@ const Body = styled.div`
 
 const Layout = props => (
   <HomeDiv>
-    <link rel="preload" href="public/fonts/neon_pixel-7.ttf" as="font" crossOrigin="" />
     <Head>
       <title>Patrick DeVries</title>
     </Head>

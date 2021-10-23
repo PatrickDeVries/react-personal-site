@@ -2,12 +2,16 @@ import Link from 'next/link';
 import { Layout } from '../components';
 import { Text } from '@headstorm/foundry-react-ui';
 import styled from 'styled-components';
-import myColors from '../styles/myColors';
 import React from 'react';
+import { useTheme } from '../components/ThemeContext';
 
 const GreetingBlock = styled.div`
-  margin-top: 100%;
-  filter: drop-shadow(0 0 4rem ${myColors.primary});
+  ${() => {
+    const { theme } = useTheme();
+    return `
+      margin-top: 100%;
+      filter: drop-shadow(0 0 4rem ${theme.primary});`;
+  }}
 `;
 
 const IntroText = styled(Text.Container)`
@@ -25,15 +29,17 @@ const CenteredA = styled.a`
 `;
 
 export default function Home() {
+  const { theme } = useTheme();
+
   return (
     <Layout>
       <GreetingBlock>
-        <Text color="white" StyledContainer={IntroText} size="2rem">
+        <Text color={theme.text} StyledContainer={IntroText} size="2rem">
           Welcome to my website
         </Text>
         <Link href="/work" passHref={true}>
           <CenteredA>
-            <Text color={myColors.primary} StyledContainer={IntroText}>
+            <Text color={theme.primary} StyledContainer={IntroText}>
               Check out my projects
             </Text>
           </CenteredA>

@@ -1,10 +1,10 @@
 import React from 'react';
 import myWork from '../resources/myWork';
-import myColors from '../styles/myColors';
 import { Text } from '@headstorm/foundry-react-ui';
 import styled from 'styled-components';
 import WorkCard from '../components/WorkCard';
 import { Layout } from '../components';
+import { useTheme } from '../components/ThemeContext';
 
 const SectionHeader = styled(Text.Container)`
   display: block;
@@ -21,11 +21,12 @@ const WorkItems = styled.div`
 `;
 
 const Work = () => {
+  const { theme } = useTheme();
   return (
     <Layout>
       {Object.keys(myWork).map(key => (
         <>
-          <Text color={myColors.secondary} size="1.25rem" StyledContainer={SectionHeader}>
+          <Text color={theme.primary} size="1.25rem" StyledContainer={SectionHeader}>
             {key}:
           </Text>
           <WorkItems>

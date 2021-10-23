@@ -1,6 +1,5 @@
 import React from 'react';
 import myWork from '../resources/myWork';
-import myColors from '../styles/myColors';
 import { Text } from '@headstorm/foundry-react-ui';
 import styled from 'styled-components';
 import WorkCard from '../components/WorkCard';
@@ -8,6 +7,7 @@ import { Layout } from '../components';
 import Link from 'next/link';
 import Icon from '@mdi/react';
 import { mdiLinkedin, mdiGithub, mdiEmail, mdiPhone, mdiMessage } from '@mdi/js';
+import { useTheme } from '../components/ThemeContext';
 
 const ContactText = styled(Text.Container)`
   margin-top: 20%;
@@ -69,9 +69,10 @@ const socials: Social[] = [
 ];
 
 const Contact = () => {
+  const { theme } = useTheme();
   return (
     <Layout>
-      <Text size="2rem" color={myColors.primary} StyledContainer={ContactText}>
+      <Text size="2rem" color={theme.primary} StyledContainer={ContactText}>
         Contact me:
       </Text>
       <SocialLinks>
@@ -79,10 +80,10 @@ const Contact = () => {
           <SocialLink key={social.site}>
             <Link href={social.href} passHref={true}>
               <SocialImage>
-                <Icon path={social.src} size="10rem" color={myColors.primary} />
+                <Icon path={social.src} size="10rem" color={theme.primary} />
               </SocialImage>
             </Link>
-            <Text size=".75rem" color={myColors.primary}>
+            <Text size=".75rem" color={theme.primary}>
               {social.text}
             </Text>
           </SocialLink>

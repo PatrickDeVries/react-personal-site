@@ -33,7 +33,7 @@ const myWork: Record<string, workItem[]> = {
       description:
         'An open-source React library of reusable styled components. I have contributed additions to the provider and multiple components. This library is also what I used to build this website.',
       tags: ['TypeScript', 'React', 'CSS', 'Styled Components', 'Open Source'],
-      href: 'https://github.com/Headstorm/foundry-ui',
+      href: 'https://github.com/Headstorm/foundry-ui/pulls?q=is%3Apr+author%3APatrickDeVries',
     },
     {
       header: 'Joker Cord',
