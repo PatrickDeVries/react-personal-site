@@ -15,6 +15,7 @@ const HomeDiv = styled.div`
     align-items: center;
     min-height: 100vh;
     min-width: 100vw;
+    z-index: -5;
   `;
   }}
 `;
@@ -23,6 +24,7 @@ const Canvas = styled.div`
   position: fixed;
   top: 0;
   left: 0;
+  // z-index: -1;
 `;
 
 const Body = styled.div`
@@ -32,6 +34,7 @@ const Body = styled.div`
   align-items: flex-start;
   height: fit-content;
   padding-bottom: 5rem;
+  z-index: 5;
 `;
 
 const Layout = props => (

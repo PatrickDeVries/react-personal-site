@@ -31,10 +31,8 @@ const CenteredA = styled.a`
 
 export default function Home() {
   const dimensions = useWindowDimensions();
-
+  const [firstRender, setFirstRender] = React.useState(true);
   const { theme } = useTheme();
-  // const [xVelocity, setxVelocity] = React.useState(0.01);
-  // const [yVelocity, setyVelocity] = React.useState(0.01);
 
   // === THREE.JS CODE START ===
   useEffect(() => {
@@ -45,38 +43,64 @@ export default function Home() {
     renderer.setClearColor(0x000000, 0);
     document.getElementById('canvas').appendChild(renderer.domElement);
     var geometry = new THREE.BoxGeometry(1, 1, 1);
-    var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-    var cube = new THREE.Mesh(geometry, material);
-    scene.add(cube);
+    var material = new THREE.MeshBasicMaterial({ color: theme.strongHighlight });
+    var cubes = [];
+    for (let i = 0; i < 10; i++) {
+      var cube = new THREE.Mesh(geometry, material);
+      cube.userData = {
+        v: {
+          x: (Math.random() % 0.1) - 0.05,
+          y: (Math.random() % 0.2) - 0.1,
+          z: (Math.random() % 0.2) - 0.1,
+        },
+      };
+      cubes.push(cube);
+      console.log(cube);
+      scene.add(cube);
+    }
     camera.position.z = 5;
-    // var xVelocity = 0.01;
-
-    var width = dimensions.width,
-      height = dimensions.height;
-    var widthHalf = width / 2,
-      heightHalf = height / 2;
-    var velocity = { x: 0.03, y: 0.02 };
 
     var animate = function () {
+      var width = dimensions.width,
+        height = dimensions.height;
+      var widthHalf = width / 2,
+        heightHalf = height / 2;
+      if (renderer.width !== dimensions.width || renderer.height !== dimensions.height) {
+        renderer.setSize(dimensions.width, dimensions.height);
+      }
+
       requestAnimationFrame(animate);
-      cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
-      cube.position.x += velocity.x;
-      cube.position.y += velocity.y;
-      var pos = cube.position.clone();
-      pos.project(camera);
-      pos.x = pos.x * widthHalf + widthHalf;
-      pos.y = -(pos.y * heightHalf) + heightHalf;
-      if (pos.x > width || pos.x < 0) {
-        velocity.x *= -1;
-      }
-      if (pos.y > height || pos.y < 0) {
-        velocity.y *= -1;
-      }
+
+      cubes.forEach(cube => {
+        cube.position.x += cube.userData.v.x;
+        cube.position.y += cube.userData.v.y;
+        cube.lookAt(0, 0, 0);
+        // cube.position.z += velocity.z;
+
+        var pos = cube.position.clone();
+
+        pos.project(camera);
+        pos.x = pos.x * widthHalf + widthHalf;
+        pos.y = -(pos.y * heightHalf) + heightHalf;
+
+        if (pos.x > width || pos.x < 0) {
+          cube.userData.v.x *= -1;
+        }
+        if (pos.y > height || pos.y < 0) {
+          cube.userData.v.y *= -1;
+        }
+      });
+      // cube.rotation.x += 0.01;
+      // cube.rotation.y += 0.01;
+
+      // if (cube.position.z > 1 || cube.position.z < -2) {
+      //   velocity.z *= -1;
+      // }
+
       renderer.render(scene, camera);
     };
     animate();
-  });
+  }, [dimensions]);
 
   return (
     <>

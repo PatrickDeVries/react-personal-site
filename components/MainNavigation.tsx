@@ -18,6 +18,7 @@ const NavDiv = styled(MainNavigationF.Container)`
       background-color: ${theme.backgroundHighlight};
       color: ${theme.text};
       border-bottom: 1px solid ${theme.primary};
+      z-index: 5;
     `;
   }}
 `;
