@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { Layout } from '../components';
 import { Text } from '@headstorm/foundry-react-ui';
 import styled from 'styled-components';
 import React from 'react';
@@ -32,7 +31,7 @@ export default function Home() {
   const { theme } = useTheme();
 
   return (
-    <Layout>
+    <>
       <GreetingBlock>
         <Text color={theme.text} StyledContainer={IntroText} size="2rem">
           Welcome to my website
@@ -45,6 +44,6 @@ export default function Home() {
           </CenteredA>
         </Link>
       </GreetingBlock>
-    </Layout>
+    </>
   );
 }

@@ -3,41 +3,23 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/dist/client/router';
 import Icon from '@mdi/react';
-import { mdiThemeLightDark } from '@mdi/js';
-import React from 'react';
-import { ThemeProvider, useTheme } from './ThemeContext';
+import { mdiHamburger, mdiMenu, mdiThemeLightDark } from '@mdi/js';
+import React, { useCallback } from 'react';
+import { useTheme } from './ThemeContext';
 import { darkColors, lightColors } from '../styles/myColors';
 import { darken, lighten } from 'polished';
+import MainNavigationF, { MainNavigationFProps, NavButton } from './MainNavigationF';
+import { useState, useEffect } from 'react';
 
-const NavDiv = styled.div`
+const NavDiv = styled(MainNavigationF.Container)`
   ${() => {
     const { theme } = useTheme();
     return `
-      width: 100%;
-      height: 3rem;
-      display: flex;
-      align-items: center;
       background-color: ${theme.backgroundHighlight};
       color: ${theme.text};
       border-bottom: 1px solid ${theme.primary};
     `;
   }}
-`;
-
-const Header = styled.div`
-  ${() => {
-    const { theme } = useTheme();
-    return `
-      left: auto;
-      margin-left: 2rem;
-      filter: drop-shadow(0 0 0.75rem ${theme.secondary});
-  `;
-  }}
-`;
-
-const Footer = styled.div`
-  margin-left: auto;
-  margin-right: 1rem;
 `;
 
 const NavSection = styled.div`
@@ -48,38 +30,38 @@ const NavSection = styled.div`
   justify-content: stretch;
 `;
 
-const NavTag = styled(Tag.Container)`
-  ${({ color }: { color: string }) => {
-    const { theme } = useTheme();
-    return `
-      outline: 1px solid ${theme.primary};
-      height: 100%;
-      border-radius: 0 0 0 0;
-      &:hover {
-        background-color: ${
-          color !== '#0000'
-            ? theme.name === 'light'
-              ? darken(0.1, color)
-              : lighten(0.1, color)
-            : theme.name === 'light'
-            ? 'rgba(0, 0, 0, 0.05)'
-            : 'rgba(256, 256, 256, 0.05)'
-        };
-      }
-  `;
-  }}
+const NavTag = styled(MainNavigationF.NavButtonContainer)`
+  padding: 1rem;
 `;
 
 const Name = styled.span`
   white-space: nowrap;
 `;
 
-const pages = {
-  Home: '/',
-  'My Work': '/work',
-  'Contact Me': '/contact',
-  Résumé:
-    'https://docs.google.com/document/d/1ShEG5LOTRDRSrXFYFUleTOYWL_tbf7We030Vdn3cPv0/edit?usp=sharing',
+const useMediaQuery = width => {
+  const [targetReached, setTargetReached] = useState(false);
+
+  const updateTarget = useCallback(e => {
+    if (e.matches) {
+      setTargetReached(true);
+    } else {
+      setTargetReached(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const media = window.matchMedia(`(max-width: ${width}px)`);
+    media.addListener(updateTarget);
+
+    // Check on mount (callback is not called until a change occurs)
+    if (media.matches) {
+      setTargetReached(true);
+    }
+
+    return () => media.removeListener(updateTarget);
+  }, []);
+
+  return targetReached;
 };
 
 const MainNavigation = () => {
@@ -87,48 +69,88 @@ const MainNavigation = () => {
   const { theme, setTheme } = useTheme();
   console.log(setTheme);
   const [dark, setDark] = React.useState<boolean>(false);
+  const [expanded, setExpanded] = React.useState<boolean>(false);
+  const [selected, setSelected] = React.useState<number>(0);
+
+  const navLinks: NavButton[] = [
+    {
+      label: 'Home',
+      onClick: () => {
+        router.push('/');
+        setSelected(0);
+      },
+    },
+    {
+      label: 'My Work',
+      onClick: () => {
+        router.push('/work');
+        setSelected(1);
+      },
+    },
+    {
+      label: 'Contact Me',
+      onClick: () => {
+        router.push('/contact');
+        setSelected(2);
+      },
+    },
+    {
+      label: 'Résumé',
+      onClick: () => {
+        router.push(
+          'https://docs.google.com/document/d/1ShEG5LOTRDRSrXFYFUleTOYWL_tbf7We030Vdn3cPv0/edit?usp=sharing',
+        );
+        setSelected(3);
+      },
+    },
+  ];
+
+  const isBreakpoint = useMediaQuery(800);
 
   return (
-    <NavDiv>
-      <Header>
+    <MainNavigationF
+      color={theme.backgroundHighlight}
+      StyledContainer={NavDiv}
+      navButtons={navLinks}
+      StyledNavButton={NavTag}
+      activeButton={selected}
+      header={
         <Text size="1.5rem" color={theme.secondary}>
           <Name>Patrick DeVries</Name>
         </Text>
-      </Header>
-      <NavSection>
-        {Object.keys(pages).map(label => (
-          <Link href={pages[label]} key={label}>
-            <a>
-              <Tag
-                color={router.pathname === pages[label] ? theme.strongHighlight : '#0000'}
-                variant={variants.fill}
-                StyledContainer={NavTag}
-                containerProps={{
-                  color: router.pathname === pages[label] ? theme.strongHighlight : '#0000',
-                }}
-              >
-                <Text color={theme.text}>{label}</Text>
-              </Tag>
-            </a>
-          </Link>
-        ))}
-      </NavSection>
-      <Footer>
-        <Button
-          color="#0000"
-          onClick={() => {
-            setDark(!dark);
-            if (dark) {
-              setTheme(darkColors);
-            } else {
-              setTheme(lightColors);
-            }
-          }}
-        >
-          <Icon path={mdiThemeLightDark} size="1.5rem" color={theme.secondary} />
-        </Button>
-      </Footer>
-    </NavDiv>
+      }
+      hideBody={isBreakpoint && !expanded}
+      bodyBelow={isBreakpoint}
+      footer={
+        <>
+          <Button
+            color="#0000"
+            onClick={() => {
+              setDark(!dark);
+              if (dark) {
+                setTheme(darkColors);
+              } else {
+                setTheme(lightColors);
+              }
+            }}
+          >
+            <Icon path={mdiThemeLightDark} size="1.5rem" color={theme.secondary} />
+          </Button>
+          {isBreakpoint ? (
+            <Button
+              color="#0000"
+              onClick={() => {
+                setExpanded(!expanded);
+              }}
+            >
+              <Icon path={mdiMenu} size="1.5rem" color={theme.secondary} />
+            </Button>
+          ) : (
+            ''
+          )}
+        </>
+      }
+    />
   );
 };
 

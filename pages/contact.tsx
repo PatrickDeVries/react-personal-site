@@ -1,9 +1,6 @@
 import React from 'react';
-import myWork from '../resources/myWork';
 import { Text } from '@headstorm/foundry-react-ui';
 import styled from 'styled-components';
-import WorkCard from '../components/WorkCard';
-import { Layout } from '../components';
 import Link from 'next/link';
 import Icon from '@mdi/react';
 import { mdiLinkedin, mdiGithub, mdiEmail, mdiPhone, mdiMessage } from '@mdi/js';
@@ -71,7 +68,7 @@ const socials: Social[] = [
 const Contact = () => {
   const { theme } = useTheme();
   return (
-    <Layout>
+    <>
       <Text size="2rem" color={theme.primary} StyledContainer={ContactText}>
         Contact me:
       </Text>
@@ -89,7 +86,7 @@ const Contact = () => {
           </SocialLink>
         ))}
       </SocialLinks>
-    </Layout>
+    </>
   );
 };
 

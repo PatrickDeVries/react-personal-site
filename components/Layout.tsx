@@ -8,12 +8,13 @@ const HomeDiv = styled.div`
   ${() => {
     const { theme } = useTheme();
     return `
-  background-repeat: no-repeat;
-  background-image: linear-gradient(168deg, ${theme.background}, ${theme.strongHighlight});
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(168deg, ${theme.background}, ${theme.strongHighlight});
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    min-width: 100vw;
   `;
   }}
 `;

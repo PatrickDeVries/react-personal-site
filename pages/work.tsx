@@ -3,7 +3,6 @@ import myWork from '../resources/myWork';
 import { Text } from '@headstorm/foundry-react-ui';
 import styled from 'styled-components';
 import WorkCard from '../components/WorkCard';
-import { Layout } from '../components';
 import { useTheme } from '../components/ThemeContext';
 
 const SectionHeader = styled(Text.Container)`
@@ -23,7 +22,7 @@ const WorkItems = styled.div`
 const Work = () => {
   const { theme } = useTheme();
   return (
-    <Layout>
+    <>
       {Object.keys(myWork).map(key => (
         <>
           <Text color={theme.primary} size="1.25rem" StyledContainer={SectionHeader}>
@@ -36,7 +35,7 @@ const Work = () => {
           </WorkItems>
         </>
       ))}
-    </Layout>
+    </>
   );
 };
 
