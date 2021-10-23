@@ -70,7 +70,15 @@ const MainNavigation = () => {
   const { theme, setTheme } = useTheme();
   const [dark, setDark] = React.useState<boolean>(false);
   const [expanded, setExpanded] = React.useState<boolean>(false);
-  const [selected, setSelected] = React.useState<number>(0);
+  const [selected, setSelected] = React.useState<number>(
+    router.pathname === '/'
+      ? 0
+      : router.pathname === '/work'
+      ? 1
+      : router.pathname === '/contact'
+      ? 2
+      : 3,
+  );
 
   const navLinks: NavButton[] = [
     {
