@@ -5,6 +5,7 @@ import { MainNavigation } from '.';
 import { useTheme } from './ThemeContext';
 import * as THREE from 'three';
 import useWindowDimensions from './utils/UseWindowDimensions';
+import { Router, useRouter } from 'next/dist/client/router';
 
 const HomeDiv = styled.div`
   ${() => {
@@ -42,9 +43,15 @@ const Body = styled.div`
 const Layout = props => {
   const dimensions = useWindowDimensions();
   const { theme } = useTheme();
+  const { asPath } = useRouter();
 
   // === THREE.JS CODE START ===
   useEffect(() => {
+    var mouse = new THREE.Vector2(0, 0);
+    document.onmousemove = event => {
+      mouse.x = (event.clientX / dimensions.width) * 2 - 1;
+      mouse.y = -(event.clientY / dimensions.height) * 2 + 1;
+    };
     const particleCount = 5000;
     const particles = new THREE.BufferGeometry();
     const pMaterial = new THREE.PointsMaterial({
@@ -73,61 +80,32 @@ const Layout = props => {
     renderer.setSize(dimensions.width, dimensions.height);
     renderer.setClearColor(0x000000, 0);
     document.getElementById('canvas').appendChild(renderer.domElement);
-    var geometry = new THREE.BoxGeometry(1, 1, 1);
-    var material = new THREE.MeshBasicMaterial({ color: theme.strongHighlight });
-    // var cubes = [];
-    // for (let i = 0; i < 10; i++) {
-    //   var cube = new THREE.Mesh(geometry, material);
-    //   cube.userData = {
-    //     v: {
-    //       x: (Math.random() % 0.1) - 0.05,
-    //       y: (Math.random() % 0.2) - 0.1,
-    //       z: (Math.random() % 0.2) - 0.1,
-    //     },
-    //   };
-    //   cubes.push(cube);
-    //   scene.add(cube);
-    // }
+
     camera.position.z = 5;
     scene.add(particleSystem);
 
+    const clock = new THREE.Clock();
+
     var animate = function () {
-      particleSystem.rotation.y += 0.0005;
+      const time = clock.getElapsedTime();
+      particleSystem.rotation.y = 0.025 * time;
+      particleSystem.rotation.x = 0.01 * time;
+
+      if (mouse.x > -250 && asPath === '/') {
+        particleSystem.rotation.y = mouse.x + time * 0.025;
+        particleSystem.rotation.x = -mouse.y + time * 0.01;
+      }
       particleSystem.material.color.set(theme.secondary);
 
-      var width = dimensions.width,
-        height = dimensions.height;
-      var widthHalf = width / 2,
-        heightHalf = height / 2;
       if (renderer.width !== dimensions.width || renderer.height !== dimensions.height) {
         renderer.setSize(dimensions.width, dimensions.height);
       }
-
-      // cubes.forEach(cube => {
-      //   cube.material.color.set(theme.strongHighlight);
-      //   cube.position.x += cube.userData.v.x;
-      //   cube.position.y += cube.userData.v.y;
-      //   cube.lookAt(0, 0, 0);
-
-      //   var pos = cube.position.clone();
-
-      //   pos.project(camera);
-      //   pos.x = pos.x * widthHalf + widthHalf;
-      //   pos.y = -(pos.y * heightHalf) + heightHalf;
-
-      //   if (pos.x > width || pos.x < 0) {
-      //     cube.userData.v.x *= -1;
-      //   }
-      //   if (pos.y > height || pos.y < 0) {
-      //     cube.userData.v.y *= -1;
-      //   }
-      // });
 
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
     };
     animate();
-  }, [dimensions, theme]);
+  }, [asPath, dimensions, theme]);
 
   return (
     <HomeDiv>
