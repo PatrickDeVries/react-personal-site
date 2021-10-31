@@ -75,24 +75,24 @@ const Layout = props => {
     document.getElementById('canvas').appendChild(renderer.domElement);
     var geometry = new THREE.BoxGeometry(1, 1, 1);
     var material = new THREE.MeshBasicMaterial({ color: theme.strongHighlight });
-    var cubes = [];
-    for (let i = 0; i < 10; i++) {
-      var cube = new THREE.Mesh(geometry, material);
-      cube.userData = {
-        v: {
-          x: (Math.random() % 0.1) - 0.05,
-          y: (Math.random() % 0.2) - 0.1,
-          z: (Math.random() % 0.2) - 0.1,
-        },
-      };
-      cubes.push(cube);
-      scene.add(cube);
-    }
+    // var cubes = [];
+    // for (let i = 0; i < 10; i++) {
+    //   var cube = new THREE.Mesh(geometry, material);
+    //   cube.userData = {
+    //     v: {
+    //       x: (Math.random() % 0.1) - 0.05,
+    //       y: (Math.random() % 0.2) - 0.1,
+    //       z: (Math.random() % 0.2) - 0.1,
+    //     },
+    //   };
+    //   cubes.push(cube);
+    //   scene.add(cube);
+    // }
     camera.position.z = 5;
     scene.add(particleSystem);
 
     var animate = function () {
-      particleSystem.rotation.y += 0.001;
+      particleSystem.rotation.y += 0.0005;
       particleSystem.material.color.set(theme.secondary);
 
       var width = dimensions.width,
@@ -103,25 +103,25 @@ const Layout = props => {
         renderer.setSize(dimensions.width, dimensions.height);
       }
 
-      cubes.forEach(cube => {
-        cube.material.color.set(theme.strongHighlight);
-        cube.position.x += cube.userData.v.x;
-        cube.position.y += cube.userData.v.y;
-        cube.lookAt(0, 0, 0);
+      // cubes.forEach(cube => {
+      //   cube.material.color.set(theme.strongHighlight);
+      //   cube.position.x += cube.userData.v.x;
+      //   cube.position.y += cube.userData.v.y;
+      //   cube.lookAt(0, 0, 0);
 
-        var pos = cube.position.clone();
+      //   var pos = cube.position.clone();
 
-        pos.project(camera);
-        pos.x = pos.x * widthHalf + widthHalf;
-        pos.y = -(pos.y * heightHalf) + heightHalf;
+      //   pos.project(camera);
+      //   pos.x = pos.x * widthHalf + widthHalf;
+      //   pos.y = -(pos.y * heightHalf) + heightHalf;
 
-        if (pos.x > width || pos.x < 0) {
-          cube.userData.v.x *= -1;
-        }
-        if (pos.y > height || pos.y < 0) {
-          cube.userData.v.y *= -1;
-        }
-      });
+      //   if (pos.x > width || pos.x < 0) {
+      //     cube.userData.v.x *= -1;
+      //   }
+      //   if (pos.y > height || pos.y < 0) {
+      //     cube.userData.v.y *= -1;
+      //   }
+      // });
 
       renderer.render(scene, camera);
       requestAnimationFrame(animate);
