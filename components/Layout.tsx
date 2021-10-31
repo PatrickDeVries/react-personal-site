@@ -42,8 +42,31 @@ const Body = styled.div`
 const Layout = props => {
   const dimensions = useWindowDimensions();
   const { theme } = useTheme();
+
   // === THREE.JS CODE START ===
   useEffect(() => {
+    const particleCount = 5000;
+    const particles = new THREE.BufferGeometry();
+    const pMaterial = new THREE.PointsMaterial({
+      color: theme.secondary,
+      map: new THREE.TextureLoader().load('/particle.png'),
+      blending: THREE.AdditiveBlending,
+      // transparent: true,
+    });
+
+    const positions = [];
+    for (let i = 0; i < particleCount; i++) {
+      positions.push(
+        Math.random() * 500 - 250,
+        Math.random() * 500 - 250,
+        Math.random() * 500 - 250,
+      );
+    }
+    particles.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+
+    const particleSystem = new THREE.Points(particles, pMaterial);
+    particleSystem.sortParticles = true;
+
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera(75, dimensions.width / dimensions.height, 0.1, 1000);
     var renderer = new THREE.WebGLRenderer({ alpha: true });
@@ -66,8 +89,12 @@ const Layout = props => {
       scene.add(cube);
     }
     camera.position.z = 5;
+    scene.add(particleSystem);
 
     var animate = function () {
+      particleSystem.rotation.y += 0.001;
+      particleSystem.material.color.set(theme.secondary);
+
       var width = dimensions.width,
         height = dimensions.height;
       var widthHalf = width / 2,
@@ -76,13 +103,11 @@ const Layout = props => {
         renderer.setSize(dimensions.width, dimensions.height);
       }
 
-      requestAnimationFrame(animate);
-
       cubes.forEach(cube => {
+        cube.material.color.set(theme.strongHighlight);
         cube.position.x += cube.userData.v.x;
         cube.position.y += cube.userData.v.y;
         cube.lookAt(0, 0, 0);
-        // cube.position.z += velocity.z;
 
         var pos = cube.position.clone();
 
@@ -97,17 +122,12 @@ const Layout = props => {
           cube.userData.v.y *= -1;
         }
       });
-      // cube.rotation.x += 0.01;
-      // cube.rotation.y += 0.01;
-
-      // if (cube.position.z > 1 || cube.position.z < -2) {
-      //   velocity.z *= -1;
-      // }
 
       renderer.render(scene, camera);
+      requestAnimationFrame(animate);
     };
     animate();
-  }, [dimensions, theme.strongHighlight]);
+  }, [dimensions, theme]);
 
   return (
     <HomeDiv>

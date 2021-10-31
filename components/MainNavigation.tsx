@@ -68,7 +68,6 @@ const useMediaQuery = width => {
 const MainNavigation = () => {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
-  const [dark, setDark] = React.useState<boolean>(false);
   const [expanded, setExpanded] = React.useState<boolean>(false);
   const [selected, setSelected] = React.useState<number>(
     router.pathname === '/'
@@ -142,8 +141,7 @@ const MainNavigation = () => {
           <Button
             color="#0000"
             onClick={() => {
-              setDark(!dark);
-              if (dark) {
+              if (theme.name === 'light') {
                 setTheme(darkColors);
               } else {
                 setTheme(lightColors);
