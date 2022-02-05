@@ -1,8 +1,7 @@
-import React, { ReactNode } from 'react';
-import styled from 'styled-components';
-import { darken, readableColor } from 'polished';
-import { Button, Text, variants, useTheme, colors } from '@headstorm/foundry-react-ui';
-import { StyledComponentBase } from 'styled-components';
+import { Button, colors, Text, useTheme, variants } from '@headstorm/foundry-react-ui'
+import { darken, readableColor } from 'polished'
+import React, { ReactNode } from 'react'
+import styled, { StyledComponentBase } from 'styled-components'
 
 /**
  * Get the appropriate font color for the button based on the variant of button
@@ -18,10 +17,10 @@ export const getFontColorFromVariant = (
   darkReturnColor: string = colors.grayDark,
 ) => {
   if (variant === 'fill') {
-    return readableColor(color, lightReturnColor, darkReturnColor, true);
+    return readableColor(color, lightReturnColor, darkReturnColor, true)
   }
-  return color;
-};
+  return color
+}
 
 /**
  * Get the appropriate background color for the button based on the variant of button
@@ -37,11 +36,11 @@ export const getBackgroundColorFromVariant = (
   switch (variant) {
     case variants.text:
     case variants.outline:
-      return transparentColor;
+      return transparentColor
     default:
-      return color;
+      return color
   }
-};
+}
 
 /**
  * Returns a filter for grayscale with contrast and brightness parameters.
@@ -51,22 +50,22 @@ export const disabledStyles = ({
   contrast = 0.5,
   brightness = 1.2,
 }: {
-  grayscale?: number;
-  contrast?: number;
-  brightness?: number;
+  grayscale?: number
+  contrast?: number
+  brightness?: number
 } = {}) => `
     filter: grayscale(${grayscale}) contrast(${contrast}) brightness(${brightness});
     pointer-events: none;
-  `;
+  `
 
-export type SubcomponentPropsType = Record<string, unknown>;
-export type StyledSubcomponentType = string & StyledComponentBase<any, SubcomponentPropsType>;
+export type SubcomponentPropsType = Record<string, unknown>
+export type StyledSubcomponentType = string & StyledComponentBase<any, SubcomponentPropsType>
 
 export type HideAnimationPropType = {
-  length?: number;
-  origin?: string;
-  collapsed: boolean;
-};
+  length?: number
+  origin?: string
+  collapsed: boolean
+}
 
 export const defaultHideAnimation = ({
   length = 0.1,
@@ -76,7 +75,7 @@ export const defaultHideAnimation = ({
     transform: ${collapsed ? 'scaleY(0)' : 'scaleY(1)'};
     transform-origin: ${origin};
     transition: transform ${length}s cubic-bezier(0, .7, .9, 1);;    
-`;
+`
 
 export const Container = styled.div`
   ${({
@@ -87,12 +86,12 @@ export const Container = styled.div`
     animation,
     disabled,
   }: {
-    color: string;
-    height: string;
-    position: string;
-    location: string;
-    animation: () => void;
-    disabled: boolean;
+    color: string
+    height: string
+    position: string
+    location: string
+    animation: () => void
+    disabled: boolean
   }) => `
     position: ${position};
     ${location}
@@ -103,7 +102,7 @@ export const Container = styled.div`
     ${animation}    
     ${disabled ? disabledStyles() : ''}
   `}
-`;
+`
 
 const NavFlex = styled.div`
   height: 100%;
@@ -112,7 +111,7 @@ const NavFlex = styled.div`
   align-items: center;
   align-content: stretch;
   padding-left: 1rem;
-`;
+`
 
 export const NavSection = styled.div`
   ${({ bodyBelow }: { bodyBelow: boolean }) => `
@@ -121,7 +120,7 @@ export const NavSection = styled.div`
   `}
   display: flex;
   height: 100%;
-`;
+`
 
 export const Header = styled(NavSection)`
   ${({ bodyBelow }: { bodyBelow: boolean }) => `
@@ -129,11 +128,11 @@ export const Header = styled(NavSection)`
   `}
   margin-right: 1rem;
   width: fit-content;
-`;
+`
 
 export const Body = styled(NavSection)`
   width: 100%;
-`;
+`
 
 export const NavButtonContainer = styled(Button.Container)`
   ${({ bodyBelow }: { bodyBelow: boolean }) => `
@@ -146,102 +145,102 @@ export const NavButtonContainer = styled(Button.Container)`
     box-shadow: 0 0 0;
   }
   `}
-`;
+`
 
 export const NavText = styled(Text.Container)`
   &:hover {
     text-decoration: underline;
   }
-`;
+`
 
 export const Footer = styled(NavSection)`
   margin-left: auto;
-`;
+`
 
 export type NavButton = {
-  label: string;
-  onClick: () => void;
-};
+  label: string
+  onClick: () => void
+}
 
 const getGetScrollSpeed = (scrollSpeed = 50) => {
-  let lastPos: number | null;
-  let newPos: number | null;
-  let timer: NodeJS.Timeout;
-  let delta: number;
-  const delay = scrollSpeed; // in "ms" (higher means lower fidelity )
+  let lastPos: number | null
+  let newPos: number | null
+  let timer: NodeJS.Timeout
+  let delta: number
+  const delay = scrollSpeed // in "ms" (higher means lower fidelity )
 
   function clear() {
-    lastPos = null;
-    delta = 0;
+    lastPos = null
+    delta = 0
   }
 
-  clear();
+  clear()
 
   return () => {
-    newPos = window.scrollY;
+    newPos = window.scrollY
     if (lastPos != null) {
-      delta = newPos - lastPos;
+      delta = newPos - lastPos
     }
-    lastPos = newPos;
-    clearTimeout(timer);
-    timer = setTimeout(clear, delay);
-    return delta;
-  };
-};
+    lastPos = newPos
+    clearTimeout(timer)
+    timer = setTimeout(clear, delay)
+    return delta
+  }
+}
 
 export const getScrollPosition = (): number => {
-  const doc = document.documentElement;
-  return (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0);
-};
+  const doc = document.documentElement
+  return (window.pageYOffset || doc.scrollTop) - (doc.clientTop || 0)
+}
 
 export interface MainNavigationFProps {
-  StyledContainer?: StyledSubcomponentType;
-  StyledHeader?: StyledSubcomponentType;
-  StyledBody?: StyledSubcomponentType;
-  StyledFooter?: StyledSubcomponentType;
-  StyledNavButton?: StyledSubcomponentType;
+  StyledContainer?: StyledSubcomponentType
+  StyledHeader?: StyledSubcomponentType
+  StyledBody?: StyledSubcomponentType
+  StyledFooter?: StyledSubcomponentType
+  StyledNavButton?: StyledSubcomponentType
 
-  containerProps?: SubcomponentPropsType;
-  headerProps?: SubcomponentPropsType;
-  bodyProps?: SubcomponentPropsType;
-  footerProps?: SubcomponentPropsType;
-  navButtonProps?: SubcomponentPropsType[];
+  containerProps?: SubcomponentPropsType
+  headerProps?: SubcomponentPropsType
+  bodyProps?: SubcomponentPropsType
+  footerProps?: SubcomponentPropsType
+  navButtonProps?: SubcomponentPropsType[]
 
-  containerRef?: React.RefObject<HTMLDivElement>;
-  headerRef?: React.RefObject<HTMLDivElement>;
-  bodyRef?: React.RefObject<HTMLDivElement>;
-  footerRef?: React.RefObject<HTMLDivElement>;
-  navButtonRefs?: React.RefObject<HTMLButtonElement>[];
+  containerRef?: React.RefObject<HTMLDivElement>
+  headerRef?: React.RefObject<HTMLDivElement>
+  bodyRef?: React.RefObject<HTMLDivElement>
+  footerRef?: React.RefObject<HTMLDivElement>
+  navButtonRefs?: React.RefObject<HTMLButtonElement>[]
 
-  header?: ReactNode;
-  body?: ReactNode;
+  header?: ReactNode
+  body?: ReactNode
   // navButtons are a list of links as buttons with onClicks that are included in the body section before the body object
-  navButtons?: NavButton[];
-  labelFontSize?: string;
-  activeButton?: number;
-  footer?: ReactNode;
+  navButtons?: NavButton[]
+  labelFontSize?: string
+  activeButton?: number
+  footer?: ReactNode
 
-  hidden?: boolean;
-  disabled?: boolean;
+  hidden?: boolean
+  disabled?: boolean
 
   // removes body, good for mobile to hide unless the body is expanded below
-  hideBody?: boolean;
+  hideBody?: boolean
   // puts body below the header and footer sections
-  bodyBelow?: boolean;
+  bodyBelow?: boolean
   // enables automatically hiding the navbar below a certain scroll position, only usable when window.onscroll
   // is available. Otherwise use the hidden prop and your own function to detect position
-  hiddenBelowY?: number;
+  hiddenBelowY?: number
   // function to call when window.onscroll is used
-  onScroll?: () => void;
+  onScroll?: () => void
 
-  HideAnimationProps?: HideAnimationPropType;
-  hideAnimation?: (value: HideAnimationPropType) => void;
+  HideAnimationProps?: HideAnimationPropType
+  hideAnimation?: (value: HideAnimationPropType) => void
   // set CSS position type ie `relative`, `absolute`, `static`, etc.
-  position?: string;
+  position?: string
   // set CSS location directly like `top: 10px; left: 10px;`
-  location?: string;
-  height?: string;
-  color?: string;
+  location?: string
+  height?: string
+  color?: string
 }
 
 const MainNavigationF = ({
@@ -283,29 +282,29 @@ const MainNavigationF = ({
   height = 'fit-content',
   color,
 }: MainNavigationFProps): JSX.Element => {
-  const { colors } = useTheme();
-  const backgroundColor = color || colors.primaryDark;
-  const [isHidden, setIsHidden] = React.useState(false);
+  const { colors } = useTheme()
+  const backgroundColor = color || colors.primaryDark
+  const [isHidden, setIsHidden] = React.useState(false)
   if (typeof hiddenBelowY !== 'undefined') {
     window.onscroll = () => {
       if (onScroll) {
-        onScroll();
+        onScroll()
       }
-      setIsHidden(getScrollPosition() > hiddenBelowY);
-    };
+      setIsHidden(getScrollPosition() > hiddenBelowY)
+    }
   }
   const animationProps = HideAnimationProps || {
     collapsed: hidden || isHidden,
-  };
+  }
 
   const getNavColor = (index: number) => {
     if (activeButton === index) {
       return backgroundColor !== 'transparent'
         ? darken(0.08, backgroundColor)
-        : 'rgba(0, 0, 0, 0.08)';
+        : 'rgba(0, 0, 0, 0.08)'
     }
-    return backgroundColor;
-  };
+    return backgroundColor
+  }
 
   const FinalBody = () => {
     return !hideBody ? (
@@ -333,8 +332,8 @@ const MainNavigationF = ({
       </StyledBody>
     ) : (
       <></>
-    );
-  };
+    )
+  }
 
   return (
     <StyledContainer
@@ -362,16 +361,16 @@ const MainNavigationF = ({
       </NavFlex>
       {bodyBelow && <FinalBody />}
     </StyledContainer>
-  );
-};
+  )
+}
 
-MainNavigationF.Container = Container;
-MainNavigationF.NavButtonContainer = NavButtonContainer;
-MainNavigationF.Header = Header;
-MainNavigationF.Body = Body;
-MainNavigationF.Footer = Footer;
+MainNavigationF.Container = Container
+MainNavigationF.NavButtonContainer = NavButtonContainer
+MainNavigationF.Header = Header
+MainNavigationF.Body = Body
+MainNavigationF.Footer = Footer
 // if using server-side rendering these will not work, since they use window.location, and should be handled outside the component
-MainNavigationF.getScrollSpeed = getGetScrollSpeed;
-MainNavigationF.getScrollPosition = getScrollPosition;
+MainNavigationF.getScrollSpeed = getGetScrollSpeed
+MainNavigationF.getScrollPosition = getScrollPosition
 
-export default MainNavigationF;
+export default MainNavigationF

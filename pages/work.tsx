@@ -1,9 +1,9 @@
-import React from 'react';
-import myWork from '../resources/myWork';
-import { Text } from '@headstorm/foundry-react-ui';
-import styled from 'styled-components';
-import WorkCard from '../components/WorkCard';
-import { useTheme } from '../components/ThemeContext';
+import { Text } from '@headstorm/foundry-react-ui'
+import React from 'react'
+import styled from 'styled-components'
+import { useTheme } from '../components/ThemeContext'
+import WorkCard from '../components/WorkCard'
+import myWork from '../resources/myWork'
 
 const SectionHeader = styled(Text.Container)`
   display: block;
@@ -11,16 +11,16 @@ const SectionHeader = styled(Text.Container)`
   text-align: left;
   margin-top: 1rem;
   padding: 1rem 0rem 0.5rem 1rem;
-`;
+`
 
 const WorkItems = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-`;
+`
 
 const Work = () => {
-  const { theme } = useTheme();
+  const { theme } = useTheme()
   return (
     <>
       {Object.keys(myWork).map(key => (
@@ -36,7 +36,7 @@ const Work = () => {
         </>
       ))}
     </>
-  );
-};
+  )
+}
 
-export default Work;
+export default Work

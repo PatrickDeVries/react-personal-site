@@ -1,5 +1,5 @@
-import MainNavigation from './MainNavigation';
-import Layout from './Layout';
-import WorkCard from './WorkCard';
+import Layout from './Layout'
+import MainNavigation from './MainNavigation'
+import WorkCard from './WorkCard'
 
-export { MainNavigation, Layout, WorkCard };
+export { MainNavigation, Layout, WorkCard }

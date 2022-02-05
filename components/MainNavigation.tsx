@@ -1,74 +1,66 @@
-import { Text, variants, Tag, Button } from '@headstorm/foundry-react-ui';
-import styled from 'styled-components';
-import Link from 'next/link';
-import { useRouter } from 'next/dist/client/router';
-import Icon from '@mdi/react';
-import { mdiHamburger, mdiMenu, mdiThemeLightDark } from '@mdi/js';
-import React, { useCallback } from 'react';
-import { useTheme } from './ThemeContext';
-import { darkColors, lightColors } from '../styles/myColors';
-import { darken, lighten } from 'polished';
-import MainNavigationF, { MainNavigationFProps, NavButton } from './MainNavigationF';
-import { useState, useEffect } from 'react';
+import { Button, Text } from '@headstorm/foundry-react-ui'
+import { mdiMenu, mdiThemeLightDark } from '@mdi/js'
+import Icon from '@mdi/react'
+import { useRouter } from 'next/dist/client/router'
+import Link from 'next/link'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
+import styled from 'styled-components'
+import { darkColors, lightColors } from '../styles/myColors'
+import { BackgroundControlContext } from './BackgroundControlProvider'
+import MainNavigationF, { NavButton } from './MainNavigationF'
+import { useTheme } from './ThemeContext'
 
 const NavDiv = styled(MainNavigationF.Container)`
   ${() => {
-    const { theme } = useTheme();
+    const { theme } = useTheme()
     return `
       background-color: ${theme.backgroundHighlight};
       color: ${theme.text};
       border-bottom: 1px solid ${theme.primary};
-      z-index: 5;
-    `;
+      z-index: 100;
+      width: 100%;
+    `
   }}
-`;
-
-const NavSection = styled.div`
-  margin-left: 2rem;
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  justify-content: stretch;
-`;
+`
 
 const NavTag = styled(MainNavigationF.NavButtonContainer)`
   padding: 1rem;
-`;
+`
 
 const Name = styled.span`
   white-space: nowrap;
-`;
+`
 
 const useMediaQuery = width => {
-  const [targetReached, setTargetReached] = useState(false);
+  const [targetReached, setTargetReached] = useState(false)
 
   const updateTarget = useCallback(e => {
     if (e.matches) {
-      setTargetReached(true);
+      setTargetReached(true)
     } else {
-      setTargetReached(false);
+      setTargetReached(false)
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    const media = window.matchMedia(`(max-width: ${width}px)`);
-    media.addListener(updateTarget);
+    const media = window.matchMedia(`(max-width: ${width}px)`)
+    media.addListener(updateTarget)
 
     // Check on mount (callback is not called until a change occurs)
     if (media.matches) {
-      setTargetReached(true);
+      setTargetReached(true)
     }
 
-    return () => media.removeListener(updateTarget);
-  }, []);
+    return () => media.removeListener(updateTarget)
+  }, [])
 
-  return targetReached;
-};
+  return targetReached
+}
 
-const MainNavigation = () => {
-  const router = useRouter();
-  const { theme, setTheme } = useTheme();
-  const [expanded, setExpanded] = React.useState<boolean>(false);
+const MainNavigation: React.FC = () => {
+  const router = useRouter()
+  const { theme, setTheme } = useTheme()
+  const [expanded, setExpanded] = React.useState<boolean>(false)
   const [selected, setSelected] = React.useState<number>(
     router.pathname === '/'
       ? 0
@@ -77,46 +69,49 @@ const MainNavigation = () => {
       : router.pathname === '/contact'
       ? 2
       : 3,
-  );
+  )
+  const { controlsOpen, setControlsOpen, updateState } = useContext(BackgroundControlContext)
 
+  console.log(router.pathname)
   const navLinks: NavButton[] = [
     {
       label: 'Home',
       onClick: () => {
-        router.push('/');
-        setSelected(0);
-        setExpanded(false);
+        router.push('/')
+        setSelected(0)
+        updateState()
+        setExpanded(false)
       },
     },
     {
       label: 'My Work',
       onClick: () => {
-        router.push('/work');
-        setSelected(1);
-        setExpanded(false);
+        setControlsOpen(false)
+        router.push('/work')
+        setSelected(1)
+        setExpanded(false)
       },
     },
     {
       label: 'Contact Me',
       onClick: () => {
-        router.push('/contact');
-        setSelected(2);
-        setExpanded(false);
+        setControlsOpen(false)
+        router.push('/contact')
+        setSelected(2)
+        setExpanded(false)
       },
     },
-    {
-      label: 'Résumé',
-      onClick: () => {
-        router.push(
-          'https://docs.google.com/document/d/1ShEG5LOTRDRSrXFYFUleTOYWL_tbf7We030Vdn3cPv0/edit?usp=sharing',
-        );
-        setSelected(3);
-        setExpanded(false);
-      },
-    },
-  ];
 
-  const isBreakpoint = useMediaQuery(800);
+    router.pathname === '/' && {
+      label: 'Toggle Background Settings',
+      onClick: () => {
+        setControlsOpen(!controlsOpen)
+        setExpanded(false)
+      },
+    },
+  ]
+
+  const isBreakpoint = useMediaQuery(800)
 
   return (
     <MainNavigationF
@@ -136,15 +131,16 @@ const MainNavigation = () => {
       }
       hideBody={isBreakpoint && !expanded}
       bodyBelow={isBreakpoint}
+      position="absolute; top: 0; left: 0;"
       footer={
         <>
           <Button
             color="#0000"
             onClick={() => {
               if (theme.name === 'light') {
-                setTheme(darkColors);
+                setTheme(darkColors)
               } else {
-                setTheme(lightColors);
+                setTheme(lightColors)
               }
             }}
           >
@@ -154,7 +150,7 @@ const MainNavigation = () => {
             <Button
               color="#0000"
               onClick={() => {
-                setExpanded(!expanded);
+                setExpanded(!expanded)
               }}
             >
               <Icon path={mdiMenu} size="1.5rem" color={theme.secondary} />
@@ -165,7 +161,7 @@ const MainNavigation = () => {
         </>
       }
     />
-  );
-};
+  )
+}
 
-export default MainNavigation;
+export default MainNavigation

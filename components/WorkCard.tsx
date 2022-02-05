@@ -1,13 +1,13 @@
-import { Card, colors, Tag, Text, variants } from '@headstorm/foundry-react-ui';
-import React from 'react';
-import styled from 'styled-components';
-import { workItem } from '../resources/myWork';
-import Link from 'next/link';
-import { useTheme } from './ThemeContext';
+import { Card, Tag, Text, variants } from '@headstorm/foundry-react-ui'
+import Link from 'next/link'
+import React from 'react'
+import styled from 'styled-components'
+import { workItem } from '../resources/myWork'
+import { useTheme } from './ThemeContext'
 
 const StyledCard = styled(Card.Container)`
   ${() => {
-    const { theme } = useTheme();
+    const { theme } = useTheme()
     return `
       margin: 1rem;
       background-color: ${theme.backgroundHighlight};
@@ -21,27 +21,27 @@ const StyledCard = styled(Card.Container)`
         width: 90vw;
       }
       outline: 2px solid ${theme.strongHighlight};
-      `;
+      `
   }}
-`;
+`
 
 const BodySection = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
-`;
+`
 
 const ScalingImg = styled.img`
   display: block;
   max-width: 40%;
   object-fit: cover;
-`;
+`
 
 const BodyText = styled(Text.Container)`
   margin: 1rem;
   text-align: justify;
   text-justify: inter-word;
-`;
+`
 
 const TagSection = styled.div`
   display: flex;
@@ -51,14 +51,14 @@ const TagSection = styled.div`
   width: 100%;
   margin-left: auto;
   bottom: 1rem;
-`;
+`
 
 interface WorkCardProps {
-  item: workItem;
+  item: workItem
 }
 
 const WorkCard = ({ item }: WorkCardProps) => {
-  const { theme } = useTheme();
+  const { theme } = useTheme()
   return (
     <Card
       StyledContainer={StyledCard}
@@ -92,7 +92,7 @@ const WorkCard = ({ item }: WorkCardProps) => {
         </a>
       </Link>
     </Card>
-  );
-};
+  )
+}
 
-export default WorkCard;
+export default WorkCard

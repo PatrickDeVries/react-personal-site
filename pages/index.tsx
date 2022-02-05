@@ -1,17 +1,19 @@
-import Link from 'next/link';
-import { Text } from '@headstorm/foundry-react-ui';
-import styled from 'styled-components';
-import React from 'react';
-import { useTheme } from '../components/ThemeContext';
+import { Text } from '@headstorm/foundry-react-ui'
+import Link from 'next/link'
+import React, { useContext } from 'react'
+import styled from 'styled-components'
+import { BackgroundControlContext } from '../components/BackgroundControlProvider'
+import { useTheme } from '../components/ThemeContext'
 
 const GreetingBlock = styled.div`
   ${() => {
-    const { theme } = useTheme();
+    const { theme } = useTheme()
+    const { controlsOpen } = useContext(BackgroundControlContext)
     return `
-      margin-top: 100%;
-      filter: drop-shadow(0 0 4rem ${theme.primary});`;
+      margin-top: ${controlsOpen ? '140' : '100'}%;
+      filter: drop-shadow(0 0 4rem ${theme.primary});`
   }}
-`;
+`
 
 const IntroText = styled(Text.Container)`
   display: block;
@@ -19,16 +21,16 @@ const IntroText = styled(Text.Container)`
   margin-right: auto;
   margin-top: 1rem;
   text-align: center;
-`;
+`
 
 const CenteredA = styled.a`
   margin-left: auto;
   margin-right: auto;
   text-align: center;
-`;
+`
 
 export default function Home() {
-  const { theme } = useTheme();
+  const { theme } = useTheme()
 
   return (
     <>
@@ -45,5 +47,5 @@ export default function Home() {
         </Link>
       </GreetingBlock>
     </>
-  );
+  )
 }

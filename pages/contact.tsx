@@ -1,17 +1,17 @@
-import React from 'react';
-import { Text } from '@headstorm/foundry-react-ui';
-import styled from 'styled-components';
-import Link from 'next/link';
-import Icon from '@mdi/react';
-import { mdiLinkedin, mdiGithub, mdiEmail, mdiPhone, mdiMessage } from '@mdi/js';
-import { useTheme } from '../components/ThemeContext';
+import { Text } from '@headstorm/foundry-react-ui'
+import { mdiEmail, mdiGithub, mdiLinkedin, mdiMessage, mdiPhone } from '@mdi/js'
+import Icon from '@mdi/react'
+import Link from 'next/link'
+import React from 'react'
+import styled from 'styled-components'
+import { useTheme } from '../components/ThemeContext'
 
 const ContactText = styled(Text.Container)`
   margin-top: 20%;
   margin-left: auto;
   margin-right: auto;
   padding: 2rem;
-`;
+`
 
 const SocialLinks = styled.div`
   margin-left: auto;
@@ -26,11 +26,11 @@ const SocialLinks = styled.div`
   @media (max-width: 799px) {
     flex-direction: column;
   }
-`;
+`
 
 const SocialImage = styled.a`
   margin: 0 2.5rem 0 2.5rem;
-`;
+`
 
 const SocialLink = styled.div`
   display: flex;
@@ -38,13 +38,13 @@ const SocialLink = styled.div`
   align-items: center;
   margin-top: 1rem;
   margin-bottom: 1rem;
-`;
+`
 
 interface Social {
-  site: string;
-  href: string;
-  src: string;
-  text: string;
+  site: string
+  href: string
+  src: string
+  text: string
 }
 
 const socials: Social[] = [
@@ -63,10 +63,10 @@ const socials: Social[] = [
   { site: 'Email', href: 'mailto:pcdevri@gmail.com', src: mdiEmail, text: 'pcdevri@gmail.com' },
   { site: 'Text', href: 'sms:8178881514', src: mdiMessage, text: '(817) 888-1514' },
   { site: 'Phone', href: 'tel:8178881514', src: mdiPhone, text: '(817) 888-1514' },
-];
+]
 
 const Contact = () => {
-  const { theme } = useTheme();
+  const { theme } = useTheme()
   return (
     <>
       <Text size="2rem" color={theme.primary} StyledContainer={ContactText}>
@@ -89,7 +89,7 @@ const Contact = () => {
         ))}
       </SocialLinks>
     </>
-  );
-};
+  )
+}
 
-export default Contact;
+export default Contact
