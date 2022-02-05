@@ -5,6 +5,7 @@ import '../styles/globals.css'
 import Layout from '../components/Layout'
 import { BackgroundControlProvider } from '../components/BackgroundControlProvider'
 import { ThemeProvider } from 'styled-components'
+import { SSRProvider } from '@react-aria/ssr'
 
 function MyApp({ Component, pageProps }) {
   const [isInitialized, setIsInitialized] = React.useState(false)
@@ -22,15 +23,17 @@ function MyApp({ Component, pageProps }) {
   }, [])
 
   return (
-    <ThemeProvider theme={theme}>
-      <CustomThemeProvider value={{ theme, setTheme }}>
-        <BackgroundControlProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </BackgroundControlProvider>
-      </CustomThemeProvider>
-    </ThemeProvider>
+    <SSRProvider>
+      <ThemeProvider theme={theme}>
+        <CustomThemeProvider value={{ theme, setTheme }}>
+          <BackgroundControlProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </BackgroundControlProvider>
+        </CustomThemeProvider>
+      </ThemeProvider>
+    </SSRProvider>
   )
 }
 

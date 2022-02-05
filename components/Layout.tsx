@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import styled from 'styled-components'
 import { MainNavigation } from '.'
-import BackgroundParticles from './backgroundParticles/BackgroundParticles'
+import BackgroundParticles from './backgroundParticles/'
 
 const Body = styled.div`
   background-repeat: no-repeat;
