@@ -11,16 +11,11 @@ import MainNavigationF, { NavButton } from './MainNavigationF'
 import { useTheme } from './ThemeContext'
 
 const NavDiv = styled(MainNavigationF.Container)`
-  ${() => {
-    const { theme } = useTheme()
-    return `
-      background-color: ${theme.backgroundHighlight};
-      color: ${theme.text};
-      border-bottom: 1px solid ${theme.primary};
-      z-index: 100;
-      width: 100%;
-    `
-  }}
+  background-color: ${({ theme }) => theme.backgroundHighlight};
+  color: ${({ theme }) => theme.text};
+  border-bottom: 1px solid ${({ theme }) => theme.primary};
+  z-index: 100;
+  width: 100%;
 `
 
 const NavTag = styled(MainNavigationF.NavButtonContainer)`
@@ -72,14 +67,12 @@ const MainNavigation: React.FC = () => {
   )
   const { controlsOpen, setControlsOpen, updateState } = useContext(BackgroundControlContext)
 
-  console.log(router.pathname)
   const navLinks: NavButton[] = [
     {
       label: 'Home',
       onClick: () => {
         router.push('/')
         setSelected(0)
-        updateState()
         setExpanded(false)
       },
     },
@@ -122,7 +115,7 @@ const MainNavigation: React.FC = () => {
       activeButton={selected}
       header={
         <Link href="/" passHref={true}>
-          <a>
+          <a onClick={updateState}>
             <Text size="1.5rem" color={theme.secondary}>
               <Name>Patrick DeVries</Name>
             </Text>

@@ -1,9 +1,10 @@
 import React from 'react'
-import { ThemeProvider } from '../components/ThemeContext'
+import { ThemeProvider as CustomThemeProvider } from '../components/ThemeContext'
 import { darkColors, lightColors } from '../styles/myColors'
 import '../styles/globals.css'
 import Layout from '../components/Layout'
 import { BackgroundControlProvider } from '../components/BackgroundControlProvider'
+import { ThemeProvider } from 'styled-components'
 
 function MyApp({ Component, pageProps }) {
   const [isInitialized, setIsInitialized] = React.useState(false)
@@ -21,12 +22,14 @@ function MyApp({ Component, pageProps }) {
   }, [])
 
   return (
-    <ThemeProvider value={{ theme, setTheme }}>
-      <BackgroundControlProvider>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </BackgroundControlProvider>
+    <ThemeProvider theme={theme}>
+      <CustomThemeProvider value={{ theme, setTheme }}>
+        <BackgroundControlProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </BackgroundControlProvider>
+      </CustomThemeProvider>
     </ThemeProvider>
   )
 }

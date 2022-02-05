@@ -25,10 +25,15 @@ const Work = () => {
     <>
       {Object.keys(myWork).map(key => (
         <>
-          <Text color={theme.primary} size="1.25rem" StyledContainer={SectionHeader}>
+          <Text
+            key={`${key}-text`}
+            color={theme.primary}
+            size="1.25rem"
+            StyledContainer={SectionHeader}
+          >
             {key}:
           </Text>
-          <WorkItems>
+          <WorkItems key={`${key}-work`}>
             {myWork[key].map(item => (
               <WorkCard key={item.header} item={item} />
             ))}

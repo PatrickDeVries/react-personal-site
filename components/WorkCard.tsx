@@ -6,23 +6,19 @@ import { workItem } from '../resources/myWork'
 import { useTheme } from './ThemeContext'
 
 const StyledCard = styled(Card.Container)`
-  ${() => {
-    const { theme } = useTheme()
-    return `
-      margin: 1rem;
-      background-color: ${theme.backgroundHighlight};
-      width: fit-content;
-      align-self: stretch;
-      @media (min-width: 800px) {
-        max-width: 40vw;
-        min-height: 40vh;
-      }
-      @media (max-width: 799px) {
-        width: 90vw;
-      }
-      outline: 2px solid ${theme.strongHighlight};
-      `
-  }}
+  background-color: ${({ theme }) => theme.backgroundHighlight};
+  margin: 1rem;
+
+  width: fit-content;
+  align-self: stretch;
+  @media (min-width: 800px) {
+    max-width: 40vw;
+    min-height: 40vh;
+  }
+  @media (max-width: 799px) {
+    width: 90vw;
+  }
+  outline: 2px solid ${({ theme }) => theme.strongHighlight};
 `
 
 const BodySection = styled.div`

@@ -14,10 +14,8 @@ const BgCanvas = styled.div<{ theme: Theme }>`
   left: 0;
   height: 100vh;
   width: 100vw;
-  background-image: ${() => {
-    const { theme } = useTheme()
-    return `linear-gradient(168deg, ${theme.background}, ${theme.strongHighlight})`
-  }};
+  background-image: ${({ theme }) =>
+    `linear-gradient(168deg, ${theme.background}, ${theme.strongHighlight})`};
 `
 
 const Overlay = styled.div`
@@ -31,10 +29,7 @@ const Overlay = styled.div`
 const ControlCard = styled(Card.Container)`
   ${({ controlsOpen }: { controlsOpen: boolean }) => !controlsOpen && 'display: none;'}
   max-width: 40vw;
-  background-color: ${() => {
-    const { theme } = useTheme()
-    return theme.backgroundHighlight
-  }};
+  background-color: ${({ theme }) => theme.backgroundHighlight};
   max-height: 100vh;
   ${MOBILE} {
     max-width: 100vw;
@@ -49,23 +44,14 @@ const ControlRows = styled.div`
   width: 100%;
   label,
   > div > div > div {
-    color: ${() => {
-      const { theme } = useTheme()
-      return theme.text
-    }};
+    color: ${({ theme }) => theme.text};
   }
   > div > div > div > div,
   div[draggable='false'] {
-    background-color: ${() => {
-      const { theme } = useTheme()
-      return theme.primary
-    }};
+    background-color: ${({ theme }) => theme.primary};
   }
   div[draggable='false'] > div {
-    background-color: ${() => {
-      const { theme } = useTheme()
-      return theme.backgroundHighlight
-    }};
+    background-color: ${({ theme }) => theme.backgroundHighlight};
   }
   ${MOBILE} {
     justify-content: center;
