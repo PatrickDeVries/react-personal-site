@@ -14,7 +14,7 @@ const NavDiv = styled(MainNavigationF.Container)`
   background-color: ${({ theme }) => theme.backgroundHighlight};
   color: ${({ theme }) => theme.text};
   border-bottom: 1px solid ${({ theme }) => theme.primary};
-  z-index: 100;
+  z-index: 2;
   width: 100%;
 `
 
@@ -26,7 +26,7 @@ const Name = styled.span`
   white-space: nowrap;
 `
 
-const useMediaQuery = width => {
+const useMediaQuery = (width: number) => {
   const [targetReached, setTargetReached] = useState(false)
 
   const updateTarget = useCallback(e => {
@@ -47,7 +47,7 @@ const useMediaQuery = width => {
     }
 
     return () => media.removeListener(updateTarget)
-  }, [])
+  }, [updateTarget, width])
 
   return targetReached
 }
@@ -71,6 +71,7 @@ const MainNavigation: React.FC = () => {
     {
       label: 'Home',
       onClick: () => {
+        updateState()
         router.push('/')
         setSelected(0)
         setExpanded(false)
@@ -79,7 +80,7 @@ const MainNavigation: React.FC = () => {
     {
       label: 'My Work',
       onClick: () => {
-        setControlsOpen(false)
+        updateState()
         router.push('/work')
         setSelected(1)
         setExpanded(false)
@@ -88,7 +89,7 @@ const MainNavigation: React.FC = () => {
     {
       label: 'Contact Me',
       onClick: () => {
-        setControlsOpen(false)
+        updateState()
         router.push('/contact')
         setSelected(2)
         setExpanded(false)
@@ -104,11 +105,12 @@ const MainNavigation: React.FC = () => {
     },
   ]
 
-  const isBreakpoint = useMediaQuery(800)
+  const isBreakpoint = useMediaQuery(1000)
 
   return (
     <MainNavigationF
       color={theme.backgroundHighlight}
+      height="3rem"
       StyledContainer={NavDiv}
       navButtons={navLinks}
       StyledNavButton={NavTag}

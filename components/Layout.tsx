@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import styled from 'styled-components'
 import { MainNavigation } from '.'
-import FiberLayout from './FiberLayout'
+import BackgroundParticles from './backgroundParticles/BackgroundParticles'
 
-const HomeDiv = styled.div`
+const Body = styled.div`
   background-repeat: no-repeat;
   ${({ theme }) =>
     `background-image: linear-gradient(168deg, ${theme.background}, ${theme.strongHighlight});`}
@@ -11,19 +11,11 @@ const HomeDiv = styled.div`
   flex-direction: column;
   align-items: center;
   height: 100vh;
-  width: 100vw;
-`
-
-const Body = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-
-  height: 100%;
   width: 100%;
+  padding-top: 3rem;
   overflow-y: auto;
   overflow-x: hidden;
+  z-index: 2;
 `
 
 const Layout = props => {
@@ -32,11 +24,9 @@ const Layout = props => {
       <Head>
         <title>Patrick DeVries</title>
       </Head>
-      <FiberLayout />
-      <HomeDiv>
-        <MainNavigation />
-        <Body>{props.children}</Body>
-      </HomeDiv>
+      <BackgroundParticles />
+      <MainNavigation />
+      <Body>{props.children}</Body>
     </>
   )
 }

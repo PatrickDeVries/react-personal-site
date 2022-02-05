@@ -6,6 +6,15 @@ import React from 'react'
 import styled from 'styled-components'
 import { useTheme } from '../components/ThemeContext'
 
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: ${({ theme }) => theme.background}77;
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+`
+
 const ContactText = styled(Text.Container)`
   margin-top: 20%;
   margin-left: auto;
@@ -68,7 +77,7 @@ const socials: Social[] = [
 const Contact = () => {
   const { theme } = useTheme()
   return (
-    <>
+    <Wrapper>
       <Text size="2rem" color={theme.primary} StyledContainer={ContactText}>
         Contact me:
       </Text>
@@ -88,7 +97,7 @@ const Contact = () => {
           </SocialLink>
         ))}
       </SocialLinks>
-    </>
+    </Wrapper>
   )
 }
 

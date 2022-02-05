@@ -103,3 +103,9 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
     </BackgroundControlContext.Provider>
   )
 }
+
+// export const useParticleControls = (): BackgroundControl => {
+//   const {context} = useContext(BackgroundControlContext)
+
+//   return { ...context }
+// }

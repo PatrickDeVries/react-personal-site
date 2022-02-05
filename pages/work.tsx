@@ -4,25 +4,43 @@ import styled from 'styled-components'
 import { useTheme } from '../components/ThemeContext'
 import WorkCard from '../components/WorkCard'
 import myWork from '../resources/myWork'
+import { MOBILE } from '../styles/mediaQueries'
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 3rem;
+  background-color: ${({ theme }) => theme.background}77;
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+`
 
 const SectionHeader = styled(Text.Container)`
   display: block;
   width: 100%;
   text-align: left;
-  margin-top: 1rem;
-  padding: 1rem 0rem 0.5rem 1rem;
+  padding: 1rem 0;
 `
 
 const WorkItems = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
+  justify-content: space-between;
+  ${MOBILE} {
+    align-items: center;
+    justify-content: center;
+  }
+  gap: 2rem;
+  width: 100%;
 `
 
 const Work = () => {
   const { theme } = useTheme()
+  // theme.ba``
   return (
-    <>
+    <Wrapper>
       {Object.keys(myWork).map(key => (
         <>
           <Text
@@ -40,7 +58,7 @@ const Work = () => {
           </WorkItems>
         </>
       ))}
-    </>
+    </Wrapper>
   )
 }
 

@@ -1,22 +1,27 @@
-import { Card, Tag, Text, variants } from '@headstorm/foundry-react-ui'
+import { Tag, Text, variants } from '@headstorm/foundry-react-ui'
+import { mdiOpenInNew } from '@mdi/js'
 import Link from 'next/link'
 import React from 'react'
 import styled from 'styled-components'
 import { workItem } from '../resources/myWork'
+import { DESKTOP, MOBILE, SMALL_MOBILE } from '../styles/mediaQueries'
 import { useTheme } from './ThemeContext'
 
-const StyledCard = styled(Card.Container)`
+const StyledCard = styled.div`
   background-color: ${({ theme }) => theme.backgroundHighlight};
-  margin: 1rem;
-
   width: fit-content;
   align-self: stretch;
-  @media (min-width: 800px) {
-    max-width: 40vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  ${DESKTOP} {
+    max-width: calc(50% - 1rem);
     min-height: 40vh;
   }
-  @media (max-width: 799px) {
-    width: 90vw;
+  ${MOBILE} {
+    max-width: 90%;
   }
   outline: 2px solid ${({ theme }) => theme.strongHighlight};
 `
@@ -24,6 +29,10 @@ const StyledCard = styled(Card.Container)`
 const BodySection = styled.div`
   display: flex;
   flex-direction: row;
+  ${SMALL_MOBILE} {
+    flex-direction: column;
+    align-items: center;
+  }
   width: 100%;
 `
 
@@ -31,6 +40,7 @@ const ScalingImg = styled.img`
   display: block;
   max-width: 40%;
   object-fit: cover;
+  padding: 1rem;
 `
 
 const BodyText = styled(Text.Container)`
@@ -56,18 +66,19 @@ interface WorkCardProps {
 const WorkCard = ({ item }: WorkCardProps) => {
   const { theme } = useTheme()
   return (
-    <Card
-      StyledContainer={StyledCard}
-      header={
+    <StyledCard>
+      {/* <Card */}
+      {/* StyledContainer={StyledCard} */}
+      {/* header={
         <Link href={item?.page || item?.href} passHref={true}>
           <a>
-            <Text size="1.25rem" color={theme.primary}>
+            <Text size="1.25rem" color={theme.primary} iconSuffix={mdiOpenInNew}>
               {item.header}
             </Text>
           </a>
         </Link>
-      }
-      footer={
+      } */}
+      {/* footer={
         <TagSection>
           {item.tags.map(tagText => (
             <Tag key={tagText} variant={variants.outline} color={theme.secondary}>
@@ -76,18 +87,35 @@ const WorkCard = ({ item }: WorkCardProps) => {
           ))}
         </TagSection>
       }
-    >
-      <Link href={item?.page || item?.href} passHref={true}>
-        <a>
-          <BodySection>
-            <ScalingImg src={item.image} />
-            <Text color={theme.text} StyledContainer={BodyText}>
-              {item.description}
+    > */}
+      <div>
+        <Link href={item?.page || item?.href} passHref={true}>
+          <a>
+            <Text size="1.25rem" color={theme.primary} iconSuffix={mdiOpenInNew}>
+              {item.header}
             </Text>
-          </BodySection>
-        </a>
-      </Link>
-    </Card>
+          </a>
+        </Link>
+        <Link href={item?.page || item?.href} passHref={true}>
+          <a>
+            <BodySection>
+              <ScalingImg src={item.image} />
+              <Text color={theme.text} StyledContainer={BodyText}>
+                {item.description}
+              </Text>
+            </BodySection>
+          </a>
+        </Link>
+      </div>
+      <TagSection>
+        {item.tags.map(tagText => (
+          <Tag key={tagText} variant={variants.outline} color={theme.secondary}>
+            <Text size="1rem">{tagText}</Text>
+          </Tag>
+        ))}
+      </TagSection>
+      {/* </Card> */}
+    </StyledCard>
   )
 }
 
