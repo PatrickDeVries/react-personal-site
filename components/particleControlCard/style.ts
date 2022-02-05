@@ -48,3 +48,9 @@ export const ControlRows = styled.div`
     background-color: ${({ theme }) => theme.backgroundHighlight};
   }
 `
+
+export const Footer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+`

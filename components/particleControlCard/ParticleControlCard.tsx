@@ -3,7 +3,7 @@ import { useRouter } from 'next/dist/client/router'
 import React, { useContext } from 'react'
 import { BackgroundControlContext } from '../BackgroundControlProvider'
 import { useTheme } from '../ThemeContext'
-import { ControlCard, ControlRows } from './style'
+import { ControlCard, ControlRows, Footer } from './style'
 
 const ParticleControlCard: React.FC = () => {
   const {
@@ -111,20 +111,22 @@ const ParticleControlCard: React.FC = () => {
             }}
           />
         </Label>
+      </ControlRows>
+      <Footer>
         <Label labelText="Color" color="black">
           <TextInput maxLength={7} value={color} onChange={event => setColor(event.target.value)} />
         </Label>
-      </ControlRows>
-      <Button
-        color={theme.primary}
-        onClick={() => {
-          setPositions([])
-          setVelocities([])
-          setAngles([])
-        }}
-      >
-        Reset Particles
-      </Button>
+        <Button
+          color={theme.primary}
+          onClick={() => {
+            setPositions([])
+            setVelocities([])
+            setAngles([])
+          }}
+        >
+          Reset Particles
+        </Button>
+      </Footer>
     </Card>
   )
 }
