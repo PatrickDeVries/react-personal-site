@@ -1,7 +1,7 @@
 import { useFrame, useThree } from '@react-three/fiber'
 import React, { useRef } from 'react'
 import { BufferAttribute, Points } from 'three'
-import '../particlematerial'
+import './particlematerial'
 
 const Particles = props => {
   const viewport = useThree(state => state.viewport)

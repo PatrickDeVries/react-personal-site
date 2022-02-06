@@ -1,6 +1,6 @@
 import styled from 'styled-components'
-import '../particlematerial'
 import { Theme } from '../ThemeContext'
+import './particlematerial'
 
 export const BgCanvas = styled.div<{ theme: Theme }>`
   position: fixed;

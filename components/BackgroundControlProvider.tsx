@@ -2,6 +2,8 @@ import { createContext, Dispatch, MutableRefObject, SetStateAction, useRef, useS
 import { BufferGeometry } from 'three'
 
 export type BackgroundControl = {
+  firstHit: boolean
+  setFirstHit: (newVal: boolean) => void
   controlsOpen: boolean
   setControlsOpen: (newVal: boolean) => void
 
@@ -35,6 +37,7 @@ export type BackgroundControl = {
 export const BackgroundControlContext = createContext<BackgroundControl | null>(null)
 
 export const BackgroundControlProvider: React.FC = ({ children }) => {
+  const [firstHit, setFirstHit] = useState<boolean>(true)
   const [controlsOpen, setControlsOpen] = useState<boolean>(false)
 
   const [particleCount, setParticleCount] = useState<number>(20000)
@@ -69,6 +72,8 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
   return (
     <BackgroundControlContext.Provider
       value={{
+        firstHit,
+        setFirstHit,
         controlsOpen,
         setControlsOpen: setWrapper<boolean>(setControlsOpen),
 

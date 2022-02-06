@@ -1,5 +1,7 @@
-import Link from 'next/link'
+import { useContext } from 'react'
 import styled from 'styled-components'
+import { BackgroundControlContext } from '../components/BackgroundControlProvider'
+import ParticleControlCard from '../components/particleControlCard'
 
 const GreetingBlock = styled.div<{ controlsOpen?: boolean }>`
   flex: 1;
@@ -22,26 +24,16 @@ const IntroText = styled.p`
   }
 `
 
-const CenteredA = styled.a`
-  text-align: center;
-  font-size: 1.25rem;
-  padding: 1rem;
-  color: ${({ theme }) => theme.text};
-
-  border: 2px ${({ theme }) => theme.text} solid;
-`
-
 export default function Home() {
+  const { firstHit } = useContext(BackgroundControlContext)
   return (
     <>
-      <GreetingBlock>
-        <IntroText>
-          {`Hello, I'm `} <b>Patrick DeVries</b>, a full-stack developer
-        </IntroText>
-        <Link href="/portfolio" passHref={true}>
-          <CenteredA>Check out my projects</CenteredA>
-        </Link>
-      </GreetingBlock>
+      <ParticleControlCard />
+      {firstHit && (
+        <GreetingBlock>
+          <IntroText>Click the gear to open the background settings</IntroText>
+        </GreetingBlock>
+      )}
     </>
   )
 }
