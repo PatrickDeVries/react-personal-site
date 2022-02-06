@@ -1,7 +1,7 @@
 import { Canvas } from '@react-three/fiber'
 import React, { useContext } from 'react'
 import { BackgroundControlContext } from '../BackgroundControlProvider'
-import '../particlematerial'
+import './particlematerial'
 import Particles from './Particles'
 import { BgCanvas } from './style'
 

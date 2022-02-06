@@ -9,18 +9,14 @@ import { MOBILE } from '../styles/mediaQueries'
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 3rem;
-  background-color: ${({ theme }) => theme.background}77;
-  z-index: 1;
-  height: 100%;
-  width: 100%;
+  padding: 2rem;
 `
 
 const SectionHeader = styled(Text.Container)`
   display: block;
   width: 100%;
   text-align: left;
-  padding: 1rem 0;
+  padding: 2rem 0 1rem;
 `
 
 const WorkItems = styled.div`
@@ -38,7 +34,6 @@ const WorkItems = styled.div`
 
 const Work = () => {
   const { theme } = useTheme()
-  // theme.ba``
   return (
     <Wrapper>
       {Object.keys(myWork).map(key => (

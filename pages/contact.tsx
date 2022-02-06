@@ -7,20 +7,15 @@ import styled from 'styled-components'
 import { useTheme } from '../components/ThemeContext'
 
 const Wrapper = styled.div`
+  padding: 3rem;
+  margin-top: auto;
+  margin-bottom: auto;
   display: flex;
   flex-direction: column;
-  background-color: ${({ theme }) => theme.background}77;
-  z-index: 1;
-  height: 100%;
-  width: 100%;
+  align-items: center;
 `
 
-const ContactText = styled(Text.Container)`
-  margin-top: 20%;
-  margin-left: auto;
-  margin-right: auto;
-  padding: 2rem;
-`
+const ContactText = styled(Text.Container)``
 
 const SocialLinks = styled.div`
   margin-left: auto;
@@ -29,12 +24,7 @@ const SocialLinks = styled.div`
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  @media (min-width: 800px) {
-    flex-direction: row;
-  }
-  @media (max-width: 799px) {
-    flex-direction: column;
-  }
+  justify-content: center;
 `
 
 const SocialImage = styled.a`

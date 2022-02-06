@@ -1,9 +1,10 @@
+import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
 import styled from 'styled-components'
-import { MainNavigation } from '.'
 import BackgroundParticles from './backgroundParticles/'
+import Header from './header'
 
-const Body = styled.div`
+const Main = styled.div`
   background-repeat: no-repeat;
   ${({ theme }) =>
     `background-image: linear-gradient(168deg, ${theme.background}, ${theme.strongHighlight});`}
@@ -12,21 +13,34 @@ const Body = styled.div`
   align-items: center;
   height: 100vh;
   width: 100%;
-  padding-top: 3rem;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   z-index: 2;
 `
 
+const Body = styled.div<{ tint?: boolean }>`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 1;
+  ${({ tint, theme }) => tint && `background-color: ${theme.background}77;`}
+`
+
 const Layout = props => {
+  const router = useRouter()
   return (
     <>
       <Head>
         <title>Patrick DeVries</title>
       </Head>
       <BackgroundParticles />
-      <MainNavigation />
-      <Body>{props.children}</Body>
+      <Main>
+        <Header />
+        <Body tint={router.pathname !== '/background'}>{props.children}</Body>
+      </Main>
     </>
   )
 }

@@ -1,5 +1,4 @@
 import { Button, Card, Label, RangeSlider, Text, TextInput } from '@headstorm/foundry-react-ui'
-import { useRouter } from 'next/dist/client/router'
 import React, { useContext } from 'react'
 import { BackgroundControlContext } from '../BackgroundControlProvider'
 import { useTheme } from '../ThemeContext'
@@ -30,13 +29,12 @@ const ParticleControlCard: React.FC = () => {
   } = useContext(BackgroundControlContext)
 
   const { theme } = useTheme()
-  const router = useRouter()
 
   return (
     <Card
       header={<Text color={theme.text}>Controls</Text>}
       StyledContainer={ControlCard}
-      containerProps={{ controlsOpen: controlsOpen && router.pathname === '/' }}
+      containerProps={{ controlsOpen: controlsOpen }}
     >
       <ControlRows>
         <Label labelText="Particle count" color="black">

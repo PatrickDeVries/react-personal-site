@@ -23,7 +23,7 @@ const StyledCard = styled.div`
   ${MOBILE} {
     max-width: 90%;
   }
-  outline: 2px solid ${({ theme }) => theme.strongHighlight};
+  outline: 1px solid ${({ theme }) => theme.secondary};
 `
 
 const BodySection = styled.div`
