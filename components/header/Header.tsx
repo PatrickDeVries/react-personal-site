@@ -35,8 +35,16 @@ const Header: React.FC = () => {
       ? 3
       : 4,
   )
-  const { setFirstHit, controlsOpen, setControlsOpen, updateState } =
-    useContext(BackgroundControlContext)
+  const {
+    setFirstHit,
+    colorA,
+    setColorA,
+    colorB,
+    setColorB,
+    controlsOpen,
+    setControlsOpen,
+    updateState,
+  } = useContext(BackgroundControlContext)
 
   const navItems: { label: string; onClick: () => void }[] = [
     {
@@ -104,8 +112,16 @@ const Header: React.FC = () => {
             onClick={() => {
               if (theme.name === 'light') {
                 setTheme(darkColors)
+                if (colorA === lightColors.primary && colorB === lightColors.secondary) {
+                  setColorA(darkColors.primary)
+                  setColorB(darkColors.secondary)
+                }
               } else {
                 setTheme(lightColors)
+                if (colorA === darkColors.primary && colorB === darkColors.secondary) {
+                  setColorA(lightColors.primary)
+                  setColorB(lightColors.secondary)
+                }
               }
             }}
           >

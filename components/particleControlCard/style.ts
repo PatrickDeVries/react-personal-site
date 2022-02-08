@@ -7,7 +7,7 @@ export const ControlCard = styled(Card.Container)`
   width: 100%;
   z-index: 1;
   height: auto;
-  transition: all 50ms ease-out;
+  transition: all 0.25s ease;
   flex: ${({ controlsOpen }) => (controlsOpen ? '1' : '0')};
   overflow: hidden;
   ${({ controlsOpen }) =>
@@ -51,6 +51,8 @@ export const ControlRows = styled.div`
 
 export const Footer = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
 `

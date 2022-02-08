@@ -2,26 +2,40 @@ import { useContext } from 'react'
 import styled from 'styled-components'
 import { BackgroundControlContext } from '../components/BackgroundControlProvider'
 import ParticleControlCard from '../components/particleControlCard'
+import { MOBILE } from '../styles/mediaQueries'
 
-const GreetingBlock = styled.div<{ controlsOpen?: boolean }>`
-  flex: 1;
-  align-self: center;
-  align-items: center;
+const Wrapper = styled.div<{ firstHit?: boolean }>`
+  position: fixed;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  filter: drop-shadow(0 0 4rem ${({ theme }) => theme.primary});
+  justify-content: flex-end;
+  top: 2rem;
+  right: 3.5rem;
+  ${MOBILE} {
+    right: 6rem;
+  }
+  background-color: ${({ theme }) => theme.background}77;
+  border: 1px ${({ theme }) => theme.secondary} solid;
+  padding: 1rem;
+
+  ${({ firstHit }) => !firstHit && 'transform: translateY(-100vh);'}
+  transition: transform .25s ease;
 `
 
-const IntroText = styled.p`
-  text-align: center;
+const GearIndicator = styled.p`
+  text-align: right;
+  margin: 0;
   color: ${({ theme }) => theme.text};
-  font-size: 2rem;
+  font-size: 1rem;
+  z-index: 2;
+`
 
-  > b {
-    color: ${({ theme }) => theme.secondary};
-    font-weight: 500;
-  }
+const Instructions = styled.p`
+  text-align: right;
+  margin: 0;
+  color: ${({ theme }) => theme.text};
+  font-size: 1rem;
+  z-index: 2;
 `
 
 export default function Home() {
@@ -29,11 +43,10 @@ export default function Home() {
   return (
     <>
       <ParticleControlCard />
-      {firstHit && (
-        <GreetingBlock>
-          <IntroText>Click the gear to open the background settings</IntroText>
-        </GreetingBlock>
-      )}
+      <Wrapper firstHit={firstHit}>
+        <GearIndicator>^</GearIndicator>
+        <Instructions>Click the gear to open the background settings </Instructions>
+      </Wrapper>
     </>
   )
 }

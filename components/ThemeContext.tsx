@@ -5,6 +5,7 @@ export type Theme = {
   text: string
   primary: string
   secondary: string
+  danger: string
   background: string
   backgroundHighlight: string
   strongHighlight: string

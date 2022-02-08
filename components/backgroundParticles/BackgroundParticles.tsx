@@ -13,7 +13,8 @@ const BackgroundParticles: React.FC = () => {
     baseTurnV,
     turnVar,
     freeRate,
-    color,
+    colorA,
+    colorB,
 
     positions,
     setPositions,
@@ -45,7 +46,8 @@ const BackgroundParticles: React.FC = () => {
           angles={angles}
           setAngles={setAngles}
           particles={particles}
-          color={color}
+          colorA={colorA}
+          colorB={colorB}
         />
       </Canvas>
     </BgCanvas>

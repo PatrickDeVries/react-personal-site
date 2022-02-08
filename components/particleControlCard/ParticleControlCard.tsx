@@ -1,4 +1,5 @@
-import { Button, Card, Label, RangeSlider, Text, TextInput } from '@headstorm/foundry-react-ui'
+import { Button, Card, Label, RangeSlider, Text } from '@headstorm/foundry-react-ui'
+import { useRouter } from 'next/dist/client/router'
 import React, { useContext } from 'react'
 import { BackgroundControlContext } from '../BackgroundControlProvider'
 import { useTheme } from '../ThemeContext'
@@ -20,15 +21,20 @@ const ParticleControlCard: React.FC = () => {
     setTurnVar,
     freeRate,
     setFreeRate,
-    color,
-    setColor,
+    colorA,
+    setColorA,
+    colorB,
+    setColorB,
 
     setPositions,
     setVelocities,
     setAngles,
+
+    resetSettings,
   } = useContext(BackgroundControlContext)
 
   const { theme } = useTheme()
+  const router = useRouter()
 
   return (
     <Card
@@ -37,7 +43,7 @@ const ParticleControlCard: React.FC = () => {
       containerProps={{ controlsOpen: controlsOpen }}
     >
       <ControlRows>
-        <Label labelText="Particle count" color="black">
+        <Label labelText="Particle count" color={theme.text}>
           <RangeSlider
             min={1}
             max={99999}
@@ -49,7 +55,7 @@ const ParticleControlCard: React.FC = () => {
             }}
           />
         </Label>
-        <Label labelText="Base Velocity" color="black">
+        <Label labelText="Base Velocity" color={theme.text}>
           <RangeSlider
             min={0}
             max={1}
@@ -61,7 +67,7 @@ const ParticleControlCard: React.FC = () => {
             }}
           />
         </Label>
-        <Label labelText="Velocity Variance" color="black">
+        <Label labelText="Velocity Variance" color={theme.text}>
           <RangeSlider
             min={0}
             max={1}
@@ -73,7 +79,7 @@ const ParticleControlCard: React.FC = () => {
             }}
           />
         </Label>
-        <Label labelText="Base Turn Speed" color="black">
+        <Label labelText="Base Turn Speed" color={theme.text}>
           <RangeSlider
             min={0}
             max={parseFloat((Math.PI / 4).toFixed(4))}
@@ -85,7 +91,7 @@ const ParticleControlCard: React.FC = () => {
             }}
           />
         </Label>
-        <Label labelText="Turn Speed Variance" color="black">
+        <Label labelText="Turn Speed Variance" color={theme.text}>
           <RangeSlider
             min={0}
             max={parseFloat((Math.PI / 4).toFixed(4))}
@@ -97,7 +103,7 @@ const ParticleControlCard: React.FC = () => {
             }}
           />
         </Label>
-        <Label labelText="Free Thinkers (1 per x)" color="black">
+        <Label labelText="Free Thinkers (1 per x)" color={theme.text}>
           <RangeSlider
             min={0}
             max={particleCount}
@@ -111,18 +117,36 @@ const ParticleControlCard: React.FC = () => {
         </Label>
       </ControlRows>
       <Footer>
-        <Label labelText="Color" color="black">
-          <TextInput maxLength={7} value={color} onChange={event => setColor(event.target.value)} />
+        <Label labelText="Left color" color={theme.text}>
+          <input
+            type="color"
+            value={colorA}
+            onChange={event => {
+              setColorA(event.target.value)
+              router.push('/background')
+            }}
+          />
+        </Label>
+        <Label labelText="Right color" color={theme.text}>
+          <input type="color" value={colorB} onChange={event => setColorB(event.target.value)} />
         </Label>
         <Button
-          color={theme.primary}
+          color={theme.danger}
+          onClick={() => {
+            resetSettings()
+          }}
+        >
+          Restore settings to Default
+        </Button>
+        <Button
+          color={theme.danger}
           onClick={() => {
             setPositions([])
             setVelocities([])
             setAngles([])
           }}
         >
-          Reset Particles
+          Reset Particle Locations
         </Button>
       </Footer>
     </Card>

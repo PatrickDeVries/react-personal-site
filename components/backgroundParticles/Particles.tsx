@@ -1,33 +1,107 @@
 import { useFrame, useThree } from '@react-three/fiber'
-import React, { useRef } from 'react'
-import { BufferAttribute, Points } from 'three'
+import React, { Dispatch, MutableRefObject, SetStateAction, useMemo, useRef } from 'react'
+import * as THREE from 'three'
+import { BufferAttribute, BufferGeometry, Points, ShaderMaterial } from 'three'
 import './particlematerial'
+import { fragment, vertex } from './particlematerial'
 
-const Particles = props => {
+type Props = {
+  particleCount: number
+  baseV: number
+  vVar: number
+  baseTurnV: number
+  turnVar: number
+  freeRate: number
+  colorA: string
+  colorB: string
+
+  positions: number[]
+  setPositions: Dispatch<SetStateAction<number[]>>
+  velocities: number[]
+  setVelocities: Dispatch<SetStateAction<number[]>>
+  angles: number[]
+  setAngles: Dispatch<SetStateAction<number[]>>
+
+  particles: MutableRefObject<BufferGeometry>
+}
+
+const GetShaderMaterial: React.FC<{
+  colorA: string
+  colorB: string
+  bboxMin: number
+  bboxMax: number
+}> = props => {
+  const ref = useRef<ShaderMaterial>()
+  const uniforms = useMemo(
+    () =>
+      THREE.UniformsUtils.merge([
+        {
+          colorA: { value: new THREE.Color(props.colorA) },
+          colorB: { value: new THREE.Color(props.colorB) },
+          bboxMin: { value: props.bboxMin },
+          bboxMax: { value: props.bboxMax },
+        },
+      ]),
+    [],
+  )
+
+  // this works, but is not dependent on props
+  useFrame(state => {
+    ref.current.uniforms.colorA.value = new THREE.Color(props.colorA)
+    ref.current.uniforms.colorB.value = new THREE.Color(props.colorB)
+    ref.current.uniforms.bboxMin.value = props.bboxMin
+    ref.current.uniforms.bboxMax.value = props.bboxMax
+  })
+
+  return (
+    <shaderMaterial
+      ref={ref}
+      attach="material"
+      uniforms={uniforms}
+      vertexShader={vertex}
+      fragmentShader={fragment}
+    />
+  )
+}
+
+const Particles: React.FC<Props> = ({
+  particleCount,
+  baseV,
+  vVar: vVariance,
+  baseTurnV: baseTurnSpeed,
+  turnVar: turnVariance,
+  freeRate,
+  colorA,
+  colorB,
+
+  positions,
+  setPositions,
+  velocities,
+  setVelocities,
+  angles,
+  setAngles,
+
+  particles,
+}) => {
   const viewport = useThree(state => state.viewport)
-  const particles = props.particles
   const pointRef = useRef<Points>()
-  const particleCount = props.particleCount
-  const baseV = props.baseV
-  const vVariance = props.vVar
-  const baseTurnSpeed = props.baseTurnV
-  const turnVariance = props.turnVar
   const sizes = []
+
   for (let i = 0; i < 999999; i++) {
     sizes.push(5)
   }
 
-  if (props.positions.length < particleCount) {
-    const positions = []
-    const velocities = []
-    const angles = []
+  if (positions.length < particleCount) {
+    const newPositions = []
+    const newVelocities = []
+    const newAngles = []
     for (let i = 0; i < 999999; i++) {
-      positions.push(
+      newPositions.push(
         Math.random() * viewport.width - viewport.width / 2,
         Math.random() * viewport.height - viewport.height / 2,
         0,
       )
-      velocities.push(Math.random(), Math.random(), 0)
+      newVelocities.push(Math.random(), Math.random(), 0)
       let newA = Math.random() * 2 * Math.PI
       if (
         newA < 0.01 ||
@@ -38,12 +112,12 @@ const Particles = props => {
       ) {
         newA += 0.03
       }
-      angles.push(newA)
+      newAngles.push(newA)
     }
 
-    props.setPositions(positions)
-    props.setVelocities(velocities)
-    props.setAngles(angles)
+    setPositions(newPositions)
+    setVelocities(newVelocities)
+    setAngles(newAngles)
   }
 
   const pi2 = Math.PI * 2
@@ -79,7 +153,7 @@ const Particles = props => {
           ) {
             pps.setXY(i, 0, 0)
           }
-        } else if (i % props.freeRate !== 0 && i > 0) {
+        } else if (i % freeRate !== 0 && i > 0) {
           let goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
           let newAngle =
             ((goalAngle - angle + Math.PI) % pi2) - Math.PI < turnV
@@ -104,19 +178,19 @@ const Particles = props => {
         <bufferAttribute
           attachObject={['attributes', 'position']}
           count={particleCount}
-          array={new Float32Array(props.positions)}
+          array={new Float32Array(positions)}
           itemSize={3}
         />
         <bufferAttribute
           attachObject={['attributes', 'velocity']}
           count={particleCount}
-          array={new Float32Array(props.velocities)}
+          array={new Float32Array(velocities)}
           itemSize={3}
         />
         <bufferAttribute
           attachObject={['attributes', 'angle']}
           count={particleCount}
-          array={new Float32Array(props.angles)}
+          array={new Float32Array(angles)}
           itemSize={1}
         />
         <bufferAttribute
@@ -126,7 +200,7 @@ const Particles = props => {
           itemSize={1}
         />
       </bufferGeometry>
-      <particleMaterial />
+      <GetShaderMaterial colorA={colorA} colorB={colorB} bboxMin={-1} bboxMax={1} />
     </points>
   )
 }

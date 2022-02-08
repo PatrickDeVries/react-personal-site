@@ -21,7 +21,7 @@ const StyledCard = styled.div`
     min-height: 40vh;
   }
   ${MOBILE} {
-    max-width: 90%;
+    max-width: 100%;
   }
   outline: 1px solid ${({ theme }) => theme.secondary};
 `

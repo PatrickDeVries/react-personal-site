@@ -22,13 +22,10 @@ const SocialLinks = styled.div`
   margin-right: auto;
   margin-bottom: 3rem;
   display: flex;
+  gap: 2rem;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-`
-
-const SocialImage = styled.a`
-  margin: 0 2.5rem 0 2.5rem;
 `
 
 const SocialLink = styled.div`
@@ -75,10 +72,8 @@ const Contact = () => {
         {socials.map(social => (
           <SocialLink key={social.site}>
             <Link href={social.href} passHref={true}>
-              <a>
-                <SocialImage>
-                  <Icon path={social.src} size="10rem" color={theme.primary} />
-                </SocialImage>
+              <a href="">
+                <Icon path={social.src} size="10rem" color={theme.primary} />
               </a>
             </Link>
             <Text size=".75rem" color={theme.primary}>

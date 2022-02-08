@@ -1,5 +1,24 @@
-import { createContext, Dispatch, MutableRefObject, SetStateAction, useRef, useState } from 'react'
+import {
+  createContext,
+  Dispatch,
+  MutableRefObject,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react'
 import { BufferGeometry } from 'three'
+import { darkColors } from '../styles/myColors'
+import { useTheme } from './ThemeContext'
+
+const DEFAULT_SETTINGS = {
+  particleCount: 20000,
+  baseV: 0.05,
+  vVar: 0.003,
+  baseTurnV: 0.03 * Math.PI,
+  turnVar: 0.03 * Math.PI,
+  freeRate: 200,
+}
 
 export type BackgroundControl = {
   firstHit: boolean
@@ -19,8 +38,10 @@ export type BackgroundControl = {
   setTurnVar: (newVal: number) => void
   freeRate: number
   setFreeRate: (newVal: number) => void
-  color: string
-  setColor: (newVal: string) => void
+  colorA: string
+  setColorA: (newVal: string) => void
+  colorB: string
+  setColorB: (newVal: string) => void
 
   positions: number[]
   setPositions: Dispatch<SetStateAction<number[]>>
@@ -32,21 +53,26 @@ export type BackgroundControl = {
   particles: MutableRefObject<BufferGeometry>
 
   updateState: () => void
+  resetSettings: () => void
 }
 
 export const BackgroundControlContext = createContext<BackgroundControl | null>(null)
 
 export const BackgroundControlProvider: React.FC = ({ children }) => {
+  const { theme } = useTheme()
+  const [isInitialized, setIsInitialized] = useState<boolean>(false)
+
   const [firstHit, setFirstHit] = useState<boolean>(true)
   const [controlsOpen, setControlsOpen] = useState<boolean>(false)
 
-  const [particleCount, setParticleCount] = useState<number>(20000)
-  const [baseV, setBaseV] = useState<number>(0.05)
-  const [vVar, setVVar] = useState<number>(0.003)
-  const [baseTurnV, setBaseTurnV] = useState<number>(0.03 * Math.PI)
-  const [turnVar, setTurnVar] = useState<number>(0.03 * Math.PI)
-  const [freeRate, setFreeRate] = useState<number>(200)
-  const [color, setColor] = useState<string>('#114455')
+  const [particleCount, setParticleCount] = useState<number>(DEFAULT_SETTINGS.particleCount)
+  const [baseV, setBaseV] = useState<number>(DEFAULT_SETTINGS.baseV)
+  const [vVar, setVVar] = useState<number>(DEFAULT_SETTINGS.vVar)
+  const [baseTurnV, setBaseTurnV] = useState<number>(DEFAULT_SETTINGS.baseV)
+  const [turnVar, setTurnVar] = useState<number>(DEFAULT_SETTINGS.baseTurnV)
+  const [freeRate, setFreeRate] = useState<number>(DEFAULT_SETTINGS.freeRate)
+  const [colorA, setColorA] = useState<string>(theme.primary)
+  const [colorB, setColorB] = useState<string>(theme.secondary)
 
   const [positions, setPositions] = useState<number[]>([])
   const [velocities, setVelocities] = useState<number[]>([])
@@ -54,12 +80,64 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
 
   const particles = useRef<BufferGeometry>()
 
+  useEffect(() => {
+    const {
+      particleCount: particleCountStore,
+      baseV: baseVStore,
+      vVar: vVarStore,
+      baseTurnV: baseTurnVStore,
+      turnVar: turnVarStore,
+      freeRate: freeRateStore,
+      colorA: colorAStore,
+      colorB: colorBStore,
+    } = JSON.parse(localStorage.getItem('background-settings')) ?? {}
+    setParticleCount(particleCountStore ?? DEFAULT_SETTINGS.particleCount)
+    setBaseV(baseVStore ?? DEFAULT_SETTINGS.baseV)
+    setVVar(vVarStore ?? DEFAULT_SETTINGS.vVar)
+    setBaseTurnV(baseTurnVStore ?? DEFAULT_SETTINGS.baseTurnV)
+    setTurnVar(turnVarStore ?? DEFAULT_SETTINGS.turnVar)
+    setFreeRate(freeRateStore ?? DEFAULT_SETTINGS.freeRate)
+    setColorA(colorAStore ?? darkColors.primary)
+    setColorB(colorBStore ?? darkColors.secondary)
+    setIsInitialized(true)
+  }, [])
+
+  useEffect(() => {
+    if (isInitialized) {
+      localStorage.setItem(
+        'background-settings',
+        JSON.stringify({
+          particleCount,
+          baseV,
+          vVar,
+          baseTurnV,
+          turnVar,
+          freeRate,
+          colorA,
+          colorB,
+        }),
+      )
+    }
+  }, [baseTurnV, baseV, colorA, colorB, freeRate, isInitialized, particleCount, turnVar, vVar])
+
   const updateState = () => {
     if (particles.current) {
       setPositions(particles.current.attributes.position.array as number[])
       setVelocities(particles.current.attributes.velocity.array as number[])
       setAngles(particles.current.attributes.angle.array as number[])
     }
+  }
+
+  const resetSettings = () => {
+    updateState()
+    setParticleCount(DEFAULT_SETTINGS.particleCount)
+    setBaseV(DEFAULT_SETTINGS.baseV)
+    setVVar(DEFAULT_SETTINGS.vVar)
+    setBaseTurnV(DEFAULT_SETTINGS.baseTurnV)
+    setTurnVar(DEFAULT_SETTINGS.turnVar)
+    setFreeRate(DEFAULT_SETTINGS.freeRate)
+    setColorA(theme.primary)
+    setColorB(theme.secondary)
   }
 
   function setWrapper<T>(setter: Dispatch<SetStateAction<T>>): (newVal: T) => void {
@@ -89,8 +167,10 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
         setTurnVar: setWrapper<number>(setTurnVar),
         freeRate,
         setFreeRate: setWrapper<number>(setFreeRate),
-        color,
-        setColor: setWrapper<string>(setColor),
+        colorA,
+        setColorA: setWrapper<string>(setColorA),
+        colorB,
+        setColorB: setWrapper<string>(setColorB),
 
         positions,
         setPositions,
@@ -102,15 +182,10 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
         particles,
 
         updateState,
+        resetSettings,
       }}
     >
       {children}
     </BackgroundControlContext.Provider>
   )
 }
-
-// export const useParticleControls = (): BackgroundControl => {
-//   const {context} = useContext(BackgroundControlContext)
-
-//   return { ...context }
-// }

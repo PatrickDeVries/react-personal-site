@@ -32,29 +32,29 @@ const WorkItems = styled.div`
   width: 100%;
 `
 
-const Work = () => {
+const Portfolio = () => {
   const { theme } = useTheme()
   return (
     <Wrapper>
       {Object.keys(myWork).map(key => (
-        <>
+        <section key={`${key}-section`}>
           <Text
-            key={`${key}-text`}
+            key={`${key}-header`}
             color={theme.primary}
             size="1.25rem"
             StyledContainer={SectionHeader}
           >
             {key}:
           </Text>
-          <WorkItems key={`${key}-work`}>
+          <WorkItems key={`${key}-work-items`}>
             {myWork[key].map(item => (
               <WorkCard key={item.header} item={item} />
             ))}
           </WorkItems>
-        </>
+        </section>
       ))}
     </Wrapper>
   )
 }
 
-export default Work
+export default Portfolio

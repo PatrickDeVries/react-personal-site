@@ -1,4 +1,4 @@
-import { darken } from 'polished'
+import { darken, mix } from 'polished'
 import styled from 'styled-components'
 import { DESKTOP, MOBILE } from '../../styles/mediaQueries'
 
@@ -44,11 +44,12 @@ export const NavItem = styled.div<{ active?: boolean }>`
   padding: 0 0.5rem;
 
   white-space: nowrap;
-  color: ${({ theme, active }) => (active ? darken(0.25)(theme.text) : theme.text)};
+  color: ${({ theme, active }) =>
+    active ? mix(0.5, theme.backgroundHighlight, theme.text) : theme.text};
   background-color: ${({ theme }) => theme.backgroundHighlight};
 
   &:hover {
-    color: ${({ theme }) => darken(0.25)(theme.text)};
+    color: ${({ theme }) => mix(0.5, theme.backgroundHighlight, theme.text)};
   }
   user-select: none;
   cursor: pointer;
@@ -63,7 +64,7 @@ export const DropDown = styled.div<{ expanded?: boolean }>`
   top: calc(3rem - 3px);
   right: -100vw;
   transform: translateX(${({ expanded }) => (expanded ? '-100vw' : '0')});
-  transition: transform 0.15s ease-in-out;
+  transition: transform 0.15s ease;
 
   width: 100vw;
   z-index: 3;
@@ -89,6 +90,7 @@ export const DropDownItem = styled.div<{ active?: boolean }>`
 
   color: ${({ theme, active }) => (active ? darken(0.25)(theme.text) : theme.text)};
   font-size: 1.25rem;
+  text-align: center;
 
   &:hover {
     color: ${({ theme }) => darken(0.25)(theme.text)};
@@ -111,9 +113,12 @@ export const NavIcon = styled.div<{ mobileOnly?: boolean }>`
   padding: 0 0.5rem;
 
   color: ${({ theme }) => theme.secondary};
+  * {
+    transition: color 0.05s ease;
+  }
 
   &:hover {
-    color: ${({ theme }) => darken(0.25)(theme.secondary)};
+    color: ${({ theme }) => mix(0.5, theme.backgroundHighlight, theme.secondary)};
   }
   user-select: none;
   cursor: pointer;
@@ -158,6 +163,15 @@ export const MenuIcon = styled.div<{ expanded?: boolean; size?: string }>`
       transform: rotateZ(${({ expanded }) => (expanded ? '-45deg' : '0deg')});
     }
   }
+  div > div {
+    background-color: ${({ theme }) => theme.secondary};
+  }
+
+  &:hover {
+    div > div {
+      background-color: ${({ theme }) => mix(0.5, theme.backgroundHighlight, theme.secondary)};
+    }
+  }
 `
 
 export const BarWrapper = styled.div`
@@ -166,14 +180,13 @@ export const BarWrapper = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  transition: all 0.15s linear;
+  transition: all 0.15s ease;
 `
 
 export const MenuIconBar = styled.div`
   position: relative;
   width: 100%;
   height: 3px;
-  background-color: ${({ theme }) => theme.secondary};
   border-radius: 2px;
-  transition: all 0.15s linear 0.15s;
+  transition: all 0.15s ease 0.15s;
 `
