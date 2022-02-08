@@ -49,6 +49,10 @@ export const ControlRows = styled.div`
   }
 `
 
+export const ColorInput = styled.input`
+  width: 10rem;
+`
+
 export const Footer = styled.div`
   display: flex;
   justify-content: space-evenly;
