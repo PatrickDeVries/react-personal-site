@@ -1,7 +1,7 @@
 import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
 import styled from 'styled-components'
-import BackgroundParticles from './backgroundParticles/'
+import BackgroundParticles from './backgroundParticles'
 import Header from './header'
 
 const Main = styled.div`
