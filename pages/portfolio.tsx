@@ -2,7 +2,7 @@ import { Text } from '@headstorm/foundry-react-ui'
 import React from 'react'
 import styled from 'styled-components'
 import { useTheme } from '../components/ThemeContext'
-import WorkCard from '../components/WorkCard'
+import WorkCard from '../components/workCard'
 import myWork from '../resources/myWork'
 import { MOBILE } from '../styles/mediaQueries'
 

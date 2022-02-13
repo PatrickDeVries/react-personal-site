@@ -3,9 +3,9 @@ import { mdiOpenInNew } from '@mdi/js'
 import Link from 'next/link'
 import React from 'react'
 import styled from 'styled-components'
-import { workItem } from '../resources/myWork'
-import { DESKTOP, MOBILE, SMALL_MOBILE } from '../styles/mediaQueries'
-import { useTheme } from './ThemeContext'
+import { workItem } from '../../resources/myWork'
+import { DESKTOP, MOBILE, SMALL_MOBILE } from '../../styles/mediaQueries'
+import { useTheme } from '../ThemeContext'
 
 const StyledCard = styled.div`
   background-color: ${({ theme }) => theme.backgroundHighlight};
