@@ -55,6 +55,8 @@ export const RangeWrapper = styled.div<{ min: number; max: number; value: number
 
   > div {
     background-color: ${({ theme }) => theme.primary};
+    cursor: pointer;
+
     z-index: 2;
     width: calc(100% * ${({ min, max, value }) => (value - min) / (max - min)});
     pointer-events: none;
@@ -63,6 +65,7 @@ export const RangeWrapper = styled.div<{ min: number; max: number; value: number
     appearance: unset;
     background-color: ${({ theme }) => theme.text};
     width: 100%;
+    cursor: pointer;
   }
   input[type='range']::-webkit-slider-thumb {
     -webkit-appearance: none;
