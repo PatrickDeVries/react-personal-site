@@ -9,7 +9,10 @@ import { MOBILE } from '../styles/mediaQueries'
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  padding: 2rem 20%;
+  ${MOBILE} {
+    padding: 1rem;
+  }
 `
 
 const SectionHeader = styled(Text.Container)`
