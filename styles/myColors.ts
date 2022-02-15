@@ -2,22 +2,22 @@ import { Theme } from '../components/ThemeContext'
 
 export const darkColors: Theme = {
   name: 'dark',
-  text: 'white',
+  text: '#FFFFFF',
   primary: '#00FF9D',
   secondary: '#03FFFF',
   danger: '#EC4678',
   background: '#031016',
-  backgroundHighlight: '#0b232e',
+  backgroundHighlight: '#0B232E',
   strongHighlight: '#113547',
 }
 
 export const lightColors: Theme = {
   name: 'light',
-  text: 'black',
-  primary: '#3277b3',
-  secondary: '#d705fc',
+  text: '#000000',
+  primary: '#3277B3',
+  secondary: '#D705FC',
   danger: '#EC4678',
-  background: '#ffffff',
-  backgroundHighlight: '#eeeeee',
-  strongHighlight: '#dddddd',
+  background: '#FFFFFF',
+  backgroundHighlight: '#EEEEEE',
+  strongHighlight: '#DDDDDD',
 }

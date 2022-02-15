@@ -1,11 +1,11 @@
 export type workItem = {
-  header: string;
-  image: string;
-  description: string;
-  tags?: string[];
-  href?: string;
-  page?: string;
-};
+  header: string
+  image: string
+  description: string
+  tags?: string[]
+  href?: string
+  page?: string
+}
 
 const myWork: Record<string, workItem[]> = {
   Certifications: [
@@ -78,6 +78,6 @@ const myWork: Record<string, workItem[]> = {
       page: '/static/lasers/index.html',
     },
   ],
-};
+}
 
-export default myWork;
+export default myWork

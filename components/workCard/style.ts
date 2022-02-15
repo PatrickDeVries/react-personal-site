@@ -50,13 +50,13 @@ export const BodyText = styled.p`
 `
 
 export const TagSection = styled.div`
+  padding-top: 1rem;
   display: flex;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
+  justify-content: space-evenly;
   gap: 1rem;
-  flex-direction: row;
   width: 100%;
   margin-left: auto;
-  bottom: 1rem;
 `
 
 export const Tag = styled.p`
@@ -65,4 +65,6 @@ export const Tag = styled.p`
   border-radius: 0.25rem;
   padding: 0.5rem;
   margin: 0;
+  flex-basis: 30%;
+  flex-grow: 1;
 `

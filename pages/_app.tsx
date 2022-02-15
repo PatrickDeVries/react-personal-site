@@ -6,7 +6,7 @@ import { BackgroundControlProvider } from '../components/BackgroundControlProvid
 import Layout from '../components/Layout'
 import { ThemeProvider as CustomThemeProvider } from '../components/ThemeContext'
 import '../styles/globals.css'
-import { darkColors } from '../styles/myColors'
+import { darkColors, lightColors } from '../styles/myColors'
 
 function MyApp({ Component, pageProps }) {
   const [isInitialized, setIsInitialized] = React.useState(false)
@@ -21,6 +21,8 @@ function MyApp({ Component, pageProps }) {
 
   React.useEffect(() => {
     setTheme(JSON.parse(localStorage.getItem('theme')) || darkColors)
+    if (theme.name === 'light') setTheme(lightColors)
+    else setTheme(darkColors)
     setIsInitialized(true)
   }, [])
 

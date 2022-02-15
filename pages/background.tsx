@@ -45,7 +45,7 @@ export default function Home() {
       <ParticleControlCard />
       <Wrapper firstHit={firstHit}>
         <GearIndicator>^</GearIndicator>
-        <Instructions>Click the gear to open the background settings </Instructions>
+        <Instructions>Click the gear to open the particle settings </Instructions>
       </Wrapper>
     </>
   )

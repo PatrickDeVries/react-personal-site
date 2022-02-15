@@ -75,7 +75,7 @@ const Header: React.FC = () => {
       },
     },
     {
-      label: 'Background Settings',
+      label: 'Particles',
       onClick: () => {
         updateState()
         router.push('/background')

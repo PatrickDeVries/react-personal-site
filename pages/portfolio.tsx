@@ -32,6 +32,14 @@ const WorkItems = styled.div`
   width: 100%;
 `
 
+const ReadmeStats = styled.img`
+  border-radius: 0.5rem;
+  border: 1px solid ${({ theme }) => theme.secondary};
+  width: 100%;
+`
+
+const colorArg = (color: string) => color.replace('#', '')
+
 const Portfolio = () => {
   const { theme } = useTheme()
   return (
@@ -47,6 +55,16 @@ const Portfolio = () => {
             {key}:
           </Text>
           <WorkItems key={`${key}-work-items`}>
+            {key === 'Github Contributions' && (
+              <ReadmeStats
+                src={`https://github-readme-stats.vercel.app/api?username=patrickdevries&count_private=true&show_icons=true&title_color=${colorArg(
+                  theme.primary,
+                )}&text_color=${colorArg(theme.text)}&icon_color=${colorArg(
+                  theme.secondary,
+                )}&bg_color=${colorArg(theme.backgroundHighlight)}&hide_border=true&hide=issues`}
+                alt="GitHub user stats for patrickdevries"
+              />
+            )}
             {myWork[key].map(item => (
               <WorkCard key={item.header} item={item} />
             ))}
