@@ -18,6 +18,12 @@ const DEFAULT_SETTINGS = {
   baseTurnV: 0.03 * Math.PI,
   turnVar: 0.03 * Math.PI,
   freeRate: 200,
+  mouseSize: 0.5,
+}
+
+export type Mouse = {
+  x: number
+  y: number
 }
 
 export type BackgroundControl = {
@@ -38,6 +44,8 @@ export type BackgroundControl = {
   setTurnVar: (newVal: number) => void
   freeRate: number
   setFreeRate: (newVal: number) => void
+  mouseSize: number
+  setMouseSize: (newVal: number) => void
   colorA: string
   setColorA: (newVal: string) => void
   colorB: string
@@ -71,6 +79,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
   const [baseTurnV, setBaseTurnV] = useState<number>(DEFAULT_SETTINGS.baseV)
   const [turnVar, setTurnVar] = useState<number>(DEFAULT_SETTINGS.baseTurnV)
   const [freeRate, setFreeRate] = useState<number>(DEFAULT_SETTINGS.freeRate)
+  const [mouseSize, setMouseSize] = useState<number>(DEFAULT_SETTINGS.mouseSize)
   const [colorA, setColorA] = useState<string>(theme.primary)
   const [colorB, setColorB] = useState<string>(theme.secondary)
 
@@ -88,6 +97,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
       baseTurnV: baseTurnVStore,
       turnVar: turnVarStore,
       freeRate: freeRateStore,
+      mouseSize: mouseSizeStore,
       colorA: colorAStore,
       colorB: colorBStore,
     } = JSON.parse(localStorage.getItem('background-settings')) ?? {}
@@ -97,6 +107,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
     setBaseTurnV(baseTurnVStore ?? DEFAULT_SETTINGS.baseTurnV)
     setTurnVar(turnVarStore ?? DEFAULT_SETTINGS.turnVar)
     setFreeRate(freeRateStore ?? DEFAULT_SETTINGS.freeRate)
+    setMouseSize(mouseSizeStore ?? DEFAULT_SETTINGS.mouseSize)
     setColorA(colorAStore ?? darkColors.primary)
     setColorB(colorBStore ?? darkColors.secondary)
     setIsInitialized(true)
@@ -113,12 +124,24 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
           baseTurnV,
           turnVar,
           freeRate,
+          mouseSize,
           colorA,
           colorB,
         }),
       )
     }
-  }, [baseTurnV, baseV, colorA, colorB, freeRate, isInitialized, particleCount, turnVar, vVar])
+  }, [
+    baseTurnV,
+    baseV,
+    colorA,
+    colorB,
+    freeRate,
+    isInitialized,
+    mouseSize,
+    particleCount,
+    turnVar,
+    vVar,
+  ])
 
   const updateState = () => {
     if (particles.current) {
@@ -136,6 +159,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
     setBaseTurnV(DEFAULT_SETTINGS.baseTurnV)
     setTurnVar(DEFAULT_SETTINGS.turnVar)
     setFreeRate(DEFAULT_SETTINGS.freeRate)
+    setMouseSize(DEFAULT_SETTINGS.mouseSize)
     setColorA(theme.primary)
     setColorB(theme.secondary)
   }
@@ -167,6 +191,8 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
         setTurnVar: setWrapper<number>(setTurnVar),
         freeRate,
         setFreeRate: setWrapper<number>(setFreeRate),
+        mouseSize,
+        setMouseSize: setWrapper<number>(setMouseSize),
         colorA,
         setColorA: setWrapper<string>(setColorA),
         colorB,

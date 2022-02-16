@@ -5,26 +5,6 @@ import { BufferAttribute, BufferGeometry, Points, ShaderMaterial } from 'three'
 import './particlematerial'
 import { fragment, vertex } from './particlematerial'
 
-type Props = {
-  particleCount: number
-  baseV: number
-  vVar: number
-  baseTurnV: number
-  turnVar: number
-  freeRate: number
-  colorA: string
-  colorB: string
-
-  positions: number[]
-  setPositions: Dispatch<SetStateAction<number[]>>
-  velocities: number[]
-  setVelocities: Dispatch<SetStateAction<number[]>>
-  angles: number[]
-  setAngles: Dispatch<SetStateAction<number[]>>
-
-  particles: MutableRefObject<BufferGeometry>
-}
-
 const GetShaderMaterial: React.FC<{
   colorA: string
   colorB: string
@@ -64,6 +44,27 @@ const GetShaderMaterial: React.FC<{
   )
 }
 
+type Props = {
+  particleCount: number
+  baseV: number
+  vVar: number
+  baseTurnV: number
+  turnVar: number
+  freeRate: number
+  mouseSize: number
+  colorA: string
+  colorB: string
+
+  positions: number[]
+  setPositions: Dispatch<SetStateAction<number[]>>
+  velocities: number[]
+  setVelocities: Dispatch<SetStateAction<number[]>>
+  angles: number[]
+  setAngles: Dispatch<SetStateAction<number[]>>
+
+  particles: MutableRefObject<BufferGeometry>
+}
+
 const Particles: React.FC<Props> = ({
   particleCount,
   baseV,
@@ -71,6 +72,7 @@ const Particles: React.FC<Props> = ({
   baseTurnV: baseTurnSpeed,
   turnVar: turnVariance,
   freeRate,
+  mouseSize,
   colorA,
   colorB,
 
@@ -120,7 +122,24 @@ const Particles: React.FC<Props> = ({
     setAngles(newAngles)
   }
 
+  let mouse = { x: 0, y: 0 }
+
+  if (document) {
+    document.onmousemove = event => {
+      mouse = {
+        x: ((event.clientX - 0) * viewport.width) / window.innerWidth + -viewport.width / 2,
+        y: ((event.clientY - 0) * -viewport.height) / window.innerHeight + viewport.height / 2,
+      }
+    }
+  }
+
   const pi2 = Math.PI * 2
+  const getNewAngle = (angle: number, goalAngle: number, turnV: number) =>
+    (((goalAngle - angle + Math.PI) % pi2) - Math.PI < turnV
+      ? goalAngle
+      : goalAngle > (angle + Math.PI) % pi2
+      ? angle - turnV
+      : angle + turnV) % pi2
 
   const updatePositions = () => {
     if (particles.current) {
@@ -135,7 +154,13 @@ const Particles: React.FC<Props> = ({
 
         pps.setXY(i, pps.getX(i) + v * Math.cos(angle), pps.getY(i) + v * Math.sin(angle))
 
-        if (pps.getX(i) > viewport.width / 2 || pps.getX(i) < -viewport.width / 2) {
+        // mouse gap restrictions
+        if (Math.sqrt((pps.getX(i) - mouse.x) ** 2 + (pps.getY(i) - mouse.y) ** 2) < mouseSize) {
+          const angleFromMouse = Math.atan2(pps.getY(i) - mouse.y, pps.getX(i) - mouse.x)
+          const newAngle = getNewAngle(angle, angleFromMouse, turnV * 1.5) // slight boost to turn speed to make mouse circle cleaner
+          pas.setX(i, newAngle)
+        } else if (pps.getX(i) > viewport.width / 2 || pps.getX(i) < -viewport.width / 2) {
+          // width restrictions
           pas.setX(i, Math.atan2(v * Math.sin(angle), -v * Math.cos(angle)))
           // reset if it has somehow escaped
           if (
@@ -145,6 +170,7 @@ const Particles: React.FC<Props> = ({
             pps.setXY(i, 0, 0)
           }
         } else if (pps.getY(i) > viewport.height / 2 || pps.getY(i) < -viewport.height / 2) {
+          // height restrictions
           pas.setX(i, Math.atan2(-v * Math.sin(angle), v * Math.cos(angle)))
           // reset if it has somehow escaped
           if (
@@ -154,14 +180,11 @@ const Particles: React.FC<Props> = ({
             pps.setXY(i, 0, 0)
           }
         } else if (i % freeRate !== 0 && i > 0) {
+          // non-free particles
           let goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
-          let newAngle =
-            ((goalAngle - angle + Math.PI) % pi2) - Math.PI < turnV
-              ? goalAngle
-              : goalAngle > (angle + Math.PI) % pi2
-              ? angle - turnV
-              : angle + turnV
-          pas.setX(i, newAngle % pi2)
+          let newAngle = getNewAngle(angle, goalAngle, turnV)
+
+          pas.setX(i, newAngle)
         }
       }
     }

@@ -3,12 +3,14 @@ import { MOBILE } from '../../styles/mediaQueries'
 
 export const ControlCard = styled.div`
   background-color: ${({ theme }) => theme.backgroundHighlight}77;
-  width: 100%;
   z-index: 1;
-  height: auto;
   border-radius: 0.5rem;
-  transition: all 0.25s ease;
+  padding: ${({ controlsOpen }) => (controlsOpen ? '1rem' : '0')};
+
   flex: ${({ controlsOpen }) => (controlsOpen ? '1' : '0')};
+  width: 100%;
+  height: auto;
+  transition: all 0.25s ease;
   overflow: hidden;
   ${({ controlsOpen }) =>
     !controlsOpen &&
@@ -20,30 +22,40 @@ export const ControlCard = styled.div`
 
 export const ControlRows = styled.div`
   display: flex;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   justify-content: center;
   align-items: center;
   > div {
-    width: calc(33% - 1rem);
+    width: calc(33% - 0.5rem);
   }
   padding: 1rem 0;
   gap: 1rem;
 
   ${MOBILE} {
     > div {
-      width: calc(50% - 1rem);
+      width: calc(50% - 0.5rem);
+    }
+    > div:nth-last-child(2) {
+      order: 9;
+    }
+    > div:last-child {
+      order: 8;
     }
   }
 `
 
 export const ColorInput = styled.input`
-  width: 10rem;
+  width: 100%;
+  background-color: ${({ theme }) => theme.strongHighlight};
+  border: 1px solid ${({ theme }) => theme.secondary};
+  cursor: pointer;
 `
 
 export const Footer = styled.div`
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
+  padding-top: 1rem;
 `

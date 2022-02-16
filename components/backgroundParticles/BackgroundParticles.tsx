@@ -13,6 +13,7 @@ const BackgroundParticles: React.FC = () => {
     baseTurnV,
     turnVar,
     freeRate,
+    mouseSize,
     colorA,
     colorB,
 
@@ -48,6 +49,7 @@ const BackgroundParticles: React.FC = () => {
           particles={particles}
           colorA={colorA}
           colorB={colorB}
+          mouseSize={mouseSize}
         />
       </Canvas>
     </BgCanvas>
