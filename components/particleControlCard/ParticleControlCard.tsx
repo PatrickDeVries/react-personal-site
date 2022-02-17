@@ -90,7 +90,7 @@ const ParticleControlCard: React.FC = () => {
           />
           <RangeSlider
             value={freeRate}
-            min={0}
+            min={1}
             max={particleCount}
             step={1}
             labels

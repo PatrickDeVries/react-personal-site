@@ -158,32 +158,29 @@ const Particles: React.FC<Props> = ({
       const pas: BufferAttribute = particles.current['attributes']['angle'] as BufferAttribute
 
       for (let i = 0, l = particleCount; i < l; i++) {
-        let angle = pas.getX(i)
-        let v = pvs.getX(i) * vVariance + baseV
-        let turnV = pvs.getY(i) * turnVariance + baseTurnSpeed
+        const angle = pas.getX(i)
+        const v = pvs.getX(i) * vVariance + baseV
+        const turnV = pvs.getY(i) * turnVariance + baseTurnSpeed
 
         pps.setXY(i, pps.getX(i) + v * Math.cos(angle), pps.getY(i) + v * Math.sin(angle))
+
+        const flipX = pps.getX(i) > viewport.width / 2 || pps.getX(i) < -viewport.width / 2
+        const flipY = pps.getY(i) > viewport.height / 2 || pps.getY(i) < -viewport.height / 2
 
         // mouse gap restrictions
         if (Math.sqrt((pps.getX(i) - mouse.x) ** 2 + (pps.getY(i) - mouse.y) ** 2) < mouseSize) {
           const angleFromMouse = Math.atan2(pps.getY(i) - mouse.y, pps.getX(i) - mouse.x)
           const newAngle = getNewAngle(angle, angleFromMouse, turnV * 1.5) // slight boost to turn speed to make mouse circle cleaner
           pas.setX(i, newAngle)
-        } else if (pps.getX(i) > viewport.width / 2 || pps.getX(i) < -viewport.width / 2) {
-          // width restrictions
-          pas.setX(i, Math.atan2(v * Math.sin(angle), -v * Math.cos(angle)))
+        } else if (flipX || flipY) {
+          pas.setX(
+            i,
+            Math.atan2((flipY ? -v : v) * Math.sin(angle), (flipX ? -v : v) * Math.cos(angle)),
+          )
           // reset if it has somehow escaped
           if (
             pps.getX(i) + v * Math.cos(pas.getX(i)) > viewport.width / 2 ||
-            pps.getX(i) + v * Math.cos(pas.getX(i)) < -viewport.width / 2
-          ) {
-            pps.setXY(i, 0, 0)
-          }
-        } else if (pps.getY(i) > viewport.height / 2 || pps.getY(i) < -viewport.height / 2) {
-          // height restrictions
-          pas.setX(i, Math.atan2(-v * Math.sin(angle), v * Math.cos(angle)))
-          // reset if it has somehow escaped
-          if (
+            pps.getX(i) + v * Math.cos(pas.getX(i)) < -viewport.width / 2 ||
             pps.getY(i) + v * Math.sin(pas.getX(i)) > viewport.height / 2 ||
             pps.getY(i) + v * Math.sin(pas.getX(i)) < -viewport.height / 2
           ) {
@@ -191,8 +188,8 @@ const Particles: React.FC<Props> = ({
           }
         } else if (i % freeRate !== 0 && i > 0) {
           // non-free particles
-          let goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
-          let newAngle = getNewAngle(angle, goalAngle, turnV)
+          const goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
+          const newAngle = getNewAngle(angle, goalAngle, turnV)
 
           pas.setX(i, newAngle)
         }
