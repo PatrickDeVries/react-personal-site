@@ -1,8 +1,8 @@
 import { Text } from '@headstorm/foundry-react-ui'
 import React from 'react'
 import styled from 'styled-components'
-import { useTheme } from '../components/ThemeContext'
 import WorkCard from '../components/workCard'
+import { useTheme } from '../providers/ThemeProvider'
 import myWork from '../resources/myWork'
 import { MOBILE } from '../styles/mediaQueries'
 

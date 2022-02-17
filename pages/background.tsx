@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import styled from 'styled-components'
-import { BackgroundControlContext } from '../components/BackgroundControlProvider'
 import ParticleControlCard from '../components/particleControlCard'
+import { BackgroundControlContext } from '../providers/BackgroundControlProvider'
 import { MOBILE } from '../styles/mediaQueries'
 
 const Wrapper = styled.div<{ firstHit?: boolean }>`

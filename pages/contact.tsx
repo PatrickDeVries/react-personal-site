@@ -4,7 +4,7 @@ import Icon from '@mdi/react'
 import Link from 'next/link'
 import React from 'react'
 import styled from 'styled-components'
-import { useTheme } from '../components/ThemeContext'
+import { useTheme } from '../providers/ThemeProvider'
 
 const Wrapper = styled.div`
   padding: 3rem;

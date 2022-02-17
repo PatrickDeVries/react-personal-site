@@ -2,9 +2,9 @@ import { mdiCogOutline, mdiThemeLightDark } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useRouter } from 'next/dist/client/router'
 import React, { useContext } from 'react'
+import { BackgroundControlContext } from '../../providers/BackgroundControlProvider'
+import { useTheme } from '../../providers/ThemeProvider'
 import { darkColors, lightColors } from '../../styles/myColors'
-import { BackgroundControlContext } from '../BackgroundControlProvider'
-import { useTheme } from '../ThemeContext'
 import {
   BarWrapper,
   DropDown,

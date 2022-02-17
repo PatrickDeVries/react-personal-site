@@ -131,6 +131,16 @@ const Particles: React.FC<Props> = ({
         y: ((event.clientY - 0) * -viewport.height) / window.innerHeight + viewport.height / 2,
       }
     }
+    document.ontouchmove = event => {
+      mouse = {
+        x:
+          ((event.changedTouches[0].clientX - 0) * viewport.width) / window.innerWidth +
+          -viewport.width / 2,
+        y:
+          ((event.changedTouches[0].clientY - 0) * -viewport.height) / window.innerHeight +
+          viewport.height / 2,
+      }
+    }
   }
 
   const pi2 = Math.PI * 2

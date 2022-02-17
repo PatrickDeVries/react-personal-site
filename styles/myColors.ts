@@ -1,4 +1,4 @@
-import { Theme } from '../components/ThemeContext'
+import { Theme } from '../providers/ThemeProvider'
 
 export const darkColors: Theme = {
   name: 'dark',

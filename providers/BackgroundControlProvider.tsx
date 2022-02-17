@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { BufferGeometry } from 'three'
 import { darkColors } from '../styles/myColors'
-import { useTheme } from './ThemeContext'
+import { useTheme } from './ThemeProvider'
 
 const DEFAULT_SETTINGS = {
   particleCount: 20000,

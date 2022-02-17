@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { Theme } from '../ThemeContext'
+import { Theme } from '../../providers/ThemeProvider'
 import './particlematerial'
 
 export const BgCanvas = styled.div<{ theme: Theme }>`

@@ -2,9 +2,9 @@ import { I18nProvider, useLocale } from '@react-aria/i18n'
 import { SSRProvider } from '@react-aria/ssr'
 import React from 'react'
 import { ThemeProvider } from 'styled-components'
-import { BackgroundControlProvider } from '../components/BackgroundControlProvider'
 import Layout from '../components/Layout'
-import { ThemeProvider as CustomThemeProvider } from '../components/ThemeContext'
+import { BackgroundControlProvider } from '../providers/BackgroundControlProvider'
+import { ThemeProvider as CustomThemeProvider } from '../providers/ThemeProvider'
 import '../styles/globals.css'
 import { darkColors, lightColors } from '../styles/myColors'
 
@@ -20,9 +20,7 @@ function MyApp({ Component, pageProps }) {
   }, [isInitialized, theme])
 
   React.useEffect(() => {
-    setTheme(JSON.parse(localStorage.getItem('theme')) || darkColors)
-    if (theme.name === 'light') setTheme(lightColors)
-    else setTheme(darkColors)
+    setTheme(JSON.parse(localStorage.getItem('theme')).name === 'light' ? lightColors : darkColors)
     setIsInitialized(true)
   }, [])
 

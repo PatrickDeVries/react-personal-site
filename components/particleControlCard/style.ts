@@ -6,12 +6,11 @@ export const ControlCard = styled.div`
   z-index: 1;
   border-radius: 0.5rem;
   padding: ${({ controlsOpen }) => (controlsOpen ? '1rem' : '0')};
+  overflow-y: auto;
 
   flex: ${({ controlsOpen }) => (controlsOpen ? '1' : '0')};
   width: 100%;
-  height: auto;
   transition: all 0.25s ease;
-  overflow: hidden;
   ${({ controlsOpen }) =>
     !controlsOpen &&
     `
@@ -26,10 +25,19 @@ export const ControlRows = styled.div`
   justify-content: center;
   align-items: center;
   > div {
+    display: flex;
+    justify-content: center;
     width: calc(33% - 0.5rem);
   }
   padding: 1rem 0;
   gap: 1rem;
+
+  > div:nth-last-child(3),
+  > div:last-child {
+    * {
+      font-size: 1rem;
+    }
+  }
 
   ${MOBILE} {
     > div {
@@ -45,7 +53,6 @@ export const ControlRows = styled.div`
 `
 
 export const ColorInput = styled.input`
-  width: 100%;
   background-color: ${({ theme }) => theme.strongHighlight};
   border: 1px solid ${({ theme }) => theme.secondary};
   cursor: pointer;
@@ -58,4 +65,10 @@ export const Footer = styled.div`
   flex-wrap: wrap;
   gap: 1rem;
   padding-top: 1rem;
+  ${MOBILE} {
+    button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 `

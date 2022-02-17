@@ -1,5 +1,6 @@
 import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
+import { useEffect, useRef } from 'react'
 import styled from 'styled-components'
 import BackgroundParticles from './backgroundParticles'
 import Header from './header'
@@ -31,6 +32,12 @@ const Body = styled.div<{ tint?: boolean }>`
 
 const Layout = props => {
   const router = useRouter()
+  const bodyRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    bodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [router])
+
   return (
     <>
       <Head>
@@ -39,7 +46,9 @@ const Layout = props => {
       <BackgroundParticles />
       <Main>
         <Header />
-        <Body tint={router.pathname !== '/background'}>{props.children}</Body>
+        <Body tint={router.pathname !== '/background'} ref={bodyRef}>
+          {props.children}
+        </Body>
       </Main>
     </>
   )
