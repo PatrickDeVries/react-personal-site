@@ -15,6 +15,7 @@ const IntroText = styled.p`
   text-align: center;
   color: ${({ theme }) => theme.text};
   font-size: 2rem;
+  padding: 1rem;
 
   > b {
     color: ${({ theme }) => theme.secondary};

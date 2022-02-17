@@ -44,8 +44,6 @@ export const ScalingImg = styled.img`
 
 export const BodyText = styled.p`
   margin: 1rem;
-  text-align: justify;
-  text-justify: inter-word;
   color: ${({ theme }) => theme.text};
 `
 

@@ -9,10 +9,7 @@ import { MOBILE } from '../styles/mediaQueries'
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 2rem 20%;
-  ${MOBILE} {
-    padding: 1rem;
-  }
+  padding: 2rem;
 `
 
 const SectionHeader = styled(Text.Container)`
@@ -38,7 +35,10 @@ const WorkItems = styled.div`
 const ReadmeStats = styled.img`
   border-radius: 0.5rem;
   border: 1px solid ${({ theme }) => theme.secondary};
-  width: 100%;
+  width: calc(50% - 1rem);
+  ${MOBILE} {
+    width: 100%;
+  }
 `
 
 const colorArg = (color: string) => color.replace('#', '')
@@ -58,6 +58,9 @@ const Portfolio = () => {
             {key}:
           </Text>
           <WorkItems key={`${key}-work-items`}>
+            {myWork[key].map(item => (
+              <WorkCard key={item.header} item={item} />
+            ))}
             {key === 'Github Contributions' && (
               <ReadmeStats
                 src={`https://github-readme-stats.vercel.app/api?username=patrickdevries&count_private=true&show_icons=true&title_color=${colorArg(
@@ -68,9 +71,6 @@ const Portfolio = () => {
                 alt="GitHub user stats for patrickdevries"
               />
             )}
-            {myWork[key].map(item => (
-              <WorkCard key={item.header} item={item} />
-            ))}
           </WorkItems>
         </section>
       ))}
