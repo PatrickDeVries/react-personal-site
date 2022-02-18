@@ -51,7 +51,7 @@ type Props = {
   vVar: number
   baseTurnV: number
   turnVar: number
-  freeRate: number
+  freeThinkers: number
   mouseSize: number
   colorA: string
   colorB: string
@@ -72,7 +72,7 @@ const Particles: React.FC<Props> = ({
   vVar: vVariance,
   baseTurnV: baseTurnSpeed,
   turnVar: turnVariance,
-  freeRate,
+  freeThinkers,
   mouseSize,
   colorA,
   colorB,
@@ -123,17 +123,17 @@ const Particles: React.FC<Props> = ({
     setAngles(newAngles)
   }
 
-  let mouse = { x: 0, y: 0 }
+  let mouse = useRef({ x: 0, y: 0 })
 
   if (document) {
     document.onmousemove = event => {
-      mouse = {
+      mouse.current = {
         x: ((event.clientX - 0) * viewport.width) / window.innerWidth + -viewport.width / 2,
         y: ((event.clientY - 0) * -viewport.height) / window.innerHeight + viewport.height / 2,
       }
     }
     document.ontouchmove = event => {
-      mouse = {
+      mouse.current = {
         x:
           ((event.changedTouches[0].clientX - 0) * viewport.width) / window.innerWidth +
           -viewport.width / 2,
@@ -169,8 +169,14 @@ const Particles: React.FC<Props> = ({
         const flipY = pps.getY(i) > viewport.height / 2 || pps.getY(i) < -viewport.height / 2
 
         // mouse gap restrictions
-        if (Math.sqrt((pps.getX(i) - mouse.x) ** 2 + (pps.getY(i) - mouse.y) ** 2) < mouseSize) {
-          const angleFromMouse = Math.atan2(pps.getY(i) - mouse.y, pps.getX(i) - mouse.x)
+        if (
+          Math.sqrt((pps.getX(i) - mouse.current.x) ** 2 + (pps.getY(i) - mouse.current.y) ** 2) <
+          mouseSize
+        ) {
+          const angleFromMouse = Math.atan2(
+            pps.getY(i) - mouse.current.y,
+            pps.getX(i) - mouse.current.x,
+          )
           const newAngle = getNewAngle(angle, angleFromMouse, turnV * 1.5) // slight boost to turn speed to make mouse circle cleaner
           pas.setX(i, newAngle)
         } else if (flipX || flipY) {
@@ -187,7 +193,7 @@ const Particles: React.FC<Props> = ({
           ) {
             pps.setXY(i, 0, 0)
           }
-        } else if (i % freeRate !== 0 && i > 0) {
+        } else if (i % Math.ceil(particleCount / freeThinkers) !== 0 && i > 0) {
           // non-free particles
           const goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
           const newAngle = getNewAngle(angle, goalAngle, turnV)

@@ -1,7 +1,7 @@
 import { mdiCogOutline, mdiThemeLightDark } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useRouter } from 'next/dist/client/router'
-import React, { useContext } from 'react'
+import React, { useContext, useRef } from 'react'
 import { BackgroundControlContext } from '../../providers/BackgroundControlProvider'
 import { useTheme } from '../../providers/ThemeProvider'
 import { darkColors, lightColors } from '../../styles/myColors'
@@ -35,8 +35,12 @@ const Header: React.FC = () => {
       ? 3
       : 4,
   )
+  const gearRef = useRef<HTMLDivElement>(null)
+
   const {
     setFirstHit,
+    mouseSize,
+    setMouseSize,
     colorA,
     setColorA,
     colorB,
@@ -85,6 +89,20 @@ const Header: React.FC = () => {
     },
   ]
 
+  if (document) {
+    document.onkeyup = event => {
+      if (event.key === 'Escape') {
+        if (gearRef.current) {
+          gearRef.current.click()
+        }
+      } else if (event.key === '=') {
+        setMouseSize(mouseSize + 0.5 < 5 ? mouseSize + 0.5 : 5)
+      } else if (event.key === '-') {
+        setMouseSize(mouseSize - 0.5 > 0 ? mouseSize - 0.5 : 0)
+      }
+    }
+  }
+
   return (
     <>
       <Wrapper>
@@ -104,6 +122,7 @@ const Header: React.FC = () => {
                 setFirstHit(false)
                 setExpanded(false)
               }}
+              ref={gearRef}
             >
               <Icon path={mdiCogOutline} size="1.5rem" />
             </NavIcon>

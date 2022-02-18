@@ -8,18 +8,10 @@ type Props = {
   min: number
   max: number
   step?: number
-  labels?: boolean
+  labels?: { min?: string; max?: string }
 }
 
-const RangeSlider: React.FC<Props> = ({
-  label,
-  value,
-  onChange,
-  min,
-  max,
-  step = 1,
-  labels = false,
-}) => {
+const RangeSlider: React.FC<Props> = ({ label, value, onChange, min, max, step = 1, labels }) => {
   const getReturnVal = (val: number) => {
     if (val < min) return min
     if (val > max) return max
@@ -40,12 +32,10 @@ const RangeSlider: React.FC<Props> = ({
         />
       </Header>
       <SliderWrapper>
-        {labels && (
-          <Labels>
-            <Label>{min}</Label>
-            <Label>{max}</Label>
-          </Labels>
-        )}
+        <Labels>
+          <Label>{labels?.min ?? min}</Label>
+          <Label>{labels?.max ?? max}</Label>
+        </Labels>
         <RangeWrapper min={min} max={max} value={value}>
           <div></div>
           <input

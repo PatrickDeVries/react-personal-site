@@ -12,7 +12,7 @@ const BackgroundParticles: React.FC = () => {
     vVar,
     baseTurnV,
     turnVar,
-    freeRate,
+    freeThinkers: freeThinkers,
     mouseSize,
     colorA,
     colorB,
@@ -39,7 +39,7 @@ const BackgroundParticles: React.FC = () => {
           vVar={vVar}
           baseTurnV={baseTurnV}
           turnVar={turnVar}
-          freeRate={freeRate}
+          freeThinkers={freeThinkers}
           positions={positions}
           setPositions={setPositions}
           velocities={velocities}

@@ -17,7 +17,7 @@ const DEFAULT_SETTINGS = {
   vVar: 0.003,
   baseTurnV: 0.03 * Math.PI,
   turnVar: 0.03 * Math.PI,
-  freeRate: 200,
+  freeThinkers: 200,
   mouseSize: 0.5,
 }
 
@@ -42,8 +42,8 @@ export type BackgroundControl = {
   setBaseTurnV: (newVal: number) => void
   turnVar: number
   setTurnVar: (newVal: number) => void
-  freeRate: number
-  setFreeRate: (newVal: number) => void
+  freeThinkers: number
+  setFreeThinkers: (newVal: number) => void
   mouseSize: number
   setMouseSize: (newVal: number) => void
   colorA: string
@@ -78,7 +78,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
   const [vVar, setVVar] = useState<number>(DEFAULT_SETTINGS.vVar)
   const [baseTurnV, setBaseTurnV] = useState<number>(DEFAULT_SETTINGS.baseV)
   const [turnVar, setTurnVar] = useState<number>(DEFAULT_SETTINGS.baseTurnV)
-  const [freeRate, setFreeRate] = useState<number>(DEFAULT_SETTINGS.freeRate)
+  const [freeThinkers, setFreeThinkers] = useState<number>(DEFAULT_SETTINGS.freeThinkers)
   const [mouseSize, setMouseSize] = useState<number>(DEFAULT_SETTINGS.mouseSize)
   const [colorA, setColorA] = useState<string>(theme.primary)
   const [colorB, setColorB] = useState<string>(theme.secondary)
@@ -96,7 +96,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
       vVar: vVarStore,
       baseTurnV: baseTurnVStore,
       turnVar: turnVarStore,
-      freeRate: freeRateStore,
+      freeThinkers: freeThinkersStore,
       mouseSize: mouseSizeStore,
       colorA: colorAStore,
       colorB: colorBStore,
@@ -106,7 +106,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
     setVVar(vVarStore ?? DEFAULT_SETTINGS.vVar)
     setBaseTurnV(baseTurnVStore ?? DEFAULT_SETTINGS.baseTurnV)
     setTurnVar(turnVarStore ?? DEFAULT_SETTINGS.turnVar)
-    setFreeRate(freeRateStore ?? DEFAULT_SETTINGS.freeRate)
+    setFreeThinkers(freeThinkersStore ?? DEFAULT_SETTINGS.freeThinkers)
     setMouseSize(mouseSizeStore ?? DEFAULT_SETTINGS.mouseSize)
     setColorA(colorAStore ?? darkColors.primary)
     setColorB(colorBStore ?? darkColors.secondary)
@@ -123,7 +123,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
           vVar,
           baseTurnV,
           turnVar,
-          freeRate,
+          freeThinkers,
           mouseSize,
           colorA,
           colorB,
@@ -135,7 +135,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
     baseV,
     colorA,
     colorB,
-    freeRate,
+    freeThinkers,
     isInitialized,
     mouseSize,
     particleCount,
@@ -158,7 +158,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
     setVVar(DEFAULT_SETTINGS.vVar)
     setBaseTurnV(DEFAULT_SETTINGS.baseTurnV)
     setTurnVar(DEFAULT_SETTINGS.turnVar)
-    setFreeRate(DEFAULT_SETTINGS.freeRate)
+    setFreeThinkers(DEFAULT_SETTINGS.freeThinkers)
     setMouseSize(DEFAULT_SETTINGS.mouseSize)
     setColorA(theme.primary)
     setColorB(theme.secondary)
@@ -189,8 +189,8 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
         setBaseTurnV: setWrapper<number>(setBaseTurnV),
         turnVar,
         setTurnVar: setWrapper<number>(setTurnVar),
-        freeRate,
-        setFreeRate: setWrapper<number>(setFreeRate),
+        freeThinkers: freeThinkers,
+        setFreeThinkers: setWrapper<number>(setFreeThinkers),
         mouseSize,
         setMouseSize: setWrapper<number>(setMouseSize),
         colorA,

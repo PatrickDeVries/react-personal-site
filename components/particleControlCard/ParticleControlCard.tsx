@@ -20,8 +20,8 @@ const ParticleControlCard: React.FC = () => {
     setBaseTurnV,
     turnVar,
     setTurnVar,
-    freeRate,
-    setFreeRate,
+    freeThinkers: freeThinkers,
+    setFreeThinkers: setFreeThinkers,
     mouseSize,
     setMouseSize,
     colorA,
@@ -48,7 +48,6 @@ const ParticleControlCard: React.FC = () => {
             value={particleCount}
             min={1}
             max={99999}
-            labels
             onChange={newVal => setParticleCount(newVal)}
             label="Particle count"
           />
@@ -57,7 +56,6 @@ const ParticleControlCard: React.FC = () => {
             min={0}
             max={1}
             step={0.0001}
-            labels
             onChange={newVal => setBaseV(newVal)}
             label="Base velocity"
           />
@@ -66,7 +64,6 @@ const ParticleControlCard: React.FC = () => {
             min={0}
             max={1}
             step={0.0001}
-            labels
             onChange={newVal => setVVar(newVal)}
             label="Velocity variance"
           />
@@ -75,27 +72,26 @@ const ParticleControlCard: React.FC = () => {
             min={0}
             max={parseFloat((Math.PI / 4).toFixed(5))}
             step={0.00001}
-            labels
             onChange={newVal => setBaseTurnV(newVal)}
             label="Base turn speed"
+            labels={{ max: 'π/4' }}
           />
           <RangeSlider
             value={parseFloat(turnVar.toFixed(5))}
             min={0}
             max={parseFloat((Math.PI / 4).toFixed(5))}
             step={0.00001}
-            labels
             onChange={newVal => setTurnVar(newVal)}
             label="Turn speed variance"
+            labels={{ max: 'π/4' }}
           />
           <RangeSlider
-            value={freeRate}
+            value={freeThinkers}
             min={1}
             max={particleCount}
             step={1}
-            labels
-            onChange={newVal => setFreeRate(newVal)}
-            label="Free thinkers (1 per x)"
+            onChange={newVal => setFreeThinkers(newVal)}
+            label="Free thinkers"
           />
           <Label labelText="Left color" color={theme.text}>
             <ColorInput
@@ -112,7 +108,6 @@ const ParticleControlCard: React.FC = () => {
             min={0}
             max={5}
             step={0.01}
-            labels
             onChange={newVal => setMouseSize(newVal)}
             label="Mouse social distancing"
           />

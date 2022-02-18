@@ -1,12 +1,12 @@
 import styled from 'styled-components'
 import { MOBILE } from '../../styles/mediaQueries'
 
-export const ControlCard = styled.div`
+export const ControlCard = styled.div<{ controlsOpen?: boolean }>`
   background-color: ${({ theme }) => theme.backgroundHighlight}77;
   z-index: 1;
   border-radius: 0.5rem;
   padding: ${({ controlsOpen }) => (controlsOpen ? '1rem' : '0')};
-  overflow-y: auto;
+  overflow-y: ${({ controlsOpen }) => (controlsOpen ? 'auto' : 'hidden')};
 
   flex: ${({ controlsOpen }) => (controlsOpen ? '1' : '0')};
   width: 100%;
