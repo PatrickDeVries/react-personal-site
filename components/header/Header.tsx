@@ -1,7 +1,7 @@
 import { mdiCogOutline, mdiThemeLightDark } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useRouter } from 'next/dist/client/router'
-import React, { useContext, useRef } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { BackgroundControlContext } from '../../providers/BackgroundControlProvider'
 import { useTheme } from '../../providers/ThemeProvider'
 import { darkColors, lightColors } from '../../styles/myColors'
@@ -89,20 +89,21 @@ const Header: React.FC = () => {
     },
   ]
 
-  if (document) {
-    document.onkeyup = event => {
-      if (event.key === 'Escape') {
-        if (gearRef.current) {
-          gearRef.current.click()
+  useEffect(() => {
+    if (document) {
+      document.onkeyup = event => {
+        if (event.key === 'Escape') {
+          if (gearRef.current) {
+            gearRef.current.click()
+          }
+        } else if (event.key === '=') {
+          setMouseSize(mouseSize + 0.5 < 5 ? mouseSize + 0.5 : 5)
+        } else if (event.key === '-') {
+          setMouseSize(mouseSize - 0.5 > 0 ? mouseSize - 0.5 : 0)
         }
-      } else if (event.key === '=') {
-        setMouseSize(mouseSize + 0.5 < 5 ? mouseSize + 0.5 : 5)
-      } else if (event.key === '-') {
-        setMouseSize(mouseSize - 0.5 > 0 ? mouseSize - 0.5 : 0)
       }
     }
-  }
-
+  }, [mouseSize, setMouseSize])
   return (
     <>
       <Wrapper>
