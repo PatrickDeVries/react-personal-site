@@ -12,6 +12,7 @@ const GetShaderMaterial: React.FC<{
   bboxMax: number
 }> = props => {
   const ref = useRef<ShaderMaterial>()
+
   const uniforms = useMemo(
     () =>
       THREE.UniformsUtils.merge([
