@@ -193,6 +193,19 @@ const Particles: React.FC<Props> = ({
           ) {
             pps.setXY(i, 0, 0)
           }
+        } else if (freeThinkers === 0) {
+          let goalAngle = 0
+          if (i === 0) {
+            goalAngle = Math.atan2(
+              pps.getY(particleCount - 1) - pps.getY(i),
+              pps.getX(particleCount - 1) - pps.getX(i),
+            )
+          } else {
+            goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))
+          }
+          const newAngle = getNewAngle(angle, goalAngle, turnV)
+
+          pas.setX(i, newAngle)
         } else if (i % Math.ceil(particleCount / freeThinkers) !== 0 && i > 0) {
           // non-free particles
           const goalAngle = Math.atan2(pps.getY(i - 1) - pps.getY(i), pps.getX(i - 1) - pps.getX(i))

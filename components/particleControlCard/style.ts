@@ -55,6 +55,7 @@ export const ControlRows = styled.div`
 export const ColorInput = styled.input`
   background-color: ${({ theme }) => theme.strongHighlight};
   border: 1px solid ${({ theme }) => theme.secondary};
+  border-radius: 0.5rem;
   cursor: pointer;
 `
 

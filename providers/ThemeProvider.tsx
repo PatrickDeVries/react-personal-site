@@ -9,6 +9,7 @@ export type Theme = {
   background: string
   backgroundHighlight: string
   strongHighlight: string
+  empty: string
 }
 
 export type ThemeProviderType = {

@@ -63,7 +63,8 @@ export const RangeWrapper = styled.div<{ min: number; max: number; value: number
   }
   input[type='range'] {
     appearance: unset;
-    background-color: ${({ theme }) => theme.text};
+    background-color: ${({ theme }) => theme.empty};
+    ${({ theme }) => theme.name === 'light' && 'border: 1px solid black;'}
     width: 100%;
     cursor: pointer;
   }

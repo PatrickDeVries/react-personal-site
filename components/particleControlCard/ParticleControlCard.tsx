@@ -48,7 +48,10 @@ const ParticleControlCard: React.FC = () => {
             value={particleCount}
             min={1}
             max={99999}
-            onChange={newVal => setParticleCount(newVal)}
+            onChange={newVal => {
+              setParticleCount(newVal)
+              freeThinkers > newVal && setFreeThinkers(newVal)
+            }}
             label="Particle count"
           />
           <RangeSlider
@@ -87,7 +90,7 @@ const ParticleControlCard: React.FC = () => {
           />
           <RangeSlider
             value={freeThinkers}
-            min={1}
+            min={0}
             max={particleCount}
             step={1}
             onChange={newVal => setFreeThinkers(newVal)}
@@ -110,6 +113,7 @@ const ParticleControlCard: React.FC = () => {
             step={0.01}
             onChange={newVal => setMouseSize(newVal)}
             label="Mouse social distancing"
+            title="Press '-' to shrink, '=' to grow"
           />
           <Label labelText="Right color" color={theme.text}>
             <ColorInput
@@ -135,6 +139,7 @@ const ParticleControlCard: React.FC = () => {
               setVelocities([])
               setAngles([])
             }}
+            containerProps={{ title: 'This will randomise the positions of all particles' }}
           >
             Reset Particle Locations
           </Button>

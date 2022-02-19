@@ -9,6 +9,7 @@ export const darkColors: Theme = {
   background: '#031016',
   backgroundHighlight: '#0B232E',
   strongHighlight: '#113547',
+  empty: '#FFFFFF',
 }
 
 export const lightColors: Theme = {
@@ -20,4 +21,5 @@ export const lightColors: Theme = {
   background: '#FFFFFF',
   backgroundHighlight: '#EEEEEE',
   strongHighlight: '#DDDDDD',
+  empty: '#EEEEEE',
 }
