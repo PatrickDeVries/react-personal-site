@@ -1,4 +1,5 @@
 import { Canvas } from '@react-three/fiber'
+import { useRouter } from 'next/dist/client/router'
 import React, { useContext } from 'react'
 import { BackgroundControlContext } from '../../providers/BackgroundControlProvider'
 import './particlematerial'
@@ -30,6 +31,7 @@ const BackgroundParticles: React.FC<Props> = ({ top }) => {
 
     particles,
   } = useContext(BackgroundControlContext)
+  const router = useRouter()
 
   return (
     <BgCanvas id="bgCanvas">
@@ -55,6 +57,7 @@ const BackgroundParticles: React.FC<Props> = ({ top }) => {
           colorB={colorB}
           mouseSize={mouseSize}
           top={top}
+          avoid={router?.pathname === '/' ? [{ x: 0, y: 0, radius: 3.25 }] : []}
         />
       </Canvas>
     </BgCanvas>

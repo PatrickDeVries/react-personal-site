@@ -47,6 +47,7 @@ const GetShaderMaterial: React.FC<{
 
 type Props = {
   top: number
+  avoid: { x: number; y: number; radius: number }[]
 
   particleCount: number
   baseV: number
@@ -68,8 +69,33 @@ type Props = {
   particles: MutableRefObject<BufferGeometry>
 }
 
+const isInRadius = (
+  point: { x: number; y: number },
+  circle: { x: number; y: number; radius: number },
+): boolean => {
+  return Math.sqrt((point.x - circle.x) ** 2 + (point.y - circle.y) ** 2) < circle.radius
+}
+
+const PI2 = Math.PI * 2
+const getNewAngle = (angle: number, goalAngle: number, turnV: number) =>
+  (((goalAngle - angle + Math.PI) % PI2) - Math.PI < turnV
+    ? goalAngle
+    : goalAngle > (angle + Math.PI) % PI2
+    ? angle - turnV
+    : angle + turnV) % PI2
+
+const escapeRadius = (
+  point: { x: number; y: number; angle: number; turnV: number },
+  circle: { x: number; y: number; radius: number },
+  boostSpeed = 1,
+) => {
+  const angleFromCircle = Math.atan2(point.y - circle.y, point.x - circle.x)
+  return getNewAngle(point.angle, angleFromCircle, point.turnV * boostSpeed) // slight boost to turn speed to make mouse circle cleaner
+}
+
 const Particles: React.FC<Props> = ({
   top,
+  avoid = [],
 
   particleCount,
   baseV,
@@ -150,16 +176,6 @@ const Particles: React.FC<Props> = ({
     }
   }
 
-  console.log(viewport.height)
-
-  const pi2 = Math.PI * 2
-  const getNewAngle = (angle: number, goalAngle: number, turnV: number) =>
-    (((goalAngle - angle + Math.PI) % pi2) - Math.PI < turnV
-      ? goalAngle
-      : goalAngle > (angle + Math.PI) % pi2
-      ? angle - turnV
-      : angle + turnV) % pi2
-
   const updatePositions = () => {
     if (particles.current) {
       const pps: BufferAttribute = particles.current['attributes']['position'] as BufferAttribute
@@ -178,18 +194,31 @@ const Particles: React.FC<Props> = ({
           pps.getY(i) > viewport.height / 2 - top * (viewport.height / window.innerHeight) ||
           pps.getY(i) < -viewport.height / 2
 
-        // mouse gap restrictions
         if (
-          Math.sqrt((pps.getX(i) - mouse.current.x) ** 2 + (pps.getY(i) - mouse.current.y) ** 2) <
-          mouseSize
+          [...avoid, { x: mouse.current.x, y: mouse.current.y, radius: mouseSize }]
+            .map(circle => {
+              if (
+                isInRadius(
+                  { x: pps.getX(i), y: pps.getY(i) },
+                  { x: circle.x, y: circle.y, radius: circle.radius },
+                )
+              ) {
+                pas.setX(
+                  i,
+                  escapeRadius(
+                    { x: pps.getX(i), y: pps.getY(i), angle, turnV },
+                    { x: circle.x, y: circle.y, radius: circle.radius },
+                    1.5,
+                  ),
+                )
+                return true
+              }
+            })
+            .some(val => val)
         ) {
-          const angleFromMouse = Math.atan2(
-            pps.getY(i) - mouse.current.y,
-            pps.getX(i) - mouse.current.x,
-          )
-          const newAngle = getNewAngle(angle, angleFromMouse, turnV * 1.5) // slight boost to turn speed to make mouse circle cleaner
-          pas.setX(i, newAngle)
-        } else if (flipX || flipY) {
+          continue
+        }
+        if (flipX || flipY) {
           pas.setX(
             i,
             Math.atan2((flipY ? -v : v) * Math.sin(angle), (flipX ? -v : v) * Math.cos(angle)),
