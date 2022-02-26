@@ -2,6 +2,16 @@ import { useFrame, useThree } from '@react-three/fiber'
 import React, { Dispatch, MutableRefObject, SetStateAction, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { BufferAttribute, BufferGeometry, Points, ShaderMaterial } from 'three'
+import {
+  Circle,
+  escapeRadius,
+  getNewAngle,
+  isCircle,
+  isInPolygon,
+  isInRadius,
+  Point2d,
+  Polygon,
+} from '../../utils/geometry'
 import './particlematerial'
 import { fragment, vertex } from './particlematerial'
 
@@ -47,7 +57,7 @@ const GetShaderMaterial: React.FC<{
 
 type Props = {
   top: number
-  avoid: { x: number; y: number; radius: number }[]
+  avoid: (Circle | Polygon)[]
 
   particleCount: number
   baseV: number
@@ -67,30 +77,6 @@ type Props = {
   setAngles: Dispatch<SetStateAction<number[]>>
 
   particles: MutableRefObject<BufferGeometry>
-}
-
-const isInRadius = (
-  point: { x: number; y: number },
-  circle: { x: number; y: number; radius: number },
-): boolean => {
-  return Math.sqrt((point.x - circle.x) ** 2 + (point.y - circle.y) ** 2) < circle.radius
-}
-
-const PI2 = Math.PI * 2
-const getNewAngle = (angle: number, goalAngle: number, turnV: number) =>
-  (((goalAngle - angle + Math.PI) % PI2) - Math.PI < turnV
-    ? goalAngle
-    : goalAngle > (angle + Math.PI) % PI2
-    ? angle - turnV
-    : angle + turnV) % PI2
-
-const escapeRadius = (
-  point: { x: number; y: number; angle: number; turnV: number },
-  circle: { x: number; y: number; radius: number },
-  boostSpeed = 1,
-) => {
-  const angleFromCircle = Math.atan2(point.y - circle.y, point.x - circle.x)
-  return getNewAngle(point.angle, angleFromCircle, point.turnV * boostSpeed) // slight boost to turn speed to make mouse circle cleaner
 }
 
 const Particles: React.FC<Props> = ({
@@ -119,6 +105,36 @@ const Particles: React.FC<Props> = ({
   const viewport = useThree(state => state.viewport)
   const pointRef = useRef<Points>()
   const sizes = []
+  console.log(avoid)
+  const maxes: Point2d[] = avoid.map(a =>
+    isCircle(a)
+      ? { x: 0, y: 0 }
+      : {
+          x: Math.max.apply(
+            Math,
+            a.vertices.map(v => v.x),
+          ),
+          y: Math.max.apply(
+            Math,
+            a.vertices.map(v => v.y),
+          ),
+        },
+  )
+  const mins: Point2d[] = avoid.map(a =>
+    isCircle(a)
+      ? { x: 0, y: 0 }
+      : {
+          x: Math.min.apply(
+            Math,
+            a.vertices.map(v => v.x),
+          ),
+          y: Math.min.apply(
+            Math,
+            a.vertices.map(v => v.y),
+          ),
+        },
+  )
+  console.log(maxes, mins)
 
   for (let i = 0; i < 999999; i++) {
     sizes.push(5)
@@ -196,22 +212,47 @@ const Particles: React.FC<Props> = ({
 
         if (
           [...avoid, { x: mouse.current.x, y: mouse.current.y, radius: mouseSize }]
-            .map(circle => {
-              if (
-                isInRadius(
-                  { x: pps.getX(i), y: pps.getY(i) },
-                  { x: circle.x, y: circle.y, radius: circle.radius },
-                )
-              ) {
-                pas.setX(
-                  i,
-                  escapeRadius(
-                    { x: pps.getX(i), y: pps.getY(i), angle, turnV },
-                    { x: circle.x, y: circle.y, radius: circle.radius },
-                    1.5,
-                  ),
-                )
-                return true
+            .map((boundary, bindex) => {
+              if (isCircle(boundary)) {
+                if (
+                  isInRadius(
+                    { x: pps.getX(i), y: pps.getY(i) },
+                    { x: boundary.x, y: boundary.y, radius: boundary.radius },
+                  )
+                ) {
+                  pas.setX(
+                    i,
+                    escapeRadius(
+                      { x: pps.getX(i), y: pps.getY(i), angle, turnV },
+                      { x: boundary.x, y: boundary.y, radius: boundary.radius },
+                      1.5,
+                    ),
+                  )
+                  return true
+                }
+              } else {
+                if (
+                  isInPolygon(
+                    { x: pps.getX(i), y: pps.getY(i) },
+                    maxes[bindex],
+                    mins[bindex],
+                    boundary.vertices,
+                  )
+                ) {
+                  pas.setX(
+                    i,
+                    escapeRadius(
+                      { x: pps.getX(i), y: pps.getY(i), angle, turnV },
+                      {
+                        x: (maxes[bindex].x + mins[bindex].x) / 2,
+                        y: (maxes[bindex].y + mins[bindex].y) / 2,
+                        radius: Math.max.apply(Math, [viewport.width, viewport.height]),
+                      },
+                      1.5,
+                    ),
+                  )
+                  return true
+                }
               }
             })
             .some(val => val)
