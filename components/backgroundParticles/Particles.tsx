@@ -46,6 +46,8 @@ const GetShaderMaterial: React.FC<{
 }
 
 type Props = {
+  top: number
+
   particleCount: number
   baseV: number
   vVar: number
@@ -67,6 +69,8 @@ type Props = {
 }
 
 const Particles: React.FC<Props> = ({
+  top,
+
   particleCount,
   baseV,
   vVar: vVariance,
@@ -101,7 +105,9 @@ const Particles: React.FC<Props> = ({
     for (let i = 0; i < 999999; i++) {
       newPositions.push(
         Math.random() * viewport.width - viewport.width / 2,
-        Math.random() * viewport.height - viewport.height / 2,
+        Math.random() * viewport.height -
+          viewport.height / 2 -
+          top * (viewport.height / window.innerHeight),
         0,
       )
       newVelocities.push(Math.random(), Math.random(), 0)
@@ -144,6 +150,8 @@ const Particles: React.FC<Props> = ({
     }
   }
 
+  console.log(viewport.height)
+
   const pi2 = Math.PI * 2
   const getNewAngle = (angle: number, goalAngle: number, turnV: number) =>
     (((goalAngle - angle + Math.PI) % pi2) - Math.PI < turnV
@@ -166,7 +174,9 @@ const Particles: React.FC<Props> = ({
         pps.setXY(i, pps.getX(i) + v * Math.cos(angle), pps.getY(i) + v * Math.sin(angle))
 
         const flipX = pps.getX(i) > viewport.width / 2 || pps.getX(i) < -viewport.width / 2
-        const flipY = pps.getY(i) > viewport.height / 2 || pps.getY(i) < -viewport.height / 2
+        const flipY =
+          pps.getY(i) > viewport.height / 2 - top * (viewport.height / window.innerHeight) ||
+          pps.getY(i) < -viewport.height / 2
 
         // mouse gap restrictions
         if (
