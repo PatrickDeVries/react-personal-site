@@ -38,7 +38,7 @@ const Instructions = styled.p`
   z-index: 2;
 `
 
-export default function Home() {
+const Background: React.FC = () => {
   const { firstHit } = useContext(BackgroundControlContext)
   return (
     <>
@@ -50,3 +50,5 @@ export default function Home() {
     </>
   )
 }
+
+export default Background

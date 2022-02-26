@@ -43,7 +43,7 @@ const ReadmeStats = styled.img`
 
 const colorArg = (color: string) => color.replace('#', '')
 
-const Portfolio = () => {
+const Portfolio: React.FC = () => {
   const { theme } = useTheme()
   return (
     <Wrapper>

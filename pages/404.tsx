@@ -31,7 +31,7 @@ const CenteredA = styled.a`
   border: 2px ${({ theme }) => theme.text} solid;
 `
 
-export default function Home() {
+const FourOFour: React.FC = () => {
   return (
     <>
       <GreetingBlock>
@@ -44,3 +44,5 @@ export default function Home() {
     </>
   )
 }
+
+export default FourOFour

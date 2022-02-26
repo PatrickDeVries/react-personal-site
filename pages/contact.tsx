@@ -61,7 +61,7 @@ const socials: Social[] = [
   { site: 'Phone', href: 'tel:8178881514', src: mdiPhone, text: '(817) 888-1514' },
 ]
 
-const Contact = () => {
+const Contact: React.FC = () => {
   const { theme } = useTheme()
   return (
     <Wrapper>

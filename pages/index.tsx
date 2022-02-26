@@ -32,7 +32,7 @@ const CenteredA = styled.a`
   border: 2px ${({ theme }) => theme.text} solid;
 `
 
-export default function Home() {
+const Index: React.FC = () => {
   return (
     <>
       <GreetingBlock>
@@ -46,3 +46,5 @@ export default function Home() {
     </>
   )
 }
+
+export default Index
