@@ -5,7 +5,11 @@ import './particlematerial'
 import Particles from './Particles'
 import { BgCanvas } from './style'
 
-const BackgroundParticles: React.FC = () => {
+type Props = {
+  top: number
+}
+
+const BackgroundParticles: React.FC<Props> = ({ top }) => {
   const {
     particleCount,
     baseV,
@@ -50,6 +54,7 @@ const BackgroundParticles: React.FC = () => {
           colorA={colorA}
           colorB={colorB}
           mouseSize={mouseSize}
+          top={top}
         />
       </Canvas>
     </BgCanvas>

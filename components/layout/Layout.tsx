@@ -18,7 +18,7 @@ const Layout = props => {
       <Head>
         <title>Patrick DeVries</title>
       </Head>
-      <BackgroundParticles />
+      <BackgroundParticles top={bodyRef.current?.offsetTop ?? 0} />
       <Main>
         <Header />
         <Body tint={router.pathname !== '/background'} ref={bodyRef}>
