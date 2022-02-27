@@ -5,12 +5,13 @@ import { BufferAttribute, BufferGeometry, Points, ShaderMaterial } from 'three'
 import {
   Circle,
   escapeRadius,
+  generateRectangleFromCenter,
+  generateStar,
   getNewAngle,
   isCircle,
+  isInCircle,
   isInPolygon,
-  isInRadius,
   Point2d,
-  Polygon,
 } from '../../utils/geometry'
 import './particlematerial'
 import { fragment, vertex } from './particlematerial'
@@ -57,7 +58,7 @@ const GetShaderMaterial: React.FC<{
 
 type Props = {
   top: number
-  avoid: (Circle | Polygon)[]
+  pathname: string
 
   particleCount: number
   baseV: number
@@ -81,7 +82,7 @@ type Props = {
 
 const Particles: React.FC<Props> = ({
   top,
-  avoid = [],
+  pathname,
 
   particleCount,
   baseV,
@@ -103,9 +104,55 @@ const Particles: React.FC<Props> = ({
   particles,
 }) => {
   const viewport = useThree(state => state.viewport)
+  const viewportTop = top * (viewport.height / window.innerHeight)
   const pointRef = useRef<Points>()
   const sizes = []
-  console.log(avoid)
+
+  const avoid =
+    pathname === '/'
+      ? [
+          {
+            vertices: generateStar(
+              viewport.width < viewport.height ? viewport.width * 0.4 : viewport.height * 0.48,
+              { x: 0, y: -viewportTop },
+            ),
+          },
+        ]
+      : pathname === '/portfolio'
+      ? [
+          {
+            x: -viewport.width / 4,
+            y: -viewport.height / 4 - viewportTop / 2,
+            radius: viewport.height / 5,
+          },
+          {
+            x: -viewport.width / 4,
+            y: viewport.height / 4 - viewportTop / 2,
+            radius: viewport.height / 5,
+          },
+          {
+            x: viewport.width / 4,
+            y: -viewport.height / 4 - viewportTop / 2,
+            radius: viewport.height / 5,
+          },
+          {
+            x: viewport.width / 4,
+            y: viewport.height / 4 - viewportTop / 2,
+            radius: viewport.height / 5,
+          },
+        ]
+      : pathname === '/contact'
+      ? [
+          {
+            vertices: generateRectangleFromCenter(
+              { x: 0, y: -viewportTop / 2 },
+              viewport.height - viewport.width / 10,
+              viewport.width - viewport.width / 10,
+            ),
+          },
+        ]
+      : []
+
   const maxes: Point2d[] = avoid.map(a =>
     isCircle(a)
       ? { x: 0, y: 0 }
@@ -134,7 +181,6 @@ const Particles: React.FC<Props> = ({
           ),
         },
   )
-  console.log(maxes, mins)
 
   for (let i = 0; i < 999999; i++) {
     sizes.push(5)
@@ -147,9 +193,7 @@ const Particles: React.FC<Props> = ({
     for (let i = 0; i < 999999; i++) {
       newPositions.push(
         Math.random() * viewport.width - viewport.width / 2,
-        Math.random() * viewport.height -
-          viewport.height / 2 -
-          top * (viewport.height / window.innerHeight),
+        Math.random() * viewport.height - viewport.height / 2 - viewportTop,
         0,
       )
       newVelocities.push(Math.random(), Math.random(), 0)
@@ -207,15 +251,15 @@ const Particles: React.FC<Props> = ({
 
         const flipX = pps.getX(i) > viewport.width / 2 || pps.getX(i) < -viewport.width / 2
         const flipY =
-          pps.getY(i) > viewport.height / 2 - top * (viewport.height / window.innerHeight) ||
-          pps.getY(i) < -viewport.height / 2
+          pps.getY(i) > viewport.height / 2 - viewportTop || pps.getY(i) < -viewport.height / 2
 
         if (
-          [...avoid, { x: mouse.current.x, y: mouse.current.y, radius: mouseSize }]
+          [...avoid, { x: mouse.current.x, y: mouse.current.y, radius: mouseSize } as Circle]
             .map((boundary, bindex) => {
               if (isCircle(boundary)) {
                 if (
-                  isInRadius(
+                  boundary.radius > 0 &&
+                  isInCircle(
                     { x: pps.getX(i), y: pps.getY(i) },
                     { x: boundary.x, y: boundary.y, radius: boundary.radius },
                   )
@@ -268,8 +312,7 @@ const Particles: React.FC<Props> = ({
           if (
             pps.getX(i) + v * Math.cos(pas.getX(i)) > viewport.width / 2 ||
             pps.getX(i) + v * Math.cos(pas.getX(i)) < -viewport.width / 2 ||
-            pps.getY(i) + v * Math.sin(pas.getX(i)) >
-              viewport.height - (top * (viewport.height / window.innerHeight)) / 2 ||
+            pps.getY(i) + v * Math.sin(pas.getX(i)) > viewport.height - viewportTop / 2 ||
             pps.getY(i) + v * Math.sin(pas.getX(i)) < -viewport.height / 2
           ) {
             pps.setXY(i, 0, 0)

@@ -12,7 +12,7 @@ export type Point2d = {
 export type Circle = Point2d & {
   radius: number
 }
-export const isCircle = (b: any): b is Circle => b.radius
+export const isCircle = (b: any): b is Circle => typeof b.radius === 'number'
 
 export type Polygon = {
   vertices: Point2d[]
@@ -23,60 +23,11 @@ export type Polygon = {
 ///
 
 /// Circle
-export const isInRadius = (point: Point2d, circle: Circle): boolean => {
+export const isInCircle = (point: Point2d, circle: Circle): boolean => {
   return Math.sqrt((point.x - circle.x) ** 2 + (point.y - circle.y) ** 2) < circle.radius
 }
 
 /// Polygon
-function onSegment(p, q, r) {
-  if (
-    q.x <= Math.max(p.x, r.x) &&
-    q.x >= Math.min(p.x, r.x) &&
-    q.y <= Math.max(p.y, r.y) &&
-    q.y >= Math.min(p.y, r.y)
-  )
-    return true
-
-  return false
-}
-
-function orientation(p, q, r) {
-  // See https://www.geeksforgeeks.org/orientation-3-ordered-points/
-  // for details of below formula.
-  let val = (q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y)
-
-  if (val == 0) return 0 // collinear
-
-  return val > 0 ? 1 : 2 // clock or counterclock wise
-}
-
-function doIntersect(p1, q1, p2, q2) {
-  // Find the four orientations needed for general and
-  // special cases
-  let o1 = orientation(p1, q1, p2)
-  let o2 = orientation(p1, q1, q2)
-  let o3 = orientation(p2, q2, p1)
-  let o4 = orientation(p2, q2, q1)
-
-  // General case
-  if (o1 != o2 && o3 != o4) return true
-
-  // Special Cases
-  // p1, q1 and p2 are collinear and p2 lies on segment p1q1
-  if (o1 == 0 && onSegment(p1, p2, q1)) return true
-
-  // p1, q1 and q2 are collinear and q2 lies on segment p1q1
-  if (o2 == 0 && onSegment(p1, q2, q1)) return true
-
-  // p2, q2 and p1 are collinear and p1 lies on segment p2q2
-  if (o3 == 0 && onSegment(p2, p1, q2)) return true
-
-  // p2, q2 and q1 are collinear and q1 lies on segment p2q2
-  if (o4 == 0 && onSegment(p2, q1, q2)) return true
-
-  return false // Doesn't fall in any of the above cases
-}
-
 export const isInPolygon = (
   point: Point2d,
   max: Point2d,
@@ -87,7 +38,6 @@ export const isInPolygon = (
     return false
   } else {
     const wrappingVertices = [vertices[vertices.length - 1], ...vertices]
-    // console.log([vertices[vertices.length - 1], ...vertices])
     return (
       wrappingVertices.filter(
         (v, index) =>
@@ -96,6 +46,73 @@ export const isInPolygon = (
         2 ===
       1
     )
+  }
+}
+
+function onSegment(a: Point2d, b: Point2d, c: Point2d) {
+  if (
+    b.x <= Math.max(a.x, c.x) &&
+    b.x >= Math.min(a.x, c.x) &&
+    b.y <= Math.max(a.y, c.y) &&
+    b.y >= Math.min(a.y, c.y)
+  )
+    return true
+
+  return false
+}
+
+// Based on https://www.geeksforgeeks.org/orientation-3-ordered-points/
+function orientation(a: Point2d, b: Point2d, c: Point2d) {
+  const val = (b.y - a.y) * (c.x - b.x) - (b.x - a.x) * (c.y - b.y)
+
+  if (val === 0) return 0 // collinear
+
+  return val > 0 ? 1 : 2 // clockwise or counterclockwise
+}
+
+// Based on https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
+function doIntersect(a1: Point2d, a2: Point2d, b1: Point2d, b2: Point2d) {
+  // Find the four orientations needed for general and special cases
+  const o1 = orientation(a1, a2, b1)
+  const o2 = orientation(a1, a2, b2)
+  const o3 = orientation(b1, b2, a1)
+  const o4 = orientation(b1, b2, a2)
+
+  // General case
+  if (o1 !== o2 && o3 !== o4) return true
+
+  // Special Cases - if a, b, and c are colinear and b lies on segment ac
+  if (o1 === 0 && onSegment(a1, b1, a2)) return true
+  if (o2 === 0 && onSegment(a1, b2, a2)) return true
+  if (o3 === 0 && onSegment(b1, a1, b2)) return true
+  if (o4 === 0 && onSegment(b1, a2, b2)) return true
+
+  return false // No intersection
+}
+
+// based on https://www.geeksforgeeks.org/program-for-point-of-intersection-of-two-lines/
+export const getIntersection = (
+  a1: Point2d,
+  a2: Point2d,
+  b1: Point2d,
+  b2: Point2d,
+): Point2d | null => {
+  // line a (la) as la1*x + la2*y
+  const la1 = a2.y - a1.y
+  const la2 = a1.x - a2.x
+  const la = la1 * a1.x + la2 * a1.y
+
+  // line b (lb) as lb1*x + lb2*y
+  const lb1 = b2.y - b1.y
+  const lb2 = b1.x - b2.x
+  const lb = lb1 * b1.x + lb2 * b1.y
+
+  const det = la1 * lb2 - lb1 * la2
+
+  if (det === 0) {
+    return null
+  } else {
+    return { x: (lb2 * la - la2 * lb) / det, y: (la1 * lb - lb1 * la) / det }
   }
 }
 
@@ -117,4 +134,57 @@ export const escapeRadius = (
 ) => {
   const angleFromCircle = Math.atan2(point.y - circle.y, point.x - circle.x)
   return getNewAngle(point.angle, angleFromCircle, point.turnV * boostSpeed) // slight boost to turn speed to make mouse circle cleaner
+}
+
+///
+/// Shape Generators
+///
+
+export const generateRectangleFromCenter = (
+  center: Point2d,
+  height: number,
+  width: number,
+): Point2d[] => {
+  return [
+    {
+      x: center.x - width / 2,
+      y: center.y - height / 2,
+    },
+    {
+      x: center.x + width / 2,
+      y: center.y - height / 2,
+    },
+    {
+      x: center.x + width / 2,
+      y: center.y + height / 2,
+    },
+    {
+      x: center.x - width / 2,
+      y: center.y + height / 2,
+    },
+  ]
+}
+
+export const generatePentagon = (scale = 1, offset: Point2d = { x: 0, y: 0 }): Point2d[] => {
+  return Array.from({ length: 5 }, (_, k) => ({
+    x: scale * Math.sin(((Math.PI * 2) / 5) * k) + offset.x,
+    y: scale * Math.cos(((Math.PI * 2) / 5) * k) + offset.y,
+  }))
+}
+
+export const generateStar = (scale = 1, offset: Point2d = { x: 0, y: 0 }): Point2d[] => {
+  const pentagon = generatePentagon(scale, offset)
+
+  return [
+    pentagon[0],
+    getIntersection(pentagon[0], pentagon[2], pentagon[4], pentagon[1]),
+    pentagon[1],
+    getIntersection(pentagon[1], pentagon[3], pentagon[0], pentagon[2]),
+    pentagon[2],
+    getIntersection(pentagon[2], pentagon[4], pentagon[3], pentagon[1]),
+    pentagon[3],
+    getIntersection(pentagon[3], pentagon[0], pentagon[4], pentagon[2]),
+    pentagon[4],
+    getIntersection(pentagon[4], pentagon[1], pentagon[0], pentagon[3]),
+  ]
 }

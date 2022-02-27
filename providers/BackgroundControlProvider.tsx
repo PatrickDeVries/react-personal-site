@@ -18,7 +18,7 @@ const DEFAULT_SETTINGS = {
   baseTurnV: 0.03 * Math.PI,
   turnVar: 0.03 * Math.PI,
   freeThinkers: 200,
-  mouseSize: 0.5,
+  mouseSize: 1,
 }
 
 export type Mouse = {

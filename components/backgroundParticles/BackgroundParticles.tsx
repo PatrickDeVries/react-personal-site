@@ -57,22 +57,7 @@ const BackgroundParticles: React.FC<Props> = ({ top }) => {
           colorB={colorB}
           mouseSize={mouseSize}
           top={top}
-          avoid={
-            router?.pathname === '/'
-              ? [
-                  { x: 0, y: 0, radius: 3.25 },
-                  {
-                    vertices: [
-                      { x: -5, y: -1 },
-                      { x: -5, y: 1 },
-                      { x: 5, y: 1 },
-                      { x: 5, y: -1 },
-                      { x: 0, y: -4 },
-                    ],
-                  },
-                ]
-              : []
-          }
+          pathname={router?.pathname}
         />
       </Canvas>
     </BgCanvas>
