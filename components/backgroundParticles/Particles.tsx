@@ -259,6 +259,38 @@ const Particles: React.FC<Props> = ({
           viewport.height / 2,
       }
     }
+
+    mouseBounds =
+      mouseShape === MouseShapes.Circle
+        ? ({ ...mouse.current, radius: mouseSize } as Circle)
+        : mouseShape === MouseShapes.Star
+        ? ({ vertices: generateStar(mouseSize, mouse.current) } as Polygon)
+        : ({
+            vertices: generateRectangleFromCenter(mouse.current, mouseSize * 2, mouseSize * 2),
+          } as Polygon)
+
+    if (!isCircle(mouseBounds)) {
+      mouseMax = {
+        x: Math.max.apply(
+          Math,
+          mouseBounds.vertices.map(v => v.x),
+        ),
+        y: Math.max.apply(
+          Math,
+          mouseBounds.vertices.map(v => v.y),
+        ),
+      }
+      mouseMin = {
+        x: Math.min.apply(
+          Math,
+          mouseBounds.vertices.map(v => v.x),
+        ),
+        y: Math.min.apply(
+          Math,
+          mouseBounds.vertices.map(v => v.y),
+        ),
+      }
+    }
   }
 
   const maxes: Point2d[] = useMemo(
