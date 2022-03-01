@@ -1,7 +1,7 @@
 import { Button, Label, Text } from '@headstorm/foundry-react-ui'
 import { useRouter } from 'next/dist/client/router'
 import React, { useContext } from 'react'
-import { BackgroundControlContext } from '../../providers/BackgroundControlProvider'
+import { BackgroundControlContext, MouseShapes } from '../../providers/BackgroundControlProvider'
 import { useTheme } from '../../providers/ThemeProvider'
 import RangeSlider from '../rangeSlider'
 import { ColorInput, ControlCard, ControlRows, Footer } from './style'
@@ -24,6 +24,9 @@ const ParticleControlCard: React.FC = () => {
     setFreeThinkers: setFreeThinkers,
     mouseSize,
     setMouseSize,
+    mouseShape,
+    setMouseShape,
+
     colorA,
     setColorA,
     colorB,
@@ -122,6 +125,15 @@ const ParticleControlCard: React.FC = () => {
               onChange={event => setColorB(event.target.value)}
             />
           </Label>
+          <Label labelText="Mouse shape" color={theme.text}>
+            <select value={mouseShape} onChange={e => setMouseShape(MouseShapes[e.target.value])}>
+              {Object.keys(MouseShapes).map(shape => (
+                <option key={shape} value={shape}>
+                  {shape}
+                </option>
+              ))}
+            </select>
+          </Label>
         </ControlRows>
         <Footer>
           <Button
@@ -132,6 +144,15 @@ const ParticleControlCard: React.FC = () => {
           >
             Restore settings to Default
           </Button>
+          <Label labelText="Mouse shape" color={theme.text}>
+            <select value={mouseShape} onChange={e => setMouseShape(MouseShapes[e.target.value])}>
+              {Object.keys(MouseShapes).map(shape => (
+                <option key={shape} value={shape}>
+                  {shape}
+                </option>
+              ))}
+            </select>
+          </Label>
           <Button
             color={theme.danger}
             onClick={() => {

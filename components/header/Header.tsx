@@ -118,6 +118,7 @@ const Header: React.FC = () => {
         <IconGroup>
           {router.pathname === '/background' && (
             <NavIcon
+              title="Edit background settings"
               onClick={() => {
                 setControlsOpen(!controlsOpen)
                 setFirstHit(false)
@@ -129,6 +130,7 @@ const Header: React.FC = () => {
             </NavIcon>
           )}
           <NavIcon
+            title={`Change to ${theme.name === 'light' ? 'dark' : 'light'} mode`}
             onClick={() => {
               if (theme.name === 'light') {
                 setTheme(darkColors)
@@ -148,6 +150,7 @@ const Header: React.FC = () => {
             <Icon path={mdiThemeLightDark} size="1.5rem" />
           </NavIcon>
           <NavIcon
+            title="Open navigation"
             mobileOnly
             onClick={() => {
               setExpanded(!expanded)

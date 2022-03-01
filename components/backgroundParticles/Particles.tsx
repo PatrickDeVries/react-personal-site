@@ -2,6 +2,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import React, { Dispatch, MutableRefObject, SetStateAction, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { BufferAttribute, BufferGeometry, Points, ShaderMaterial } from 'three'
+import { MouseShapes } from '../../providers/BackgroundControlProvider'
 import {
   Circle,
   escapeRadius,
@@ -12,6 +13,7 @@ import {
   isInCircle,
   isInPolygon,
   Point2d,
+  Polygon,
 } from '../../utils/geometry'
 import './particlematerial'
 import { fragment, vertex } from './particlematerial'
@@ -67,6 +69,7 @@ type Props = {
   turnVar: number
   freeThinkers: number
   mouseSize: number
+  mouseShape: MouseShapes
   colorA: string
   colorB: string
 
@@ -91,6 +94,8 @@ const Particles: React.FC<Props> = ({
   turnVar: turnVariance,
   freeThinkers,
   mouseSize,
+  mouseShape,
+
   colorA,
   colorB,
 
@@ -108,78 +113,190 @@ const Particles: React.FC<Props> = ({
   const pointRef = useRef<Points>()
   const sizes = []
 
-  const avoid =
-    pathname === '/'
-      ? [
-          {
-            vertices: generateStar(
-              viewport.width < viewport.height ? viewport.width * 0.4 : viewport.height * 0.48,
-              { x: 0, y: -viewportTop },
-            ),
-          },
-        ]
-      : pathname === '/portfolio'
-      ? [
-          {
-            x: -viewport.width / 4,
-            y: -viewport.height / 4 - viewportTop / 2,
-            radius: viewport.height / 5,
-          },
-          {
-            x: -viewport.width / 4,
-            y: viewport.height / 4 - viewportTop / 2,
-            radius: viewport.height / 5,
-          },
-          {
-            x: viewport.width / 4,
-            y: -viewport.height / 4 - viewportTop / 2,
-            radius: viewport.height / 5,
-          },
-          {
-            x: viewport.width / 4,
-            y: viewport.height / 4 - viewportTop / 2,
-            radius: viewport.height / 5,
-          },
-        ]
-      : pathname === '/contact'
-      ? [
-          {
-            vertices: generateRectangleFromCenter(
-              { x: 0, y: -viewportTop / 2 },
-              viewport.height - viewport.width / 10,
-              viewport.width - viewport.width / 10,
-            ),
-          },
-        ]
-      : []
+  const avoid = useMemo(
+    () =>
+      pathname === '/'
+        ? [
+            {
+              vertices: generateStar(
+                viewport.width < viewport.height ? viewport.width * 0.4 : viewport.height * 0.48,
+                { x: 0, y: -viewportTop },
+              ),
+            },
+          ]
+        : pathname === '/portfolio'
+        ? [
+            {
+              x: -viewport.width / 4,
+              y: -viewport.height / 4 - viewportTop / 2,
+              radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
+            },
+            {
+              x: -viewport.width / 4,
+              y: viewport.height / 4 - viewportTop / 2,
+              radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
+            },
+            {
+              x: viewport.width / 4,
+              y: -viewport.height / 4 - viewportTop / 2,
+              radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
+            },
+            {
+              x: viewport.width / 4,
+              y: viewport.height / 4 - viewportTop / 2,
+              radius: viewport.height > viewport.width ? viewport.width / 5 : viewport.height / 5,
+            },
+          ]
+        : pathname === '/contact'
+        ? [
+            {
+              vertices: generateRectangleFromCenter(
+                { x: 0, y: -viewportTop / 2 },
+                viewport.height -
+                  (viewport.height > viewport.width ? viewport.height / 10 : viewport.width / 10),
+                viewport.width -
+                  (viewport.height > viewport.width ? viewport.height / 10 : viewport.width / 10),
+              ),
+            },
+          ]
+        : [],
+    [pathname, viewport.height, viewport.width, viewportTop],
+  )
 
-  const maxes: Point2d[] = avoid.map(a =>
-    isCircle(a)
-      ? { x: 0, y: 0 }
-      : {
+  const mouse = useRef<Point2d>({ x: 0, y: 0 })
+  let mouseBounds: Circle | Polygon = useMemo(
+    () =>
+      mouseShape === MouseShapes.Circle
+        ? ({ ...mouse.current, radius: mouseSize } as Circle)
+        : mouseShape === MouseShapes.Star
+        ? ({ vertices: generateStar(mouseSize, mouse.current) } as Polygon)
+        : ({
+            vertices: generateRectangleFromCenter(mouse.current, mouseSize * 2, mouseSize * 2),
+          } as Polygon),
+    [mouseShape, mouseSize],
+  )
+
+  let mouseMax: Point2d = useMemo(
+    () =>
+      !isCircle(mouseBounds)
+        ? {
+            x: Math.max.apply(
+              Math,
+              mouseBounds.vertices.map(v => v.x),
+            ),
+            y: Math.max.apply(
+              Math,
+              mouseBounds.vertices.map(v => v.y),
+            ),
+          }
+        : { x: 0, y: 0 },
+    [mouseBounds],
+  )
+
+  let mouseMin: Point2d = useMemo(
+    () =>
+      !isCircle(mouseBounds)
+        ? {
+            x: Math.min.apply(
+              Math,
+              mouseBounds.vertices.map(v => v.x),
+            ),
+            y: Math.min.apply(
+              Math,
+              mouseBounds.vertices.map(v => v.y),
+            ),
+          }
+        : { x: 0, y: 0 },
+    [mouseBounds],
+  )
+
+  if (document) {
+    document.onmousemove = event => {
+      mouse.current = {
+        x: ((event.clientX - 0) * viewport.width) / window.innerWidth + -viewport.width / 2,
+        y: ((event.clientY - 0) * -viewport.height) / window.innerHeight + viewport.height / 2,
+      }
+
+      mouseBounds =
+        mouseShape === MouseShapes.Circle
+          ? ({ ...mouse.current, radius: mouseSize } as Circle)
+          : mouseShape === MouseShapes.Star
+          ? ({ vertices: generateStar(mouseSize, mouse.current) } as Polygon)
+          : ({
+              vertices: generateRectangleFromCenter(mouse.current, mouseSize * 2, mouseSize * 2),
+            } as Polygon)
+
+      if (!isCircle(mouseBounds)) {
+        mouseMax = {
           x: Math.max.apply(
             Math,
-            a.vertices.map(v => v.x),
+            mouseBounds.vertices.map(v => v.x),
           ),
           y: Math.max.apply(
             Math,
-            a.vertices.map(v => v.y),
+            mouseBounds.vertices.map(v => v.y),
           ),
-        },
-  )
-  const mins: Point2d[] = avoid.map(a =>
-    isCircle(a)
-      ? { x: 0, y: 0 }
-      : {
+        }
+        mouseMin = {
           x: Math.min.apply(
             Math,
-            a.vertices.map(v => v.x),
+            mouseBounds.vertices.map(v => v.x),
           ),
           y: Math.min.apply(
             Math,
-            a.vertices.map(v => v.y),
+            mouseBounds.vertices.map(v => v.y),
           ),
-        },
+        }
+      }
+    }
+    document.ontouchmove = event => {
+      mouse.current = {
+        x:
+          ((event.changedTouches[0].clientX - 0) * viewport.width) / window.innerWidth +
+          -viewport.width / 2,
+        y:
+          ((event.changedTouches[0].clientY - 0) * -viewport.height) / window.innerHeight +
+          viewport.height / 2,
+      }
+    }
+  }
+
+  const maxes: Point2d[] = useMemo(
+    () =>
+      [...avoid].map(a =>
+        isCircle(a)
+          ? { x: 0, y: 0 }
+          : {
+              x: Math.max.apply(
+                Math,
+                a.vertices.map(v => v.x),
+              ),
+              y: Math.max.apply(
+                Math,
+                a.vertices.map(v => v.y),
+              ),
+            },
+      ),
+    [avoid],
+  )
+
+  const mins: Point2d[] = useMemo(
+    () =>
+      [...avoid].map(a =>
+        isCircle(a)
+          ? { x: 0, y: 0 }
+          : {
+              x: Math.min.apply(
+                Math,
+                a.vertices.map(v => v.x),
+              ),
+              y: Math.min.apply(
+                Math,
+                a.vertices.map(v => v.y),
+              ),
+            },
+      ),
+    [avoid],
   )
 
   for (let i = 0; i < 999999; i++) {
@@ -215,27 +332,6 @@ const Particles: React.FC<Props> = ({
     setAngles(newAngles)
   }
 
-  let mouse = useRef({ x: 0, y: 0 })
-
-  if (document) {
-    document.onmousemove = event => {
-      mouse.current = {
-        x: ((event.clientX - 0) * viewport.width) / window.innerWidth + -viewport.width / 2,
-        y: ((event.clientY - 0) * -viewport.height) / window.innerHeight + viewport.height / 2,
-      }
-    }
-    document.ontouchmove = event => {
-      mouse.current = {
-        x:
-          ((event.changedTouches[0].clientX - 0) * viewport.width) / window.innerWidth +
-          -viewport.width / 2,
-        y:
-          ((event.changedTouches[0].clientY - 0) * -viewport.height) / window.innerHeight +
-          viewport.height / 2,
-      }
-    }
-  }
-
   const updatePositions = () => {
     if (particles.current) {
       const pps: BufferAttribute = particles.current['attributes']['position'] as BufferAttribute
@@ -253,8 +349,52 @@ const Particles: React.FC<Props> = ({
         const flipY =
           pps.getY(i) > viewport.height / 2 - viewportTop || pps.getY(i) < -viewport.height / 2
 
+        let mouseMoved = false
+        if (isCircle(mouseBounds)) {
+          if (
+            mouseBounds.radius > 0 &&
+            isInCircle(
+              { x: pps.getX(i), y: pps.getY(i) },
+              { x: mouse.current.x, y: mouse.current.y, radius: mouseBounds.radius },
+            )
+          ) {
+            pas.setX(
+              i,
+              escapeRadius(
+                { x: pps.getX(i), y: pps.getY(i), angle, turnV },
+                { x: mouse.current.x, y: mouse.current.y, radius: mouseBounds.radius },
+                1.5,
+              ),
+            )
+            mouseMoved = true
+          }
+        } else {
+          if (
+            isInPolygon(
+              { x: pps.getX(i), y: pps.getY(i) },
+              mouseMax,
+              mouseMin,
+              mouseBounds.vertices,
+            )
+          ) {
+            pas.setX(
+              i,
+              escapeRadius(
+                { x: pps.getX(i), y: pps.getY(i), angle, turnV },
+                {
+                  x: (mouseMax.x + mouseMin.x) / 2,
+                  y: (mouseMax.y + mouseMin.y) / 2,
+                  radius: Math.max.apply(Math, [viewport.width, viewport.height]),
+                },
+                1.5,
+              ),
+            )
+            mouseMoved = true
+          }
+        }
+
         if (
-          [...avoid, { x: mouse.current.x, y: mouse.current.y, radius: mouseSize } as Circle]
+          avoid
             .map((boundary, bindex) => {
               if (isCircle(boundary)) {
                 if (
@@ -299,7 +439,8 @@ const Particles: React.FC<Props> = ({
                 }
               }
             })
-            .some(val => val)
+            .some(val => val) ||
+          mouseMoved
         ) {
           continue
         }

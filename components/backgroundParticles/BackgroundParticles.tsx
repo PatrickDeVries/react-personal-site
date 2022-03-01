@@ -19,6 +19,8 @@ const BackgroundParticles: React.FC<Props> = ({ top }) => {
     turnVar,
     freeThinkers: freeThinkers,
     mouseSize,
+    mouseShape,
+
     colorA,
     colorB,
 
@@ -56,6 +58,7 @@ const BackgroundParticles: React.FC<Props> = ({ top }) => {
           colorA={colorA}
           colorB={colorB}
           mouseSize={mouseSize}
+          mouseShape={mouseShape}
           top={top}
           pathname={router?.pathname}
         />

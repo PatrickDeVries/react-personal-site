@@ -11,19 +11,15 @@ import { BufferGeometry } from 'three'
 import { darkColors } from '../styles/myColors'
 import { useTheme } from './ThemeProvider'
 
-const DEFAULT_SETTINGS = {
-  particleCount: 20000,
-  baseV: 0.05,
-  vVar: 0.003,
-  baseTurnV: 0.03 * Math.PI,
-  turnVar: 0.03 * Math.PI,
-  freeThinkers: 200,
-  mouseSize: 1,
-}
-
 export type Mouse = {
   x: number
   y: number
+}
+
+export enum MouseShapes {
+  Circle = 'Circle',
+  Square = 'Square',
+  Star = 'Star',
 }
 
 export type BackgroundControl = {
@@ -46,6 +42,9 @@ export type BackgroundControl = {
   setFreeThinkers: (newVal: number) => void
   mouseSize: number
   setMouseSize: (newVal: number) => void
+  mouseShape: MouseShapes
+  setMouseShape: (newVal: MouseShapes) => void
+
   colorA: string
   setColorA: (newVal: string) => void
   colorB: string
@@ -64,6 +63,27 @@ export type BackgroundControl = {
   resetSettings: () => void
 }
 
+const DEFAULT_SETTINGS: Pick<
+  BackgroundControl,
+  | 'particleCount'
+  | 'baseV'
+  | 'vVar'
+  | 'baseTurnV'
+  | 'turnVar'
+  | 'freeThinkers'
+  | 'mouseSize'
+  | 'mouseShape'
+> = {
+  particleCount: 20000,
+  baseV: 0.05,
+  vVar: 0.003,
+  baseTurnV: 0.03 * Math.PI,
+  turnVar: 0.03 * Math.PI,
+  freeThinkers: 200,
+  mouseSize: 1,
+  mouseShape: MouseShapes.Circle,
+}
+
 export const BackgroundControlContext = createContext<BackgroundControl | null>(null)
 
 export const BackgroundControlProvider: React.FC = ({ children }) => {
@@ -80,6 +100,8 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
   const [turnVar, setTurnVar] = useState<number>(DEFAULT_SETTINGS.baseTurnV)
   const [freeThinkers, setFreeThinkers] = useState<number>(DEFAULT_SETTINGS.freeThinkers)
   const [mouseSize, setMouseSize] = useState<number>(DEFAULT_SETTINGS.mouseSize)
+  const [mouseShape, setMouseShape] = useState<MouseShapes>(DEFAULT_SETTINGS.mouseShape)
+
   const [colorA, setColorA] = useState<string>(theme.primary)
   const [colorB, setColorB] = useState<string>(theme.secondary)
 
@@ -98,6 +120,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
       turnVar: turnVarStore,
       freeThinkers: freeThinkersStore,
       mouseSize: mouseSizeStore,
+      mouseShape: mouseShapeStore,
       colorA: colorAStore,
       colorB: colorBStore,
     } = JSON.parse(localStorage.getItem('background-settings')) ?? {}
@@ -108,6 +131,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
     setTurnVar(turnVarStore ?? DEFAULT_SETTINGS.turnVar)
     setFreeThinkers(freeThinkersStore ?? DEFAULT_SETTINGS.freeThinkers)
     setMouseSize(mouseSizeStore ?? DEFAULT_SETTINGS.mouseSize)
+    setMouseShape(mouseShapeStore ?? DEFAULT_SETTINGS.mouseShape)
     setColorA(colorAStore ?? darkColors.primary)
     setColorB(colorBStore ?? darkColors.secondary)
     setIsInitialized(true)
@@ -125,6 +149,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
           turnVar,
           freeThinkers,
           mouseSize,
+          mouseShape,
           colorA,
           colorB,
         }),
@@ -137,6 +162,7 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
     colorB,
     freeThinkers,
     isInitialized,
+    mouseShape,
     mouseSize,
     particleCount,
     turnVar,
@@ -160,6 +186,8 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
     setTurnVar(DEFAULT_SETTINGS.turnVar)
     setFreeThinkers(DEFAULT_SETTINGS.freeThinkers)
     setMouseSize(DEFAULT_SETTINGS.mouseSize)
+    setMouseShape(DEFAULT_SETTINGS.mouseShape)
+
     setColorA(theme.primary)
     setColorB(theme.secondary)
   }
@@ -193,6 +221,9 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
         setFreeThinkers: setWrapper<number>(setFreeThinkers),
         mouseSize,
         setMouseSize: setWrapper<number>(setMouseSize),
+        mouseShape,
+        setMouseShape: setWrapper<MouseShapes>(setMouseShape),
+
         colorA,
         setColorA: setWrapper<string>(setColorA),
         colorB,

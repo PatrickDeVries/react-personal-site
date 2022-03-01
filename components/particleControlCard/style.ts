@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { MOBILE } from '../../styles/mediaQueries'
+import { DESKTOP, MOBILE } from '../../styles/mediaQueries'
 
 export const ControlCard = styled.div<{ controlsOpen?: boolean }>`
   background-color: ${({ theme }) => theme.backgroundHighlight}77;
@@ -34,6 +34,7 @@ export const ControlRows = styled.div`
 
   > div:nth-last-child(3),
   > div:last-child {
+    padding: 0.5rem;
     * {
       font-size: 1rem;
     }
@@ -43,11 +44,10 @@ export const ControlRows = styled.div`
     > div {
       width: calc(50% - 0.5rem);
     }
-    > div:nth-last-child(2) {
-      order: 9;
-    }
+  }
+  ${DESKTOP} {
     > div:last-child {
-      order: 8;
+      display: none;
     }
   }
 `
@@ -66,10 +66,20 @@ export const Footer = styled.div`
   flex-wrap: wrap;
   gap: 1rem;
   padding-top: 1rem;
+  div {
+    display: flex;
+    * {
+      font-size: 1rem;
+    }
+  }
+
   ${MOBILE} {
-    button {
+    > button {
       width: 100%;
       justify-content: center;
+    }
+    > div {
+      display: none;
     }
   }
 `
