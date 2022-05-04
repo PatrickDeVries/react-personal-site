@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }) {
   }, [isInitialized, theme])
 
   React.useEffect(() => {
-    setTheme(JSON.parse(localStorage.getItem('theme')).name === 'light' ? lightColors : darkColors)
+    setTheme(JSON.parse(localStorage.getItem('theme'))?.name === 'light' ? lightColors : darkColors)
     setIsInitialized(true)
   }, [])
 
