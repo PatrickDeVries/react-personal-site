@@ -1,4 +1,3 @@
-import { lighten } from 'polished'
 import styled, { css } from 'styled-components'
 
 export const Wrapper = styled.div`
@@ -56,8 +55,7 @@ export const PoolBall = styled.div<{ num: number; sunk?: boolean }>`
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  background-color: ${({ num, sunk }) =>
-    sunk ? lighten(0.25, BALL_COLORS[(num - 1) % 8]) : BALL_COLORS[(num - 1) % 8]};
+  background-color: ${({ num }) => BALL_COLORS[(num - 1) % 8]};
   box-sizing: border-box;
 
   ${({ sunk }) =>
@@ -114,5 +112,18 @@ export const PoolBall = styled.div<{ num: number; sunk?: boolean }>`
     display: flex;
     place-content: center;
     align-items: center;
+  }
+`
+
+export const ConfirmQueue = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+
+  > select {
+    border-radius: 0.25rem;
+    border-color: ${({ theme }) => theme.primary};
+    padding: 0.75rem 0.5rem;
   }
 `
