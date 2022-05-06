@@ -10,6 +10,7 @@ export type Theme = {
   backgroundHighlight: string
   strongHighlight: string
   empty: string
+  focus: string
 }
 
 export type ThemeProviderType = {

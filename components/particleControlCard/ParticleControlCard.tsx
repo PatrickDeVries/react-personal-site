@@ -137,7 +137,7 @@ const ParticleControlCard: React.FC = () => {
         </ControlRows>
         <Footer>
           <Button
-            color={theme.danger}
+            color={theme.focus}
             onClick={() => {
               resetSettings()
             }}
@@ -154,7 +154,7 @@ const ParticleControlCard: React.FC = () => {
             </select>
           </Label>
           <Button
-            color={theme.danger}
+            color={theme.focus}
             onClick={() => {
               setPositions([])
               setVelocities([])

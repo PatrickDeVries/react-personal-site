@@ -10,16 +10,18 @@ export const darkColors: Theme = {
   backgroundHighlight: '#0B232E',
   strongHighlight: '#113547',
   empty: '#FFFFFF',
+  focus: '#00FF00',
 }
 
 export const lightColors: Theme = {
   name: 'light',
   text: '#000000',
-  primary: '#3277B3',
-  secondary: '#D705FC',
+  primary: '#12CE5A',
+  secondary: '#3277B3',
   danger: '#EC4678',
   background: '#FFFFFF',
   backgroundHighlight: '#EEEEEE',
   strongHighlight: '#DDDDDD',
   empty: '#EEEEEE',
+  focus: '#2C00A3',
 }

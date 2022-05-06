@@ -65,7 +65,7 @@ const Contact: React.FC = () => {
   const { theme } = useTheme()
   return (
     <Wrapper>
-      <Text size="2rem" color={theme.primary} StyledContainer={ContactText}>
+      <Text size="2rem" color={theme.text} StyledContainer={ContactText}>
         Contact me:
       </Text>
       <SocialLinks>
@@ -73,10 +73,10 @@ const Contact: React.FC = () => {
           <SocialLink key={social.site}>
             <Link href={social.href} passHref={true}>
               <a href="">
-                <Icon path={social.src} size="10rem" color={theme.primary} />
+                <Icon path={social.src} size="10rem" color={theme.secondary} />
               </a>
             </Link>
-            <Text size=".75rem" color={theme.primary}>
+            <Text size=".75rem" color={theme.focus}>
               {social.text}
             </Text>
           </SocialLink>

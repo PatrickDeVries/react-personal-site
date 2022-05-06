@@ -1,11 +1,13 @@
-import Link from 'next/link'
+import { Button, variants } from '@headstorm/foundry-react-ui'
+import { useRouter } from 'next/dist/client/router'
 import styled from 'styled-components'
+import { useTheme } from '../providers/ThemeProvider'
 
 const GreetingBlock = styled.div<{ controlsOpen?: boolean }>`
   flex: 1;
-  align-self: center;
-  align-items: center;
+
   display: flex;
+  align-items: center;
   flex-direction: column;
   justify-content: center;
   filter: drop-shadow(0 0 4rem ${({ theme }) => theme.primary});
@@ -23,25 +25,22 @@ const IntroText = styled.p`
   }
 `
 
-const CenteredA = styled.a`
-  text-align: center;
-  font-size: 1.25rem;
-  padding: 1rem;
-  color: ${({ theme }) => theme.text};
-
-  border: 2px ${({ theme }) => theme.text} solid;
-`
-
 const Index: React.FC = () => {
+  const router = useRouter()
+  const { theme } = useTheme()
   return (
     <>
       <GreetingBlock>
         <IntroText>
           {`Hello, I'm `} <b>Patrick DeVries</b>, a full-stack developer
         </IntroText>
-        <Link href="/portfolio" passHref={true}>
-          <CenteredA>Check out my projects</CenteredA>
-        </Link>
+        <Button
+          color={theme.focus}
+          variant={variants.text}
+          onClick={() => router.push('/portfolio')}
+        >
+          Check out my projects
+        </Button>
       </GreetingBlock>
     </>
   )
