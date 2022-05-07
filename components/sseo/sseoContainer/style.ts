@@ -1,17 +1,23 @@
 import styled, { css } from 'styled-components'
+import { MOBILE } from '../../../styles/mediaQueries'
 
 export const Wrapper = styled.div`
   width: 100%;
   height: 100%;
 
   display: flex;
+  ${MOBILE} {
+    flex-direction: column;
+  }
   gap: 2rem;
 
-  background-color: ${({ theme }) => theme.background};
+  /* background-color: ${({ theme }) => theme.background}; */
   color: ${({ theme }) => theme.text};
 `
 
 export const LeftSection = styled.div`
+  flex: 1;
+
   padding: 1rem;
 
   display: flex;
@@ -21,6 +27,7 @@ export const LeftSection = styled.div`
 
 export const RightSection = styled.div`
   flex: 1;
+  padding: 1rem;
 `
 
 const BALL_COLORS = [
@@ -38,6 +45,10 @@ export const PlayerWrapper = styled.div`
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  > label {
+    width: 20rem;
+  }
+
   > div:nth-child(n + 1) {
     margin-top: 1.5rem;
   }
@@ -97,7 +108,7 @@ export const PoolBall = styled.div<{ num: number; sunk?: boolean }>`
     width: 2rem;
     aspect-ratio: 1;
     border-radius: 50%;
-    border: 1px solid ${({ theme }) => theme.text};
+    border: 1px solid black; //${({ theme }) => theme.text};
   }
 
   > div {
@@ -123,7 +134,14 @@ export const ConfirmQueue = styled.div`
 
   > select {
     border-radius: 0.25rem;
-    border-color: ${({ theme }) => theme.primary};
+    border: 1px solid ${({ theme }) => theme.secondary};
     padding: 0.75rem 0.5rem;
+    outline: none;
+    background-color: ${({ theme }) => theme.backgroundHighlight};
+    color: ${({ theme }) => theme.text};
+
+    &:focus {
+      border-color: ${({ theme }) => theme.focus};
+    }
   }
 `

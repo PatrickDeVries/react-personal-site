@@ -1,5 +1,5 @@
 import React from 'react'
-import SseoContainer from '../../components/sseoContainer'
+import { SseoContainer } from '../../components/sseo/'
 
 const SolidsStripesEvensOdds: React.FC = () => {
   return <SseoContainer />
