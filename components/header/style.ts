@@ -7,6 +7,8 @@ export const Wrapper = styled.nav`
   align-items: center;
   gap: 3rem;
 
+  font-size: 16px;
+
   height: 3rem;
   width: 100%;
   z-index: 2;
@@ -19,8 +21,7 @@ export const Wrapper = styled.nav`
 export const Logo = styled.div`
   white-space: nowrap;
   color: ${({ theme }) => theme.secondary};
-  font-size: 1.3rem;
-
+  font-weight: 600;
   user-select: none;
 `
 
@@ -89,8 +90,8 @@ export const DropDownItem = styled.div<{ active?: boolean }>`
   border-bottom: 1px ${({ theme }) => theme.secondary} solid;
 
   color: ${({ theme, active }) => (active ? darken(0.25)(theme.text) : theme.text)};
-  font-size: 1.25rem;
   text-align: center;
+  font-size: 16px;
 
   &:hover {
     color: ${({ theme }) => darken(0.25)(theme.text)};

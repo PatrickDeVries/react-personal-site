@@ -5,6 +5,8 @@ import BackgroundParticles from '../backgroundParticles'
 import Header from '../header'
 import { Body, Main } from './style'
 
+const PARTICLE_WHITELIST = ['/', '/portfolio', '/contact', '/background']
+
 const Layout = props => {
   const router = useRouter()
   const bodyRef = useRef<HTMLElement>(null)
@@ -18,7 +20,9 @@ const Layout = props => {
       <Head>
         <title>Patrick DeVries</title>
       </Head>
-      <BackgroundParticles top={bodyRef.current?.offsetTop ?? 0} />
+      {PARTICLE_WHITELIST.includes(router.pathname) && (
+        <BackgroundParticles top={bodyRef.current?.offsetTop ?? 0} />
+      )}
       <Main>
         <Header />
         <Body tint={router.pathname !== '/background'} ref={bodyRef}>

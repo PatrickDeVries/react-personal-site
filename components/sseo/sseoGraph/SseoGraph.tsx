@@ -20,7 +20,6 @@ const getLocation = (
   const combo = Object.values(BallTypeCombo).find(ballTypeCombo =>
     quarters[ballTypeCombo].includes(player),
   )
-
   if (combo) return combo
 
   return 'hidden'

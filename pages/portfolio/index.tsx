@@ -13,23 +13,28 @@ const Wrapper = styled.div`
 `
 
 const SectionHeader = styled(Text.Container)`
-  display: block;
   width: 100%;
-  text-align: left;
   padding: 2rem 0 1rem;
+
+  display: block;
+
+  font-size: 16px;
+  text-transform: uppercase;
 `
 
 const WorkItems = styled.div`
+  width: 100%;
+
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
+  gap: 2rem;
+
   ${MOBILE} {
     align-items: center;
     justify-content: center;
   }
-  gap: 2rem;
-  width: 100%;
 `
 
 const ReadmeStats = styled.img`

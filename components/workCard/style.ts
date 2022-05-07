@@ -27,7 +27,7 @@ export const StyledCard = styled.div`
 `
 
 export const HeaderText = styled.span`
-  font-size: 1.25rem;
+  font-size: 16px;
   color: ${({ theme }) => theme.secondary};
 `
 
@@ -38,6 +38,8 @@ export const BodySection = styled.div`
   flex-direction: row;
   gap: 1rem;
 
+  font-size: 14px;
+
   ${SMALL_MOBILE} {
     flex-direction: column;
     align-items: center;
@@ -47,7 +49,7 @@ export const BodySection = styled.div`
 
 export const ScalingImg = styled.img`
   display: block;
-  max-width: 40%;
+  max-width: 30%;
   object-fit: cover;
   border-radius: 0.5rem;
 `

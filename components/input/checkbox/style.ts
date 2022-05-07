@@ -1,6 +1,22 @@
 import styled, { css } from 'styled-components'
 import { OUTLINE_WIDTH } from '../style'
 
+export const ToggleLabel = styled.label<{ disabled?: boolean }>`
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  user-select: none;
+  ${({ disabled }) =>
+    !disabled &&
+    css`
+      cursor: pointer;
+    `}
+
+  input {
+    cursor: inherit;
+  }
+`
+
 const CHECK_POSITION = css`
   position: absolute;
   bottom: 10%;
@@ -21,7 +37,8 @@ export const CheckboxInput = styled.input`
   font: inherit;
   width: 1em;
   aspect-ratio: 1;
-  border: ${OUTLINE_WIDTH} solid ${({ theme }) => theme.secondary};
+  border: ${OUTLINE_WIDTH} solid ${({ theme }) => theme.text};
+  background-color: ${({ theme }) => theme.backgroundHighlight};
 
   &::before {
     content: '';
@@ -29,7 +46,7 @@ export const CheckboxInput = styled.input`
     width: 0.2em;
     height: ${OUTLINE_WIDTH};
     transform: scale(0) rotateZ(${CHECK_ANGLE}deg);
-    background-color: ${({ theme }) => theme.primary};
+    background-color: ${({ theme }) => theme.secondary};
   }
 
   &::after {
@@ -38,7 +55,7 @@ export const CheckboxInput = styled.input`
     width: 0.65em;
     height: ${OUTLINE_WIDTH};
     transform: scale(0) rotateZ(${CHECK_ANGLE + 90}deg);
-    background-color: ${({ theme }) => theme.primary};
+    background-color: ${({ theme }) => theme.secondary};
   }
 
   &:checked {
@@ -48,6 +65,6 @@ export const CheckboxInput = styled.input`
     &::after {
       transform: scale(1) rotateZ(${CHECK_ANGLE + 90}deg);
     }
-    border-color: ${({ theme }) => theme.primary};
+    border-color: ${({ theme }) => theme.secondary};
   }
 `
