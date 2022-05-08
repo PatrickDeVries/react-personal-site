@@ -1,15 +1,20 @@
 import { useRouter } from 'next/dist/client/router'
 import Head from 'next/head'
-import { useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import BackgroundParticles from '../backgroundParticles'
-import Header from '../header'
+import Header from './header'
 import { Body, Main } from './style'
 
 const PARTICLE_WHITELIST = ['/', '/portfolio', '/contact', '/background']
+interface Props {
+  theme: 'light' | 'dark'
+  setTheme: React.Dispatch<React.SetStateAction<'light' | 'dark'>>
+  children: React.ReactNode
+}
 
-const Layout = props => {
+const Layout: React.FC<Props> = ({ theme, setTheme, children }) => {
   const router = useRouter()
-  const bodyRef = useRef<HTMLElement>(null)
+  const bodyRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     bodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
@@ -24,9 +29,9 @@ const Layout = props => {
         <BackgroundParticles top={bodyRef.current?.offsetTop ?? 0} />
       )}
       <Main>
-        <Header />
+        <Header theme={theme} setTheme={setTheme} />
         <Body tint={router.pathname !== '/background'} ref={bodyRef}>
-          {props.children}
+          {children}
         </Body>
       </Main>
     </>

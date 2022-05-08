@@ -1,11 +1,11 @@
 import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document'
 // Import styled components ServerStyleSheet
-import styled, { ServerStyleSheet } from 'styled-components'
+import { ServerStyleSheet } from 'styled-components'
 
-const Body = styled.body`
-  min-height: 100vh;
-  min-width: 100vw;
-`
+// const Body = styled.body`
+//   min-height: 100vh;
+//   min-width: 100vw;
+// `
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -36,12 +36,19 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <Html>
-        <Head></Head>
-        <Body>
+      <Html lang="en">
+        <meta name="description" content="Patrick DeVries' web dev portolio" />
+
+        <meta property="og:url" content="https://www.patrickdevries.com/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Patrick" />
+        <meta property="og:description" content="Patrick DeVries' web dev portolio" />
+
+        <Head />
+        <body>
           <Main />
           <NextScript />
-        </Body>
+        </body>
       </Html>
     )
   }

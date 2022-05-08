@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import React from 'react'
-import { workItem } from '../../resources/myWork'
+import { WorkItem } from '../types'
 import { BodySection, BodyText, HeaderText, ScalingImg, StyledCard, Tag, TagSection } from './style'
 interface WorkCardProps {
-  item: workItem
+  item: WorkItem
 }
 
 const WorkCard = ({ item }: WorkCardProps) => {

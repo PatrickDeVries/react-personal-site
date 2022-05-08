@@ -1,5 +1,5 @@
 import React from 'react'
-import { InputProps } from '../../../types/input'
+import { InputProps } from '../types'
 import { CheckboxInput, ToggleLabel } from './style'
 
 const Checkbox: React.FC<InputProps> = ({ disabled, ...props }) => (

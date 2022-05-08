@@ -1,6 +1,6 @@
-import { Theme } from '../providers/ThemeProvider'
+import { Theme } from '../../styles'
 
-export const darkColors: Theme = {
+export const dark: Theme = {
   name: 'dark',
   text: '#FFFFFF',
   primary: '#00FF9D',
@@ -13,7 +13,7 @@ export const darkColors: Theme = {
   focus: '#00FF00',
 }
 
-export const lightColors: Theme = {
+export const light: Theme = {
   name: 'light',
   text: '#000000',
   primary: '#12CE5A',

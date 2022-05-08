@@ -1,8 +1,7 @@
 import styled from 'styled-components'
-import { DESKTOP, SMALL_MOBILE } from '../../styles/mediaQueries'
+import { DESKTOP, SMALL_MOBILE } from '../../ theme/mediaQueries'
 
 export const StyledCard = styled.div`
-  width: fit-content;
   align-self: stretch;
 
   display: flex;
@@ -23,6 +22,10 @@ export const StyledCard = styled.div`
     display: flex;
     flex-direction: column;
     gap: 1rem;
+  }
+
+  a {
+    text-decoration: none;
   }
 `
 
@@ -49,13 +52,15 @@ export const BodySection = styled.div`
 
 export const ScalingImg = styled.img`
   display: block;
-  max-width: 30%;
+  max-height: 20vh;
+  max-width: 100%;
   object-fit: cover;
   border-radius: 0.5rem;
 `
 
 export const BodyText = styled.p`
   color: ${({ theme }) => theme.text};
+  font-size: 16px;
 `
 
 export const TagSection = styled.div`

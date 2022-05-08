@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Header, Label, Labels, RangeWrapper, SliderWrapper, Wrapper } from './style'
 
 type Props = {
@@ -22,11 +22,19 @@ const RangeSlider: React.FC<Props> = ({
   labels,
   title,
 }) => {
-  const getReturnVal = (val: number) => {
-    if (val < min) return min
-    if (val > max) return max
-    return Math.ceil(val / step) * step
-  }
+  const getReturnVal = useCallback(
+    (val: number) => {
+      if (val < min) return min
+      if (val > max) return max
+      return Math.ceil(val / step) * step
+    },
+    [max, min, step],
+  )
+
+  const changeHandler = useCallback(
+    e => onChange(getReturnVal(Number(e.target.value))),
+    [getReturnVal, onChange],
+  )
 
   return (
     <Wrapper>
@@ -38,7 +46,7 @@ const RangeSlider: React.FC<Props> = ({
           min={min}
           max={max}
           step={step}
-          onChange={e => onChange(getReturnVal(Number(e.target.value)))}
+          onChange={changeHandler}
           title={title}
         />
       </Header>
@@ -55,7 +63,7 @@ const RangeSlider: React.FC<Props> = ({
             min={min}
             max={max}
             step={step}
-            onChange={e => onChange(getReturnVal(Number(e.target.value)))}
+            onInput={changeHandler}
             id={label}
             title={title}
           />

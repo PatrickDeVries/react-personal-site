@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { InputProps } from '../../types/input'
+import { InputProps } from './types'
 
 export const OUTLINE_WIDTH = `0.1em`
 
@@ -28,20 +28,4 @@ export const TextLabel = styled.label`
   flex-direction: column;
   gap: 0.5em;
   text-indent: calc(${OUTLINE_WIDTH} + 0.75em);
-`
-
-export const ToggleLabel = styled.label<{ disabled?: boolean }>`
-  display: flex;
-  gap: 1em;
-  align-items: center;
-  user-select: none;
-  ${({ disabled }) =>
-    disabled &&
-    css`
-      cursor: pointer;
-    `}
-
-  input {
-    cursor: inherit;
-  }
 `

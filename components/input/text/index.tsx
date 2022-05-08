@@ -1,7 +1,7 @@
 import React from 'react'
 import { useTheme } from 'styled-components'
-import { InputProps } from '../../../types/input'
 import { TextLabel } from '../style'
+import { InputProps } from '../types'
 import { TextInput } from './style'
 
 const Text: React.FC<InputProps> = ({ variant = 'outline', color, ...props }) => {

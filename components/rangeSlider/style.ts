@@ -59,6 +59,7 @@ export const RangeWrapper = styled.div<{ min: number; max: number; value: number
 
     z-index: 2;
     width: calc(100% * ${({ min, max, value }) => (value - min) / (max - min)});
+    transition: width 100ms ease-in-out;
     pointer-events: none;
   }
   input[type='range'] {

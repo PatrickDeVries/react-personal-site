@@ -2,9 +2,8 @@ import { mdiCogOutline, mdiThemeLightDark } from '@mdi/js'
 import Icon from '@mdi/react'
 import { useRouter } from 'next/dist/client/router'
 import React, { useContext, useEffect, useRef } from 'react'
-import { BackgroundControlContext } from '../../providers/BackgroundControlProvider'
-import { useTheme } from '../../providers/ThemeProvider'
-import { darkColors, lightColors } from '../../styles/myColors'
+import { dark, light } from '../../ theme/theme'
+import { BackgroundControlContext } from '../../particleControlCard/provider'
 import {
   BarWrapper,
   DropDown,
@@ -20,9 +19,13 @@ import {
   Wrapper,
 } from './style'
 
-const Header: React.FC = () => {
+interface Props {
+  theme: 'light' | 'dark'
+  setTheme: React.Dispatch<React.SetStateAction<'light' | 'dark'>>
+}
+
+const Header: React.FC<Props> = ({ theme, setTheme }) => {
   const router = useRouter()
-  const { theme, setTheme } = useTheme()
   const [expanded, setExpanded] = React.useState<boolean>(false)
   const [selected, setSelected] = React.useState<number>(
     router.pathname === '/'
@@ -50,8 +53,9 @@ const Header: React.FC = () => {
     updateState,
   } = useContext(BackgroundControlContext)
 
-  const navItems: { label: string; onClick: () => void }[] = [
+  const navItems: { route: string; label: string; onClick: () => void }[] = [
     {
+      route: '/',
       label: 'Home',
       onClick: () => {
         updateState()
@@ -61,6 +65,7 @@ const Header: React.FC = () => {
       },
     },
     {
+      route: '/portfolio',
       label: 'Portfolio',
       onClick: () => {
         updateState()
@@ -70,6 +75,7 @@ const Header: React.FC = () => {
       },
     },
     {
+      route: '/contact',
       label: 'Contact',
       onClick: () => {
         updateState()
@@ -79,6 +85,7 @@ const Header: React.FC = () => {
       },
     },
     {
+      route: '/background',
       label: 'Particles',
       onClick: () => {
         updateState()
@@ -110,7 +117,11 @@ const Header: React.FC = () => {
         <Logo>Patrick DeVries</Logo>
         <NavGroup>
           {navItems.map((item, index) => (
-            <NavItem key={item.label} onClick={item.onClick} active={selected === index}>
+            <NavItem
+              key={item.label}
+              onClick={item.onClick}
+              active={router.pathname === item.route}
+            >
               {item.label}
             </NavItem>
           ))}
@@ -130,19 +141,19 @@ const Header: React.FC = () => {
             </NavIcon>
           )}
           <NavIcon
-            title={`Change to ${theme.name === 'light' ? 'dark' : 'light'} mode`}
+            title={`Change to ${theme === 'light' ? 'dark' : 'light'} mode`}
             onClick={() => {
-              if (theme.name === 'light') {
-                setTheme(darkColors)
-                if (colorA === lightColors.primary && colorB === lightColors.secondary) {
-                  setColorA(darkColors.primary)
-                  setColorB(darkColors.secondary)
+              if (theme === 'light') {
+                setTheme('dark')
+                if (colorA === light.primary && colorB === light.secondary) {
+                  setColorA(dark.primary)
+                  setColorB(dark.secondary)
                 }
               } else {
-                setTheme(lightColors)
-                if (colorA === darkColors.primary && colorB === darkColors.secondary) {
-                  setColorA(lightColors.primary)
-                  setColorB(lightColors.secondary)
+                setTheme('light')
+                if (colorA === dark.primary && colorB === dark.secondary) {
+                  setColorA(light.primary)
+                  setColorB(light.secondary)
                 }
               }
             }}

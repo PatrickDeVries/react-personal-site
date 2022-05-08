@@ -1,13 +1,6 @@
-export type workItem = {
-  header: string
-  image: string
-  description: string
-  tags?: string[]
-  href?: string
-  page?: string
-}
+import { WorkItem } from './types'
 
-const myWork: Record<string, workItem[]> = {
+export const myWork: Record<string, WorkItem[]> = {
   Certifications: [
     {
       header: 'AZ-900 - Azure Fundamentals (Complete)',
@@ -78,6 +71,14 @@ const myWork: Record<string, workItem[]> = {
       page: '/static/lasers/index.html',
     },
   ],
+  Random: [
+    {
+      header: 'Solids vs Stripes vs Even vs Odds',
+      image: '/8ball.png',
+      description:
+        'A tool for tracking the rules and game state of the 4-player pool game, solids vs stripes vs evens vs odds. Players enter nicknames, then as they sink balls they input them. The resulting role assignments are visualized in the graph.',
+      tags: ['TypeScript', 'CSS', 'Pool', 'Game'],
+      href: '/portfolio/sseo',
+    },
+  ],
 }
-
-export default myWork

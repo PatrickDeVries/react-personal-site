@@ -2,7 +2,6 @@ import { useFrame, useThree } from '@react-three/fiber'
 import React, { Dispatch, MutableRefObject, SetStateAction, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { BufferAttribute, BufferGeometry, Points, ShaderMaterial } from 'three'
-import { MouseShapes } from '../../providers/BackgroundControlProvider'
 import {
   Circle,
   escapeRadius,
@@ -15,6 +14,7 @@ import {
   Point2d,
   Polygon,
 } from '../../utils/geometry'
+import { MouseShapes } from '../particleControlCard/provider'
 import './particlematerial'
 import { fragment, vertex } from './particlematerial'
 

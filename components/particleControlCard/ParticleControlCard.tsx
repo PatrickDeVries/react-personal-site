@@ -1,9 +1,9 @@
 import { Button, Label, Text } from '@headstorm/foundry-react-ui'
 import { useRouter } from 'next/dist/client/router'
 import React, { useContext } from 'react'
-import { BackgroundControlContext, MouseShapes } from '../../providers/BackgroundControlProvider'
-import { useTheme } from '../../providers/ThemeProvider'
+import { useTheme } from 'styled-components'
 import RangeSlider from '../rangeSlider'
+import { BackgroundControlContext, MouseShapes } from './provider'
 import { ColorInput, ControlCard, ControlRows, Footer } from './style'
 
 const ParticleControlCard: React.FC = () => {
@@ -39,7 +39,7 @@ const ParticleControlCard: React.FC = () => {
     resetSettings,
   } = useContext(BackgroundControlContext)
 
-  const { theme } = useTheme()
+  const theme = useTheme()
   const router = useRouter()
 
   return (

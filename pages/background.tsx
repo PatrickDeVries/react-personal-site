@@ -1,25 +1,30 @@
+import dynamic from 'next/dynamic'
 import { useContext } from 'react'
 import styled from 'styled-components'
-import ParticleControlCard from '../components/particleControlCard'
-import { BackgroundControlContext } from '../providers/BackgroundControlProvider'
-import { MOBILE } from '../styles/mediaQueries'
+import { MOBILE } from '../components/ theme/mediaQueries'
+import { BackgroundControlContext } from '../components/particleControlCard/provider'
+const ParticleControlCard = dynamic(() => import('../components/particleControlCard'), {
+  ssr: false,
+}) // turn off SSR for particle control card which for some reason cannot be SSRed
 
 const Wrapper = styled.div<{ firstHit?: boolean }>`
   position: fixed;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
   top: 2rem;
   right: 3.5rem;
   ${MOBILE} {
     right: 6rem;
   }
+  ${({ firstHit }) => !firstHit && 'transform: translateY(-100vh);'}
+
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+
   background-color: ${({ theme }) => theme.background}77;
   border: 1px ${({ theme }) => theme.secondary} solid;
-  padding: 1rem;
 
-  ${({ firstHit }) => !firstHit && 'transform: translateY(-100vh);'}
-  transition: transform .25s ease;
+  transition: transform 0.25s ease;
 `
 
 const GearIndicator = styled.p`
@@ -27,7 +32,7 @@ const GearIndicator = styled.p`
   margin: 0;
   color: ${({ theme }) => theme.text};
   font-size: 1rem;
-  z-index: 2;
+  /* z-index: 2; */
 `
 
 const Instructions = styled.p`
@@ -35,7 +40,7 @@ const Instructions = styled.p`
   margin: 0;
   color: ${({ theme }) => theme.text};
   font-size: 1rem;
-  z-index: 2;
+  /* z-index: 2; */
 `
 
 const Background: React.FC = () => {

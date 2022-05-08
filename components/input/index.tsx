@@ -1,7 +1,7 @@
 import React from 'react'
-import { InputProps } from '../../types/input'
 import Checkbox from './checkbox'
 import Text from './text'
+import { InputProps } from './types'
 
 const inputs = {
   checkbox: Checkbox,

@@ -1,18 +1,17 @@
-import { I18nProvider, useLocale } from '@react-aria/i18n'
-import { SSRProvider } from '@react-aria/ssr'
+import { useLocale } from '@react-aria/i18n'
 import React from 'react'
 import { ThemeProvider } from 'styled-components'
+import { Global } from '../components/ theme/global'
+import { dark, light } from '../components/ theme/theme'
 import Layout from '../components/layout'
-import { BackgroundControlProvider } from '../providers/BackgroundControlProvider'
-import { ThemeProvider as CustomThemeProvider } from '../providers/ThemeProvider'
-import '../styles/globals.css'
-import { darkColors, lightColors } from '../styles/myColors'
+import { BackgroundControlProvider } from '../components/particleControlCard/provider'
 
 function MyApp({ Component, pageProps }) {
   const [isInitialized, setIsInitialized] = React.useState(false)
-  const { locale, direction } = useLocale()
+  const { locale } = useLocale()
 
-  const [theme, setTheme] = React.useState(darkColors)
+  const [theme, setTheme] = React.useState<'dark' | 'light'>('dark')
+
   React.useEffect(() => {
     if (isInitialized) {
       localStorage.setItem('theme', JSON.stringify(theme))
@@ -20,24 +19,19 @@ function MyApp({ Component, pageProps }) {
   }, [isInitialized, theme])
 
   React.useEffect(() => {
-    setTheme(JSON.parse(localStorage.getItem('theme'))?.name === 'light' ? lightColors : darkColors)
+    setTheme(JSON.parse(localStorage.getItem('theme'))?.name === 'light' ? 'light' : 'dark')
     setIsInitialized(true)
   }, [])
 
   return (
-    <SSRProvider>
-      <I18nProvider locale={locale}>
-        <ThemeProvider theme={theme}>
-          <CustomThemeProvider value={{ theme, setTheme }}>
-            <BackgroundControlProvider>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </BackgroundControlProvider>
-          </CustomThemeProvider>
-        </ThemeProvider>
-      </I18nProvider>
-    </SSRProvider>
+    <ThemeProvider theme={theme === 'light' ? light : dark}>
+      <Global />
+      <BackgroundControlProvider>
+        <Layout theme={theme} setTheme={setTheme}>
+          <Component {...pageProps} />
+        </Layout>
+      </BackgroundControlProvider>
+    </ThemeProvider>
   )
 }
 

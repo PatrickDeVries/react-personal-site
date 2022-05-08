@@ -3,8 +3,7 @@ import { mdiEmail, mdiGithub, mdiLinkedin, mdiMessage, mdiPhone } from '@mdi/js'
 import Icon from '@mdi/react'
 import Link from 'next/link'
 import React from 'react'
-import styled from 'styled-components'
-import { useTheme } from '../providers/ThemeProvider'
+import styled, { useTheme } from 'styled-components'
 
 const Wrapper = styled.div`
   padding: 3rem;
@@ -62,7 +61,7 @@ const socials: Social[] = [
 ]
 
 const Contact: React.FC = () => {
-  const { theme } = useTheme()
+  const theme = useTheme()
   return (
     <Wrapper>
       <Text size="2rem" color={theme.text} StyledContainer={ContactText}>

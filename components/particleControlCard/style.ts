@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { DESKTOP, MOBILE } from '../../styles/mediaQueries'
+import { DESKTOP, MOBILE } from '../ theme/mediaQueries'
 
 export const ControlCard = styled.div<{ controlsOpen?: boolean }>`
   background-color: ${({ theme }) => theme.backgroundHighlight}77;

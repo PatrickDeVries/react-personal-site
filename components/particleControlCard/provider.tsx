@@ -7,9 +7,9 @@ import {
   useRef,
   useState,
 } from 'react'
+import { useTheme } from 'styled-components'
 import { BufferGeometry } from 'three'
-import { darkColors } from '../styles/myColors'
-import { useTheme } from './ThemeProvider'
+import { dark } from '../ theme/theme'
 
 export type Mouse = {
   x: number
@@ -87,7 +87,7 @@ const DEFAULT_SETTINGS: Pick<
 export const BackgroundControlContext = createContext<BackgroundControl | null>(null)
 
 export const BackgroundControlProvider: React.FC = ({ children }) => {
-  const { theme } = useTheme()
+  const theme = useTheme()
   const [isInitialized, setIsInitialized] = useState<boolean>(false)
 
   const [firstHit, setFirstHit] = useState<boolean>(true)
@@ -132,8 +132,8 @@ export const BackgroundControlProvider: React.FC = ({ children }) => {
     setFreeThinkers(freeThinkersStore ?? DEFAULT_SETTINGS.freeThinkers)
     setMouseSize(mouseSizeStore ?? DEFAULT_SETTINGS.mouseSize)
     setMouseShape(mouseShapeStore ?? DEFAULT_SETTINGS.mouseShape)
-    setColorA(colorAStore ?? darkColors.primary)
-    setColorB(colorBStore ?? darkColors.secondary)
+    setColorA(colorAStore ?? dark.primary)
+    setColorB(colorBStore ?? dark.secondary)
     setIsInitialized(true)
   }, [])
 
