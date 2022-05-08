@@ -1,33 +1,34 @@
 import styled, { css } from 'styled-components'
-import { MOBILE } from '../../../styles/mediaQueries'
+import { MOBILE } from '../../ theme/mediaQueries'
 
 export const Wrapper = styled.div`
   width: 100%;
-  height: 100%;
 
   display: flex;
+  justify-content: space-between;
   ${MOBILE} {
     flex-direction: column;
+    align-items: center;
   }
   gap: 2rem;
-
-  /* background-color: ${({ theme }) => theme.background}; */
+  padding: 1rem;
+  margin: 0 auto;
   color: ${({ theme }) => theme.text};
 `
 
 export const LeftSection = styled.div`
-  flex: 1;
-
-  padding: 1rem;
-
   display: flex;
   flex-direction: column;
   gap: 1rem;
 `
 
 export const RightSection = styled.div`
-  flex: 1;
-  padding: 1rem;
+  width: max-content;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  * {
+  }
 `
 
 const BALL_COLORS = [
@@ -45,26 +46,27 @@ export const PlayerWrapper = styled.div`
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  > label {
-    width: 20rem;
-  }
+  align-items: flex-end;
 
-  > div:nth-child(n + 1) {
-    margin-top: 1.5rem;
+  font-size: 14px;
+
+  > label {
+    width: 22rem;
+    font-size: 12px;
   }
-  align-items: center;
 `
 
 export const BallsWrapper = styled.div`
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  font-size: 14px;
 `
 
 export const PoolBall = styled.div<{ num: number; sunk?: boolean }>`
   position: relative;
-  width: 2rem;
-  height: 2rem;
+  width: 2em;
+  height: 2em;
   border-radius: 50%;
   background-color: ${({ num }) => BALL_COLORS[(num - 1) % 8]};
   box-sizing: border-box;
@@ -82,7 +84,7 @@ export const PoolBall = styled.div<{ num: number; sunk?: boolean }>`
 
   user-select: none;
 
-  ${({ num, theme }) =>
+  ${({ num }) =>
     num > 8 &&
     css`
       ::before {
@@ -94,8 +96,8 @@ export const PoolBall = styled.div<{ num: number; sunk?: boolean }>`
         width: 100%;
         height: 70%;
 
-        border-top: 1px solid ${theme.text};
-        border-bottom: 1px solid ${theme.text};
+        border-top: 1px solid black;
+        border-bottom: 1px solid black;
         box-shadow: 0 0 0 1rem white;
       }
     `}
@@ -105,10 +107,10 @@ export const PoolBall = styled.div<{ num: number; sunk?: boolean }>`
     box-sizing: border-box;
     top: 0;
 
-    width: 2rem;
+    width: 2em;
     aspect-ratio: 1;
     border-radius: 50%;
-    border: 1px solid black; //${({ theme }) => theme.text};
+    border: 1px solid black;
   }
 
   > div {
@@ -117,8 +119,8 @@ export const PoolBall = styled.div<{ num: number; sunk?: boolean }>`
     border-radius: 50%;
     background-color: white;
     color: black;
-    font-size: 10px;
-    border: 1px solid ${({ theme }) => theme.text};
+    font-size: 0.6em;
+    border: 1px solid black;
 
     display: flex;
     place-content: center;

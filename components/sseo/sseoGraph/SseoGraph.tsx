@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { formatBallType, formatPlayer } from '../formatters'
+import { formatBallType, formatPlayerName } from '../formatters'
 import { BallType, BallTypeCombo, Player, Roles } from '../types'
 import { getQuarters } from '../utils'
 import { GraphBody, GraphLabels, GridCell, GridHeader, Label, Wrapper } from './style'
@@ -23,6 +23,12 @@ const getLocation = (
   if (combo) return combo
 
   return 'hidden'
+}
+
+const getIndex = (player: Player, quarters: Record<BallTypeCombo, Player[]>): -1 | 0 | 1 => {
+  const quarter = Object.keys(quarters).find(quarter => quarters[quarter].includes(player))
+  if (!quarter || quarters[quarter].length === 1) return -1
+  return quarters[quarter][0] === player ? 0 : 1
 }
 
 const SseoGraph: React.FC<Props> = ({ roles, playerNames }) => {
@@ -63,10 +69,10 @@ const SseoGraph: React.FC<Props> = ({ roles, playerNames }) => {
             {Object.values(Player).map(player => (
               <Label
                 key={`${BallTypeCombo.SolidEven}-${player}`}
-                location={getLocation(player, decided, quarters)} // TODO: style position based on each possible option to allow animation
-                index={Object.values(quarters).find(arr => arr[0] === player) ? 0 : 1}
+                location={getLocation(player, decided, quarters)}
+                index={getIndex(player, quarters)}
               >
-                <span>{formatPlayer(player, playerNames)}</span>
+                <span>{formatPlayerName(player, playerNames)}</span>
               </Label>
             ))}
           </GridCell>
@@ -80,87 +86,3 @@ const SseoGraph: React.FC<Props> = ({ roles, playerNames }) => {
 }
 
 export default SseoGraph
-
-// <GraphGrid>
-//   <div></div>
-//   <GridHeader ballType={BallType.Solid}>{formatBallType(BallType.Solid)}</GridHeader>
-//   <GridHeader ballType={BallType.Stripe}>{formatBallType(BallType.Stripe)}</GridHeader>
-
-//   <GridHeader ballType={BallType.Even}>{formatBallType(BallType.Even)}</GridHeader>
-//   <GridCell>
-// {Object.values(Player).map(player => (
-//   <Label
-//     key={`${BallTypeCombo.SolidEven}-${player}`}
-//     location={
-//       quarters[BallTypeCombo.SolidEven].includes(player)
-//         ? BallTypeCombo.SolidEven
-//         : quarters[BallTypeCombo.StripeEven].includes(player)
-//         ? BallTypeCombo.StripeEven
-//         : quarters[BallTypeCombo.SolidEven].includes(player)
-//         ? BallTypeCombo.SolidEven
-//         : quarters[BallTypeCombo.SolidOdd].includes(player)
-//         ? BallTypeCombo.SolidOdd
-//         : decided[BallType.Solid] === player
-//         ? BallType.Solid
-//         : decided[BallType.Stripe] === player
-//         ? BallType.Stripe
-//         : decided[BallType.Odd] === player
-//         ? BallType.Odd
-//         : decided[BallType.Even] === player
-//         ? BallType.Even
-//         : 'hidden'
-//     } // TODO: style position based on each possible option to allow animation
-//     index={quarters[BallTypeCombo.SolidEven][0] === player ? 0 : 1} // TODO:for each quarter check if it is at 0
-//   >
-//     {quarters[BallTypeCombo.SolidEven].includes(player) ||
-//     decided[BallType.Solid] === player ||
-//     decided[BallType.Even] === player
-//       ? formatPlayer(player, playerNames)
-//       : ''}{' '}
-//     // TODO: accept all possible values
-//   </Label>
-// ))}
-//   </GridCell>
-//   <GridCell>
-//     {/* {Object.values(Player).map(player => (
-//       <Label
-//         key={`${BallTypeCombo.StripeEven}-${player}`}
-//         location={
-//           quarters[BallTypeCombo.StripeEven].includes(player)
-//             ? BallTypeCombo.StripeEven
-//             : decided[BallType.Solid] === player
-//             ? BallType.Stripe
-//             : decided[BallType.Even] === player
-//             ? BallType.Even
-//             : 'hidden'
-//         }
-//         index={quarters[BallTypeCombo.StripeEven][0] === player ? 0 : 1}
-//       >
-//         {quarters[BallTypeCombo.StripeEven].includes(player) ||
-//         decided[BallType.Solid] === player ||
-//         decided[BallType.Even] === player
-//           ? formatPlayer(player, playerNames)
-//           : ''}
-//       </Label>
-//     ))} */}
-//   </GridCell>
-
-//   <GridHeader ballType={BallType.Odd}>{formatBallType(BallType.Odd)}</GridHeader>
-//   <GridCell>
-//     {/* <Label location={BallTypeCombo.SolidOdd}>
-//       {quarters[BallTypeCombo.SolidOdd]
-//         .map(player => formatPlayer(player, playerNames))
-//         .join(' | ')}
-//     </Label>
-//     <Label location={BallType.Odd}>
-//       {decided[BallType.Odd] ? decided[BallType.Odd] : ''}
-//     </Label> */}
-//   </GridCell>
-//   <GridCell>
-//     {/* <Label location={BallTypeCombo.StripeOdd}>
-//       {quarters[BallTypeCombo.StripeOdd]
-//         .map(player => formatPlayer(player, playerNames))
-//         .join(' | ')}
-//     </Label> */}
-//   </GridCell>
-// </GraphGrid>

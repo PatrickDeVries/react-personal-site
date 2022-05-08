@@ -7,5 +7,5 @@ export const formatBallType = (ballType: BallType): string => {
   return 'Stripes'
 }
 
-export const formatPlayer = (player: Player, playerNames: Record<Player, string>): string =>
+export const formatPlayerName = (player: Player, playerNames: Record<Player, string>): string =>
   playerNames[player] ? playerNames[player] : `Player ${player.toLowerCase()}`

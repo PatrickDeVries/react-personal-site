@@ -1,6 +1,6 @@
 import { Button } from '@headstorm/foundry-react-ui'
 import React, { useState } from 'react'
-import { useTheme } from '../../../providers/ThemeProvider'
+import { useTheme } from 'styled-components'
 import Input from '../../input'
 import { formatBallType } from '../formatters'
 import SseoGraph from '../sseoGraph'
@@ -17,7 +17,7 @@ import {
 } from './style'
 
 const SseoContainer: React.FC = () => {
-  const { theme } = useTheme()
+  const theme = useTheme()
   const [playerNames, setPlayerNames] = useState<Record<Player, string>>({
     [Player.One]: '',
     [Player.Two]: '',
@@ -44,23 +44,12 @@ const SseoContainer: React.FC = () => {
             <Input
               placeholder={`Player name`}
               type="text"
-              label={`Player ${i + 1} - ${roles[playerKey]
+              label={`Player ${playerKey.toLowerCase()} - ${roles[playerKey]
                 .map(ballType => formatBallType(ballType))
                 .join(' | ')}`}
               value={playerNames[playerKey]}
               onChange={e => setPlayerNames(curr => ({ ...curr, [playerKey]: e.target.value }))}
             />
-            {/* <div>
-              {Object.values(BallType).map(ballType => (
-                <Input
-                  key={`${playerKey}-${ballType}`}
-                  type="checkbox"
-                  label={formatBallType(ballType)}
-                  checked={roles[playerKey].includes(ballType)}
-                  disabled
-                />
-              ))}
-            </div> */}
             {balls.map(
               ({ sunkBy, queued }, index) =>
                 sunkBy === playerKey &&
