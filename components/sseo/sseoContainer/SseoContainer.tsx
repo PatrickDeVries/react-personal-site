@@ -67,6 +67,10 @@ const SseoContainer: React.FC = () => {
             onClick={() => {
               setRoles(INITIAL_ROLES)
               setBalls(INITIAL_BALLS)
+              setWinners([])
+              setLosers([])
+              setSelectedPlayer(Player.One)
+              setLost(false)
             }}
             color={theme.focus}
           >
