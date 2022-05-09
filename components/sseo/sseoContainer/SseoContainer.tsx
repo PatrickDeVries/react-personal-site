@@ -1,20 +1,30 @@
 import { Button } from '@headstorm/foundry-react-ui'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useTheme } from 'styled-components'
 import Input from '../../input'
 import { formatBallType } from '../formatters'
 import SseoGraph from '../sseoGraph'
-import { BallType, Player, Roles } from '../types'
-import { ballsSunkToRole, cascadeRoles } from '../utils'
+import { Ball, BallType, Player, Roles } from '../types'
+import { ballsSunkToRole, cascadeRoles, getDecided, getWinners } from '../utils'
 import {
   BallsWrapper,
   ConfirmQueue,
+  Header,
   LeftSection,
   PlayerWrapper,
   PoolBall,
   RightSection,
   Wrapper,
 } from './style'
+
+const INITIAL_ROLES: Roles = {
+  [Player.One]: Object.values(BallType),
+  [Player.Two]: Object.values(BallType),
+  [Player.Three]: Object.values(BallType),
+  [Player.Four]: Object.values(BallType),
+}
+
+const INITIAL_BALLS = new Array(15).fill({ sunkBy: null, queued: false })
 
 const SseoContainer: React.FC = () => {
   const theme = useTheme()
@@ -24,21 +34,27 @@ const SseoContainer: React.FC = () => {
     [Player.Three]: '',
     [Player.Four]: '',
   })
-  const [balls, setBalls] = useState<{ sunkBy: Player | null; queued: boolean }[]>(
-    new Array(15).fill({ sunkBy: null, queued: false }),
-  )
+  const [balls, setBalls] = useState<Ball[]>(INITIAL_BALLS)
   const [selectedPlayer, setSelectedPlayer] = useState<Player>(Player.One)
-  const [roles, setRoles] = useState<Roles>({
-    [Player.One]: Object.values(BallType),
-    [Player.Two]: Object.values(BallType),
-    [Player.Three]: Object.values(BallType),
-    [Player.Four]: Object.values(BallType),
-  })
+  const [roles, setRoles] = useState<Roles>(INITIAL_ROLES)
+  const decided: Record<BallType, Player | undefined> = useMemo(() => getDecided(roles), [roles])
+  const winners = useMemo(() => getWinners(balls, decided), [balls, decided])
 
   return (
     <Wrapper>
       <LeftSection>
-        <h1>Solids vs Stripes vs Evens vs Odds</h1>
+        <Header>
+          <h1>Solids vs Stripes vs Evens vs Odds </h1>
+          <Button
+            onClick={() => {
+              setRoles(INITIAL_ROLES)
+              setBalls(INITIAL_BALLS)
+            }}
+            color={theme.focus}
+          >
+            New game
+          </Button>
+        </Header>
         {Object.values(Player).map((playerKey, i) => (
           <PlayerWrapper key={playerKey}>
             <Input
@@ -144,7 +160,7 @@ const SseoContainer: React.FC = () => {
         </BallsWrapper>
       </LeftSection>
       <RightSection>
-        <SseoGraph roles={roles} playerNames={playerNames} />
+        <SseoGraph roles={roles} playerNames={playerNames} decided={decided} winners={winners} />
       </RightSection>
     </Wrapper>
   )

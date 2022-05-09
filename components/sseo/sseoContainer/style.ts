@@ -11,7 +11,10 @@ export const Wrapper = styled.div`
     align-items: center;
   }
   gap: 2rem;
-  padding: 1rem;
+  padding: 1rem 3rem;
+  ${MOBILE} {
+    padding: 1rem;
+  }
   margin: 0 auto;
   color: ${({ theme }) => theme.text};
 `
@@ -41,6 +44,12 @@ const BALL_COLORS = [
   '#611915',
   '#000000',
 ]
+
+export const Header = styled.header`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+`
 
 export const PlayerWrapper = styled.div`
   display: flex;

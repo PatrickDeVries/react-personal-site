@@ -72,6 +72,7 @@ export const GridCell = styled.div`
 export const Label = styled.div<{
   location?: BallType | BallTypeCombo | 'hidden'
   index?: -1 | 0 | 1
+  winner?: boolean
 }>`
   position: absolute;
   width: 50%;
@@ -112,10 +113,16 @@ export const Label = styled.div<{
 
   > span {
     padding: 1rem;
+    max-width: calc(100% - 2px);
 
     background-color: ${({ theme }) => theme.backgroundHighlight};
     text-align: center;
     font-size: 1.8rem;
+    ${({ winner, theme }) =>
+      winner &&
+      css`
+        color: ${theme.primary};
+      `}
 
     ${MOBILE} {
       font-size: 1.2rem;

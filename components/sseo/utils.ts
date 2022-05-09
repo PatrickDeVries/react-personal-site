@@ -1,4 +1,4 @@
-import { BallType, BallTypeCombo, Player, Roles } from './types'
+import { Ball, BallType, BallTypeCombo, Player, Roles } from './types'
 
 export const ballsSunkToRole = (balls: number[], role: BallType[]): BallType[] => {
   const sunkTypes = {
@@ -91,4 +91,58 @@ export const cascadeRoles = (roles: Roles): Roles => {
   rolesCopy = pushByQuarter(rolesCopy)
 
   return rolesCopy
+}
+
+export const getDecided = (roles: Roles) => {
+  const solidPlayer = Object.values(Player).find(
+    player => roles[player].length === 1 && roles[player].includes(BallType.Solid),
+  )
+  const stripePlayer = Object.values(Player).find(
+    player => roles[player].length === 1 && roles[player].includes(BallType.Stripe),
+  )
+  const evenPlayer = Object.values(Player).find(
+    player => roles[player].length === 1 && roles[player].includes(BallType.Even),
+  )
+  const oddPlayer = Object.values(Player).find(
+    player => roles[player].length === 1 && roles[player].includes(BallType.Odd),
+  )
+
+  return {
+    [BallType.Solid]: solidPlayer,
+    [BallType.Stripe]: stripePlayer,
+    [BallType.Even]: evenPlayer,
+    [BallType.Odd]: oddPlayer,
+  }
+}
+
+export const getWinners = (
+  balls: Ball[],
+  decided: Record<BallType, Player | undefined>,
+): Player[] => {
+  let winners = []
+  Object.values(BallType).forEach(ballType => {
+    if (decided[ballType]) {
+      if (
+        ballType === BallType.Solid &&
+        balls.every(({ sunkBy, queued }, index) => index + 1 > 8 || (sunkBy && !queued))
+      )
+        winners.push(decided[ballType])
+      else if (
+        ballType === BallType.Stripe &&
+        balls.every(({ sunkBy, queued }, index) => index + 1 <= 8 || (sunkBy && !queued))
+      )
+        winners.push(decided[ballType])
+      else if (
+        ballType === BallType.Even &&
+        balls.every(({ sunkBy, queued }, index) => (index + 1) % 2 !== 0 || (sunkBy && !queued))
+      )
+        winners.push(decided[ballType])
+      else if (
+        ballType === BallType.Odd &&
+        balls.every(({ sunkBy, queued }, index) => (index + 1) % 2 === 0 || (sunkBy && !queued))
+      )
+        winners.push(decided[ballType])
+    }
+  })
+  return winners
 }

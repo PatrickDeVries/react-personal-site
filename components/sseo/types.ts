@@ -12,6 +12,11 @@ export enum BallType {
   Odd = 'ODD',
 }
 
+export interface Ball {
+  sunkBy: Player | null
+  queued: boolean
+}
+
 export type Roles = {
   [key in Player]: BallType[]
 }

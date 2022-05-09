@@ -7,6 +7,8 @@ import { GraphBody, GraphLabels, GridCell, GridHeader, Label, Wrapper } from './
 interface Props {
   roles: Roles
   playerNames: Record<Player, string>
+  decided: Record<BallType, Player | undefined>
+  winners: Player[]
 }
 
 const getLocation = (
@@ -31,29 +33,7 @@ const getIndex = (player: Player, quarters: Record<BallTypeCombo, Player[]>): -1
   return quarters[quarter][0] === player ? 0 : 1
 }
 
-const SseoGraph: React.FC<Props> = ({ roles, playerNames }) => {
-  const decided: Record<BallType, Player | undefined> = useMemo(() => {
-    const solidPlayer = Object.values(Player).find(
-      player => roles[player].length === 1 && roles[player].includes(BallType.Solid),
-    )
-    const stripePlayer = Object.values(Player).find(
-      player => roles[player].length === 1 && roles[player].includes(BallType.Stripe),
-    )
-    const evenPlayer = Object.values(Player).find(
-      player => roles[player].length === 1 && roles[player].includes(BallType.Even),
-    )
-    const oddPlayer = Object.values(Player).find(
-      player => roles[player].length === 1 && roles[player].includes(BallType.Odd),
-    )
-
-    return {
-      [BallType.Solid]: solidPlayer,
-      [BallType.Stripe]: stripePlayer,
-      [BallType.Even]: evenPlayer,
-      [BallType.Odd]: oddPlayer,
-    }
-  }, [roles])
-
+const SseoGraph: React.FC<Props> = ({ roles, playerNames, decided, winners }) => {
   const quarters = useMemo(() => getQuarters(roles), [roles])
 
   return (
@@ -71,8 +51,13 @@ const SseoGraph: React.FC<Props> = ({ roles, playerNames }) => {
                 key={`${BallTypeCombo.SolidEven}-${player}`}
                 location={getLocation(player, decided, quarters)}
                 index={getIndex(player, quarters)}
+                winner={winners.includes(player)}
               >
-                <span>{formatPlayerName(player, playerNames)}</span>
+                <span>
+                  {winners.includes(player) && <span>&#9733; </span>}
+                  {formatPlayerName(player, playerNames)}
+                  {winners.includes(player) && <span> - WINNER! &#9733;</span>}
+                </span>
               </Label>
             ))}
           </GridCell>
