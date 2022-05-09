@@ -1,11 +1,8 @@
-import dynamic from 'next/dynamic'
 import { useContext } from 'react'
 import styled from 'styled-components'
 import { MOBILE } from '../components/ theme/mediaQueries'
+import ParticleControlCard from '../components/particleControlCard'
 import { BackgroundControlContext } from '../components/particleControlCard/provider'
-const ParticleControlCard = dynamic(() => import('../components/particleControlCard'), {
-  ssr: false,
-}) // turn off SSR for particle control card which for some reason cannot be SSRed
 
 const Wrapper = styled.div<{ firstHit?: boolean }>`
   position: fixed;
@@ -32,7 +29,6 @@ const GearIndicator = styled.p`
   margin: 0;
   color: ${({ theme }) => theme.text};
   font-size: 1rem;
-  /* z-index: 2; */
 `
 
 const Instructions = styled.p`
@@ -40,7 +36,6 @@ const Instructions = styled.p`
   margin: 0;
   color: ${({ theme }) => theme.text};
   font-size: 1rem;
-  /* z-index: 2; */
 `
 
 const Background: React.FC = () => {

@@ -7,7 +7,7 @@ export const Wrapper = styled.nav`
   align-items: center;
   gap: 3rem;
 
-  font-size: 16px;
+  font-size: 1.4rem;
 
   height: 3rem;
   width: 100%;
@@ -91,7 +91,7 @@ export const DropDownItem = styled.div<{ active?: boolean }>`
 
   color: ${({ theme, active }) => (active ? darken(0.25)(theme.text) : theme.text)};
   text-align: center;
-  font-size: 16px;
+  font-size: 1.4rem;
 
   &:hover {
     color: ${({ theme }) => darken(0.25)(theme.text)};

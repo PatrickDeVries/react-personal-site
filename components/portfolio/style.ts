@@ -17,7 +17,7 @@ export const SectionHeader = styled.h2`
   padding: 1rem;
   color: ${({ theme }) => theme.primary};
 
-  font-size: 16px;
+  font-size: 1.4rem;
   text-transform: uppercase;
 `
 

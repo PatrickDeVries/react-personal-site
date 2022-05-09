@@ -30,7 +30,7 @@ export const StyledCard = styled.div`
 `
 
 export const HeaderText = styled.span`
-  font-size: 16px;
+  font-size: 1.4rem;
   color: ${({ theme }) => theme.secondary};
 `
 
@@ -41,7 +41,7 @@ export const BodySection = styled.div`
   flex-direction: row;
   gap: 1rem;
 
-  font-size: 14px;
+  font-size: 1.2rem;
 
   ${SMALL_MOBILE} {
     flex-direction: column;
@@ -60,7 +60,7 @@ export const ScalingImg = styled.img`
 
 export const BodyText = styled.p`
   color: ${({ theme }) => theme.text};
-  font-size: 16px;
+  font-size: 1.4rem;
 `
 
 export const TagSection = styled.div`

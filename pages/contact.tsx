@@ -14,7 +14,9 @@ const Wrapper = styled.div`
   align-items: center;
 `
 
-const ContactText = styled(Text.Container)``
+const ContactText = styled.div`
+  font-size: 2rem;
+`
 
 const SocialLinks = styled.div`
   margin-left: auto;
@@ -64,9 +66,7 @@ const Contact: React.FC = () => {
   const theme = useTheme()
   return (
     <Wrapper>
-      <Text size="2rem" color={theme.text} StyledContainer={ContactText}>
-        Contact me:
-      </Text>
+      <ContactText>Contact me:</ContactText>
       <SocialLinks>
         {socials.map(social => (
           <SocialLink key={social.site}>

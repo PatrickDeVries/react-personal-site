@@ -48,11 +48,11 @@ export const PlayerWrapper = styled.div`
   flex-wrap: wrap;
   align-items: flex-end;
 
-  font-size: 14px;
+  font-size: 1.2rem;
 
   > label {
     width: 22rem;
-    font-size: 12px;
+    font-size: 1rem;
   }
 `
 
@@ -60,7 +60,7 @@ export const BallsWrapper = styled.div`
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  font-size: 14px;
+  font-size: 1.2rem;
 `
 
 export const PoolBall = styled.div<{ num: number; sunk?: boolean }>`

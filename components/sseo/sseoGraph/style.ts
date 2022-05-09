@@ -36,9 +36,9 @@ export const GridHeader = styled.div<{ ballType: BallType }>`
   padding: 1rem;
 
   text-align: center;
-  font-size: 16px;
+  font-size: 1.4rem;
   ${MOBILE} {
-    font-size: 12px;
+    font-size: 1rem;
   }
 
   ${({ ballType }) =>
@@ -58,7 +58,7 @@ export const GridCell = styled.div`
   justify-content: center;
 
   text-align: center;
-  font-size: 16px;
+  font-size: 1.4rem;
 
   border: 1px solid ${({ theme }) => theme.secondary};
 
@@ -115,10 +115,10 @@ export const Label = styled.div<{
 
     background-color: ${({ theme }) => theme.backgroundHighlight};
     text-align: center;
-    font-size: 20px;
+    font-size: 1.8rem;
 
     ${MOBILE} {
-      font-size: 14px;
+      font-size: 1.2rem;
     }
   }
 
