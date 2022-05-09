@@ -9,6 +9,7 @@ interface Props {
   playerNames: Record<Player, string>
   decided: Record<BallType, Player | undefined>
   winners: Player[]
+  losers: Player[]
 }
 
 const getLocation = (
@@ -33,7 +34,7 @@ const getIndex = (player: Player, quarters: Record<BallTypeCombo, Player[]>): -1
   return quarters[quarter][0] === player ? 0 : 1
 }
 
-const SseoGraph: React.FC<Props> = ({ roles, playerNames, decided, winners }) => {
+const SseoGraph: React.FC<Props> = ({ roles, playerNames, decided, winners, losers }) => {
   const quarters = useMemo(() => getQuarters(roles), [roles])
 
   return (
@@ -52,11 +53,15 @@ const SseoGraph: React.FC<Props> = ({ roles, playerNames, decided, winners }) =>
                 location={getLocation(player, decided, quarters)}
                 index={getIndex(player, quarters)}
                 winner={winners.includes(player)}
+                loser={losers.includes(player)}
               >
                 <span>
                   {winners.includes(player) && <span>&#9733; </span>}
                   {formatPlayerName(player, playerNames)}
                   {winners.includes(player) && <span> - WINNER! &#9733;</span>}
+                  {losers.includes(player) && (
+                    <span> - LOSER {losers.findIndex(loser => loser === player) + 1}</span>
+                  )}
                 </span>
               </Label>
             ))}

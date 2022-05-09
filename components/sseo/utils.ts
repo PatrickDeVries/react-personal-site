@@ -115,6 +115,40 @@ export const getDecided = (roles: Roles) => {
   }
 }
 
+export const wouldWin = (
+  player: Player,
+  balls: Ball[],
+  decided: Record<BallType, Player | undefined>,
+): boolean => {
+  let won = false
+  Object.values(BallType).forEach(ballType => {
+    if (decided[ballType] === player) {
+      if (
+        ballType === BallType.Solid &&
+        balls.every(({ sunkBy, queued }, index) => index + 1 > 8 || sunkBy || queued)
+      )
+        won = true
+      else if (
+        ballType === BallType.Stripe &&
+        balls.every(({ sunkBy, queued }, index) => index + 1 <= 8 || sunkBy || queued)
+      )
+        won = true
+      else if (
+        ballType === BallType.Even &&
+        balls.every(({ sunkBy, queued }, index) => (index + 1) % 2 !== 0 || sunkBy || queued)
+      )
+        won = true
+      else if (
+        ballType === BallType.Odd &&
+        balls.every(({ sunkBy, queued }, index) => (index + 1) % 2 === 0 || sunkBy || queued)
+      )
+        won = true
+    }
+  })
+
+  return won
+}
+
 export const getWinners = (
   balls: Ball[],
   decided: Record<BallType, Player | undefined>,

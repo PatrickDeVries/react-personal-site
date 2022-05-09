@@ -1,11 +1,11 @@
 import { Button } from '@headstorm/foundry-react-ui'
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useTheme } from 'styled-components'
 import Input from '../../input'
 import { formatBallType } from '../formatters'
 import SseoGraph from '../sseoGraph'
 import { Ball, BallType, Player, Roles } from '../types'
-import { ballsSunkToRole, cascadeRoles, getDecided, getWinners } from '../utils'
+import { ballsSunkToRole, cascadeRoles, getDecided, getWinners, wouldWin } from '../utils'
 import {
   BallsWrapper,
   ConfirmQueue,
@@ -37,8 +37,26 @@ const SseoContainer: React.FC = () => {
   const [balls, setBalls] = useState<Ball[]>(INITIAL_BALLS)
   const [selectedPlayer, setSelectedPlayer] = useState<Player>(Player.One)
   const [roles, setRoles] = useState<Roles>(INITIAL_ROLES)
+  const [lost, setLost] = useState<boolean>(false)
+  const [winners, setWinners] = useState<Player[]>([])
+  const [losers, setLosers] = useState<Player[]>([])
   const decided: Record<BallType, Player | undefined> = useMemo(() => getDecided(roles), [roles])
-  const winners = useMemo(() => getWinners(balls, decided), [balls, decided])
+  const winningShot = useMemo(
+    () => wouldWin(selectedPlayer, balls, decided),
+    [balls, decided, selectedPlayer],
+  )
+
+  useEffect(() => !winningShot && setLost(false), [winningShot])
+  useEffect(
+    () =>
+      setWinners(curr => [
+        ...curr,
+        ...getWinners(balls, decided).filter(
+          winner => !curr.includes(winner) && !losers.includes(winner),
+        ),
+      ]),
+    [balls, decided, losers],
+  )
 
   return (
     <Wrapper>
@@ -110,6 +128,7 @@ const SseoContainer: React.FC = () => {
                 key={player}
                 label={playerNames[player] || `Player ${i + 1}`}
                 value={player}
+                disabled={winners.includes(player) || losers.includes(player)}
               />
             ))}
           </select>
@@ -132,6 +151,18 @@ const SseoContainer: React.FC = () => {
                   queued: false,
                 })),
               )
+              if (winningShot) {
+                if (lost) setLosers(curr => [...curr, selectedPlayer])
+                else setWinners(curr => [...curr, selectedPlayer])
+
+                setSelectedPlayer(
+                  curr =>
+                    Object.values(Player).find(
+                      player =>
+                        !winners.includes(player) && !losers.includes(player) && player !== curr,
+                    ) ?? curr,
+                )
+              }
             }}
             color={theme.focus}
             disabled={!balls.filter(({ queued }) => queued).length}
@@ -157,10 +188,24 @@ const SseoContainer: React.FC = () => {
                 </PoolBall>
               ),
           )}
+          {winningShot && balls.some(ball => ball.queued) && (
+            <Input
+              type="checkbox"
+              label="called wrong pocket / scratched"
+              checked={lost}
+              onChange={e => setLost(e.target.checked)}
+            />
+          )}
         </BallsWrapper>
       </LeftSection>
       <RightSection>
-        <SseoGraph roles={roles} playerNames={playerNames} decided={decided} winners={winners} />
+        <SseoGraph
+          roles={roles}
+          playerNames={playerNames}
+          decided={decided}
+          winners={winners}
+          losers={losers}
+        />
       </RightSection>
     </Wrapper>
   )

@@ -73,6 +73,7 @@ export const Label = styled.div<{
   location?: BallType | BallTypeCombo | 'hidden'
   index?: -1 | 0 | 1
   winner?: boolean
+  loser?: boolean
 }>`
   position: absolute;
   width: 50%;
@@ -122,6 +123,12 @@ export const Label = styled.div<{
       winner &&
       css`
         color: ${theme.primary};
+      `}
+
+    ${({ loser, theme }) =>
+      loser &&
+      css`
+        color: ${theme.danger};
       `}
 
     ${MOBILE} {
