@@ -56,9 +56,10 @@ const SseoGraph: React.FC<Props> = ({ roles, playerNames, decided, winners, lose
                 loser={losers.includes(player)}
               >
                 <span>
-                  {winners.includes(player) && <span>&#9733; </span>}
                   {formatPlayerName(player, playerNames)}
-                  {winners.includes(player) && <span> - WINNER! &#9733;</span>}
+                  {winners.includes(player) && (
+                    <span> - WINNER {winners.findIndex(winner => winner === player) + 1}!</span>
+                  )}
                   {losers.includes(player) && (
                     <span> - LOSER {losers.findIndex(loser => loser === player) + 1}</span>
                   )}
