@@ -1,15 +1,12 @@
 import React, { useMemo } from 'react'
-import { formatBallType, formatPlayerName } from '../formatters'
-import { BallType, BallTypeCombo, Player, Roles } from '../types'
+import { formatBallType, formatOrdinal, formatPlayerName } from '../formatters'
+import { BallType, BallTypeCombo, GameState, Player } from '../types'
 import { getQuarters } from '../utils'
 import { GraphBody, GraphLabels, GridCell, GridHeader, Label, Wrapper } from './style'
 
 interface Props {
-  roles: Roles
-  playerNames: Record<Player, string>
+  game: GameState
   decided: Record<BallType, Player | undefined>
-  winners: Player[]
-  losers: Player[]
 }
 
 const getLocation = (
@@ -34,8 +31,22 @@ const getIndex = (player: Player, quarters: Record<BallTypeCombo, Player[]>): -1
   return quarters[quarter][0] === player ? 0 : 1
 }
 
-const SseoGraph: React.FC<Props> = ({ roles, playerNames, decided, winners, losers }) => {
-  const quarters = useMemo(() => getQuarters(roles), [roles])
+const SseoGraph: React.FC<Props> = ({ game, decided }) => {
+  const quarters = useMemo(() => getQuarters(game.roles), [game.roles])
+  const rankings = useMemo(
+    () =>
+      Object.values(Player).reduce((obj, player) => {
+        const winRank = game.winners.findIndex(winner => winner === player)
+        console.log(winRank, player)
+        if (winRank !== -1) return { ...obj, [player]: winRank + 1 }
+        const loseRank = game.losers.findIndex(loser => loser === player)
+        console.log(loseRank, player)
+
+        if (loseRank !== -1) return { ...obj, [player]: 4 - loseRank }
+        return { ...obj }
+      }, {}),
+    [game.losers, game.winners],
+  )
 
   return (
     <Wrapper>
@@ -52,16 +63,15 @@ const SseoGraph: React.FC<Props> = ({ roles, playerNames, decided, winners, lose
                 key={`${BallTypeCombo.SolidEven}-${player}`}
                 location={getLocation(player, decided, quarters)}
                 index={getIndex(player, quarters)}
-                winner={winners.includes(player)}
-                loser={losers.includes(player)}
+                rank={rankings[player]}
               >
                 <span>
-                  {formatPlayerName(player, playerNames)}
-                  {winners.includes(player) && (
-                    <span> - WINNER {winners.findIndex(winner => winner === player) + 1}!</span>
-                  )}
-                  {losers.includes(player) && (
-                    <span> - LOSER {losers.findIndex(loser => loser === player) + 1}</span>
+                  {formatPlayerName(player, game.names)}
+                  {rankings[player] && (
+                    <span>
+                      {' - '}
+                      {formatOrdinal(rankings[player])}
+                    </span>
                   )}
                 </span>
               </Label>

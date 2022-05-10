@@ -1,3 +1,4 @@
+import { mix } from 'polished'
 import styled, { css } from 'styled-components'
 import { MOBILE } from '../../ theme/mediaQueries'
 import { BallType, BallTypeCombo } from '../types'
@@ -72,8 +73,7 @@ export const GridCell = styled.div`
 export const Label = styled.div<{
   location?: BallType | BallTypeCombo | 'hidden'
   index?: -1 | 0 | 1
-  winner?: boolean
-  loser?: boolean
+  rank?: number
 }>`
   position: absolute;
   width: 50%;
@@ -119,16 +119,10 @@ export const Label = styled.div<{
     background-color: ${({ theme }) => theme.backgroundHighlight};
     text-align: center;
     font-size: 1.8rem;
-    ${({ winner, theme }) =>
-      winner &&
+    ${({ rank, theme }) =>
+      rank !== undefined &&
       css`
-        color: ${theme.primary};
-      `}
-
-    ${({ loser, theme }) =>
-      loser &&
-      css`
-        color: ${theme.danger};
+        color: ${mix((rank - 1) / 3, theme.danger, theme.primary)};
       `}
 
     ${MOBILE} {

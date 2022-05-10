@@ -22,7 +22,8 @@ export const Wrapper = styled.div`
 export const LeftSection = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
+  align-items: flex-start;
 `
 
 export const RightSection = styled.div`
@@ -71,7 +72,6 @@ export const PlayerWrapper = styled.div`
     > div {
       display: flex;
       gap: 1rem;
-      font-size: 1rem;
       align-items: center;
 
       > label {
@@ -162,6 +162,7 @@ export const ConfirmQueue = styled.div`
   gap: 1rem;
   flex-wrap: wrap;
   align-items: center;
+  font-size: 1.2rem;
 
   > select {
     padding: 0.75rem 0.5rem;
