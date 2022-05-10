@@ -4,7 +4,7 @@ import { useTheme } from 'styled-components'
 import Input from '../../input'
 import { formatBallType } from '../formatters'
 import SseoGraph from '../sseoGraph'
-import { Ball, BallType, Player, Roles } from '../types'
+import { Ball, BallType, GameState, Player, Roles } from '../types'
 import { ballsSunkToRole, cascadeRoles, getDecided, getWinners, wouldWin } from '../utils'
 import {
   BallsWrapper,
@@ -17,45 +17,55 @@ import {
   Wrapper,
 } from './style'
 
-const INITIAL_ROLES: Roles = {
-  [Player.One]: Object.values(BallType),
-  [Player.Two]: Object.values(BallType),
-  [Player.Three]: Object.values(BallType),
-  [Player.Four]: Object.values(BallType),
-}
-
-const INITIAL_BALLS = new Array(15).fill({ sunkBy: null, queued: false })
-
-const SseoContainer: React.FC = () => {
-  const theme = useTheme()
-  const [playerNames, setPlayerNames] = useState<Record<Player, string>>({
+const INITIAL_STATE: GameState = {
+  names: {
     [Player.One]: '',
     [Player.Two]: '',
     [Player.Three]: '',
     [Player.Four]: '',
-  })
-  const [balls, setBalls] = useState<Ball[]>(INITIAL_BALLS)
+  },
+  balls: new Array(15).fill({ sunkBy: null, queued: false }),
+  roles: {
+    [Player.One]: Object.values(BallType),
+    [Player.Two]: Object.values(BallType),
+    [Player.Three]: Object.values(BallType),
+    [Player.Four]: Object.values(BallType),
+  },
+  winners: [],
+  losers: [],
+}
+
+const SseoContainer: React.FC = () => {
+  const theme = useTheme()
+  const [game, setGame] = useState<GameState>(INITIAL_STATE)
   const [selectedPlayer, setSelectedPlayer] = useState<Player>(Player.One)
-  const [roles, setRoles] = useState<Roles>(INITIAL_ROLES)
   const [lost, setLost] = useState<boolean>(false)
-  const [winners, setWinners] = useState<Player[]>([])
-  const [losers, setLosers] = useState<Player[]>([])
-  const decided: Record<BallType, Player | undefined> = useMemo(() => getDecided(roles), [roles])
-  const winningShot = useMemo(
-    () => wouldWin(selectedPlayer, balls, decided),
-    [balls, decided, selectedPlayer],
+  const decided: Record<BallType, Player | undefined> = useMemo(
+    () => getDecided(game.roles),
+    [game.roles],
   )
+  const winningShot = useMemo(
+    () => wouldWin(selectedPlayer, game.balls, decided),
+    [game.balls, decided, selectedPlayer],
+  )
+  // TODO: diffs instead of full state
+  const [history, setHistory] = useState<
+    { balls: Ball[]; roles?: Roles; winners?: Player[]; losers?: Player[] }[]
+  >([])
 
   useEffect(() => !winningShot && setLost(false), [winningShot])
   useEffect(
     () =>
-      setWinners(curr => [
+      setGame(curr => ({
         ...curr,
-        ...getWinners(balls, decided).filter(
-          winner => !curr.includes(winner) && !losers.includes(winner),
-        ),
-      ]),
-    [balls, decided, losers],
+        winners: [
+          ...curr.winners,
+          ...getWinners(game.balls, decided).filter(
+            winner => !curr.winners.includes(winner) && !curr.losers.includes(winner),
+          ),
+        ],
+      })),
+    [decided, game.balls],
   )
 
   return (
@@ -65,10 +75,7 @@ const SseoContainer: React.FC = () => {
           <h1>Solids vs Stripes vs Evens vs Odds </h1>
           <Button
             onClick={() => {
-              setRoles(INITIAL_ROLES)
-              setBalls(INITIAL_BALLS)
-              setWinners([])
-              setLosers([])
+              setGame(curr => ({ ...INITIAL_STATE, names: curr.names }))
               setSelectedPlayer(Player.One)
               setLost(false)
             }}
@@ -80,27 +87,32 @@ const SseoContainer: React.FC = () => {
         {Object.values(Player).map((playerKey, i) => (
           <PlayerWrapper key={playerKey}>
             <label>
-              {`Player ${playerKey.toLowerCase()} - ${roles[playerKey]
+              {`Player ${playerKey.toLowerCase()} - ${game.roles[playerKey]
                 .map(ballType => formatBallType(ballType))
                 .join(' | ')}`}
               <div>
                 <Input
                   placeholder={`Player name`}
                   type="text"
-                  value={playerNames[playerKey]}
-                  onChange={e => setPlayerNames(curr => ({ ...curr, [playerKey]: e.target.value }))}
+                  value={game.names[playerKey]}
+                  onChange={e =>
+                    setGame(curr => ({
+                      ...curr,
+                      names: { ...curr.names, [playerKey]: e.target.value },
+                    }))
+                  }
                 />
                 <Button
                   color={theme.primary}
                   variant={variants.outline}
                   onClick={() => setSelectedPlayer(playerKey)}
-                  disabled={winners.includes(playerKey) || losers.includes(playerKey)}
+                  disabled={game.winners.includes(playerKey) || game.losers.includes(playerKey)}
                 >
                   Select
                 </Button>
               </div>
             </label>
-            {balls.map(
+            {game.balls.map(
               ({ sunkBy, queued }, index) =>
                 sunkBy === playerKey &&
                 !queued && (
@@ -114,7 +126,7 @@ const SseoContainer: React.FC = () => {
 
         <div>Remaining - click a ball to queue</div>
         <BallsWrapper>
-          {balls.map(
+          {game.balls.map(
             ({ sunkBy, queued }, index) =>
               !sunkBy &&
               !queued && (
@@ -123,9 +135,9 @@ const SseoContainer: React.FC = () => {
                   key={`ball-${index + 1}`}
                   num={index + 1}
                   onClick={() => {
-                    const currCopy = [...balls]
+                    const currCopy = [...game.balls]
                     currCopy[index] = { sunkBy: null, queued: true }
-                    setBalls(currCopy)
+                    setGame(curr => ({ ...curr, balls: currCopy }))
                   }}
                 >
                   <div>{index + 1}</div>
@@ -143,43 +155,52 @@ const SseoContainer: React.FC = () => {
             {Object.values(Player).map((player, i) => (
               <option
                 key={player}
-                label={playerNames[player] || `Player ${i + 1}`}
+                label={game.names[player] || `Player ${i + 1}`}
                 value={player}
-                disabled={winners.includes(player) || losers.includes(player)}
+                disabled={game.winners.includes(player) || game.losers.includes(player)}
               />
             ))}
           </select>
           <Button
             variant={variants.outline}
             color={theme.focus}
-            disabled={!balls.filter(({ queued }) => queued).length}
+            disabled={!game.balls.filter(({ queued }) => queued).length}
             onClick={() => {
-              setRoles(curr =>
-                cascadeRoles({
-                  ...curr,
-                  [selectedPlayer]: ballsSunkToRole(
-                    balls
-                      .map(({ queued }, i) => queued && i + 1)
-                      .filter(val => typeof val === 'number'),
-                    roles[selectedPlayer],
-                  ),
-                }),
-              )
-              setBalls(curr =>
-                curr.map(({ sunkBy, queued }) => ({
-                  sunkBy: queued ? selectedPlayer : sunkBy,
-                  queued: false,
-                })),
-              )
-              if (winningShot) {
-                if (lost) setLosers(curr => [...curr, selectedPlayer])
-                else setWinners(curr => [...curr, selectedPlayer])
+              setHistory([...history, game])
 
+              const newBalls = game.balls.map(({ sunkBy, queued }) => ({
+                sunkBy: queued ? selectedPlayer : sunkBy,
+                queued: false,
+              }))
+              const newRoles = cascadeRoles({
+                ...game.roles,
+                [selectedPlayer]: ballsSunkToRole(
+                  game.balls
+                    .map(({ queued }, i) => queued && i + 1)
+                    .filter(val => typeof val === 'number'),
+                  game.roles[selectedPlayer],
+                ),
+              })
+              const newLosers = winningShot && lost ? [...game.losers, selectedPlayer] : game.losers
+              const newWinners =
+                winningShot && !lost ? [...game.winners, selectedPlayer] : game.winners
+
+              setGame(curr => ({
+                ...curr,
+                roles: newRoles,
+                balls: newBalls,
+                winners: newWinners,
+                losers: newLosers,
+              }))
+
+              if (winningShot) {
                 setSelectedPlayer(
                   curr =>
                     Object.values(Player).find(
                       player =>
-                        !winners.includes(player) && !losers.includes(player) && player !== curr,
+                        !newWinners.includes(player) &&
+                        !newLosers.includes(player) &&
+                        player !== curr,
                     ) ?? curr,
                 )
               }
@@ -189,7 +210,7 @@ const SseoContainer: React.FC = () => {
           </Button>
         </ConfirmQueue>
         <BallsWrapper>
-          {balls.map(
+          {game.balls.map(
             ({ queued }, index) =>
               queued && (
                 <PoolBall
@@ -197,16 +218,16 @@ const SseoContainer: React.FC = () => {
                   key={`ball-${index + 1}`}
                   num={index + 1}
                   onClick={() => {
-                    const currCopy = [...balls]
+                    const currCopy = [...game.balls]
                     currCopy[index] = { sunkBy: null, queued: false }
-                    setBalls(currCopy)
+                    setGame(curr => ({ ...curr, balls: currCopy }))
                   }}
                 >
                   <div>{index + 1}</div>
                 </PoolBall>
               ),
           )}
-          {winningShot && balls.some(ball => ball.queued) && (
+          {winningShot && game.balls.some(ball => ball.queued) && (
             <Input
               type="checkbox"
               label="called wrong pocket / scratched"
@@ -215,15 +236,21 @@ const SseoContainer: React.FC = () => {
             />
           )}
         </BallsWrapper>
+        {history.length > 0 && (
+          <Button
+            variant={variants.outline}
+            color={theme.danger}
+            onClick={() => {
+              setGame(curr => ({ ...curr, ...history.at(-1) }))
+              setHistory(history.slice(0, -1))
+            }}
+          >
+            Undo Last Shot
+          </Button>
+        )}
       </LeftSection>
       <RightSection>
-        <SseoGraph
-          roles={roles}
-          playerNames={playerNames}
-          decided={decided}
-          winners={winners}
-          losers={losers}
-        />
+        <SseoGraph game={game} decided={decided} />
       </RightSection>
     </Wrapper>
   )

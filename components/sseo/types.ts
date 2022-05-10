@@ -27,3 +27,11 @@ export enum BallTypeCombo {
   StripeEven = 'STRIPE_EVEN',
   StripeOdd = 'STRIPE_ODD',
 }
+
+export interface GameState {
+  names: Record<Player, string>
+  balls: Ball[]
+  roles: Roles
+  winners: Player[]
+  losers: Player[]
+}
