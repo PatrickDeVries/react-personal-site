@@ -49,6 +49,9 @@ export const Header = styled.header`
   display: flex;
   gap: 1rem;
   align-items: center;
+  > button {
+    padding: 0.5em 0.75em;
+  }
 `
 
 export const PlayerWrapper = styled.div`
@@ -60,8 +63,25 @@ export const PlayerWrapper = styled.div`
   font-size: 1.2rem;
 
   > label {
-    width: 22rem;
-    font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-indent: 1rem;
+
+    > div {
+      display: flex;
+      gap: 1rem;
+      font-size: 1rem;
+      align-items: center;
+
+      > label {
+        width: 19rem;
+      }
+
+      > button {
+        padding: 0.5em 0.75em;
+      }
+    }
   }
 `
 
@@ -139,20 +159,26 @@ export const PoolBall = styled.div<{ num: number; sunk?: boolean }>`
 
 export const ConfirmQueue = styled.div`
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
   flex-wrap: wrap;
   align-items: center;
 
   > select {
-    border-radius: 0.25rem;
-    border: 1px solid ${({ theme }) => theme.secondary};
     padding: 0.75rem 0.5rem;
+
+    border: 1px solid ${({ theme }) => theme.secondary};
+    border-radius: 0.25rem;
     outline: none;
-    background-color: ${({ theme }) => theme.backgroundHighlight};
+
     color: ${({ theme }) => theme.text};
+    background-color: ${({ theme }) => theme.backgroundHighlight};
 
     &:focus {
       border-color: ${({ theme }) => theme.focus};
     }
+  }
+
+  > button {
+    padding: 0.75rem 0.5rem;
   }
 `

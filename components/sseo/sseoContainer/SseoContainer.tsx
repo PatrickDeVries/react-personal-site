@@ -1,4 +1,4 @@
-import { Button } from '@headstorm/foundry-react-ui'
+import { Button, variants } from '@headstorm/foundry-react-ui'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTheme } from 'styled-components'
 import Input from '../../input'
@@ -79,15 +79,27 @@ const SseoContainer: React.FC = () => {
         </Header>
         {Object.values(Player).map((playerKey, i) => (
           <PlayerWrapper key={playerKey}>
-            <Input
-              placeholder={`Player name`}
-              type="text"
-              label={`Player ${playerKey.toLowerCase()} - ${roles[playerKey]
+            <label>
+              {`Player ${playerKey.toLowerCase()} - ${roles[playerKey]
                 .map(ballType => formatBallType(ballType))
                 .join(' | ')}`}
-              value={playerNames[playerKey]}
-              onChange={e => setPlayerNames(curr => ({ ...curr, [playerKey]: e.target.value }))}
-            />
+              <div>
+                <Input
+                  placeholder={`Player name`}
+                  type="text"
+                  value={playerNames[playerKey]}
+                  onChange={e => setPlayerNames(curr => ({ ...curr, [playerKey]: e.target.value }))}
+                />
+                <Button
+                  color={theme.primary}
+                  variant={variants.outline}
+                  onClick={() => setSelectedPlayer(playerKey)}
+                  disabled={winners.includes(playerKey) || losers.includes(playerKey)}
+                >
+                  Select
+                </Button>
+              </div>
+            </label>
             {balls.map(
               ({ sunkBy, queued }, index) =>
                 sunkBy === playerKey &&
@@ -124,6 +136,7 @@ const SseoContainer: React.FC = () => {
         <ConfirmQueue>
           <div>Queue</div>
           <select
+            title="Select Player"
             value={selectedPlayer}
             onChange={e => setSelectedPlayer(e.target.value as Player)}
           >
@@ -137,6 +150,9 @@ const SseoContainer: React.FC = () => {
             ))}
           </select>
           <Button
+            variant={variants.outline}
+            color={theme.focus}
+            disabled={!balls.filter(({ queued }) => queued).length}
             onClick={() => {
               setRoles(curr =>
                 cascadeRoles({
@@ -168,8 +184,6 @@ const SseoContainer: React.FC = () => {
                 )
               }
             }}
-            color={theme.focus}
-            disabled={!balls.filter(({ queued }) => queued).length}
           >
             Confirm
           </Button>
