@@ -37,11 +37,8 @@ const SseoGraph: React.FC<Props> = ({ game, decided }) => {
     () =>
       Object.values(Player).reduce((obj, player) => {
         const winRank = game.winners.findIndex(winner => winner === player)
-        console.log(winRank, player)
         if (winRank !== -1) return { ...obj, [player]: winRank + 1 }
         const loseRank = game.losers.findIndex(loser => loser === player)
-        console.log(loseRank, player)
-
         if (loseRank !== -1) return { ...obj, [player]: 4 - loseRank }
         return { ...obj }
       }, {}),

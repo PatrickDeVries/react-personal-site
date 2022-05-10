@@ -241,7 +241,6 @@ const SseoContainer: React.FC = () => {
             variant={variants.outline}
             color={theme.danger}
             onClick={() => {
-              console.log(history.at(-1))
               setGame(curr => ({ ...curr, ...history.at(-1) }))
               setHistory(history.slice(0, -1))
             }}
