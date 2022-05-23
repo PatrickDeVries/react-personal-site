@@ -3,20 +3,20 @@ import { WorkItem } from './types'
 export const myWork: Record<string, WorkItem[]> = {
   Certifications: [
     {
-      header: 'AZ-900 - Azure Fundamentals (Complete)',
+      header: 'AZ-900 - Azure Fundamentals',
       image: '/AZ900.svg',
       description:
         'Earners of the Azure Fundamentals certification have demonstrated foundational level knowledge of cloud services and how those services are provided with Microsoft Azure.',
       tags: ['Cloud', 'Azure', 'Security', 'Virtualization', 'Cloud Data'],
-      href: 'https://www.credly.com/badges/ff554b6a-5cb2-433a-af7e-1345ea8b7a51',
+      href: 'https://www.credly.com/badges/ff554b6a-5cb2-433a-af7e-1345ea8b7a51/public_url',
     },
     {
-      header: 'AZ-204 - Azure Developer Associate (In progress)',
+      header: 'AZ-204 - Azure Developer Associate',
       image: '/AZ204.svg',
       description:
         'Earning Azure Developer Associate certification validates the skills and knowledge to design, build, test, and maintain cloud applications and services on Microsoft Azure. Candidates participate in all phases of cloud development from requirements definition and design, to development, deployment, and maintenance.',
       tags: ['Cloud', 'Azure', 'Security', 'Virtualization', 'Cloud Data', 'Architecture'],
-      href: 'https://docs.microsoft.com/en-us/learn/certifications/azure-developer/',
+      href: 'https://www.credly.com/badges/36e250d4-692c-4198-bcd6-4df6be171d32/public_url',
     },
   ],
   'Github Contributions': [
